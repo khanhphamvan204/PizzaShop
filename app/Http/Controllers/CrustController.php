@@ -4,62 +4,64 @@ namespace App\Http\Controllers;
 
 use App\Models\Crust;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CrustController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $crusts = Crust::latest()->get();
+        return response()->json($crusts);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:50',
+            'description' => 'nullable|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $crust = Crust::create($request->all());
+        return response()->json($crust, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Crust $crust)
+    public function show($id)
     {
-        //
+        $crust = Crust::findOrFail($id);
+        return response()->json($crust);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Crust $crust)
+    public function update(Request $request, $id)
     {
-        //
+        $crust = Crust::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:50',
+            'description' => 'nullable|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $crust->update($request->all());
+        return response()->json($crust);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Crust $crust)
+    public function destroy($id)
     {
-        //
-    }
+        $crust = Crust::findOrFail($id);
+        
+        // Check if crust is used in any product variants
+        if ($crust->productVariants()->count() > 0) {
+            return response()->json(['error' => 'Cannot delete crust that is used in product variants'], 422);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Crust $crust)
-    {
-        //
+        $crust->delete();
+        return response()->json(['message' => 'Crust deleted successfully']);
     }
 }

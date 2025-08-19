@@ -1,65 +1,81 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ContactController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $contacts = Contact::with('user')->get();
+        return response()->json([
+            'status' => 'success',
+            'data' => $contacts
+        ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'nullable|exists:users,id',
+            'name' => 'nullable|string|max:100',
+            'email' => 'required|email|max:100',
+            'message' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $contact = Contact::create($request->all());
+        return response()->json([
+            'status' => 'success',
+            'data' => $contact->load('user')
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Contact $contact)
     {
-        //
+        return response()->json([
+            'status' => 'success',
+            'data' => $contact->load('user')
+        ], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Contact $contact)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Contact $contact)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'nullable|exists:users,id',
+            'name' => 'nullable|string|max:100',
+            'email' => 'required|email|max:100',
+            'message' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $contact->update($request->all());
+        return response()->json([
+            'status' => 'success',
+            'data' => $contact->load('user')
+        ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Contact $contact)
     {
-        //
+        $contact->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Contact deleted successfully'
+        ], 200);
     }
 }

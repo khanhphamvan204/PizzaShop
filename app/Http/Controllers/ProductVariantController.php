@@ -4,62 +4,83 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProductVariantController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $variants = ProductVariant::with(['product', 'size', 'crust'])->get();
+        return response()->json($variants);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id',
+            'size_id' => 'required|exists:sizes,id',
+            'crust_id' => 'required|exists:crusts,id',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'integer|min:0'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Check unique combination
+        $exists = ProductVariant::where([
+            'product_id' => $request->product_id,
+            'size_id' => $request->size_id,
+            'crust_id' => $request->crust_id
+        ])->exists();
+
+        if ($exists) {
+            return response()->json(['error' => 'This variant already exists'], 422);
+        }
+
+        $variant = ProductVariant::create($request->all());
+        return response()->json($variant->load(['product', 'size', 'crust']), 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ProductVariant $productVariant)
+    public function show($id)
     {
-        //
+        $variant = ProductVariant::with(['product', 'size', 'crust'])->findOrFail($id);
+        return response()->json($variant);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ProductVariant $productVariant)
+    public function update(Request $request, $id)
     {
-        //
+        $variant = ProductVariant::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id',
+            'size_id' => 'required|exists:sizes,id',
+            'crust_id' => 'required|exists:crusts,id',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'integer|min:0'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $variant->update($request->all());
+        return response()->json($variant->load(['product', 'size', 'crust']));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ProductVariant $productVariant)
+    public function destroy($id)
     {
-        //
+        $variant = ProductVariant::findOrFail($id);
+        $variant->delete();
+        return response()->json(['message' => 'Product variant deleted successfully']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ProductVariant $productVariant)
+    public function getByProduct($productId)
     {
-        //
+        $variants = ProductVariant::where('product_id', $productId)
+                                ->with(['size', 'crust'])
+                                ->get();
+        return response()->json($variants);
     }
 }

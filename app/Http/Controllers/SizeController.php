@@ -4,62 +4,64 @@ namespace App\Http\Controllers;
 
 use App\Models\Size;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SizeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $sizes = Size::latest()->get();
+        return response()->json($sizes);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:50',
+            'diameter' => 'required|numeric|min:0'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $size = Size::create($request->all());
+        return response()->json($size, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Size $size)
+    public function show($id)
     {
-        //
+        $size = Size::findOrFail($id);
+        return response()->json($size);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Size $size)
+    public function update(Request $request, $id)
     {
-        //
+        $size = Size::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:50',
+            'diameter' => 'required|numeric|min:0'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $size->update($request->all());
+        return response()->json($size);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Size $size)
+    public function destroy($id)
     {
-        //
-    }
+        $size = Size::findOrFail($id);
+        
+        // Check if size is used in any product variants
+        if ($size->productVariants()->count() > 0) {
+            return response()->json(['error' => 'Cannot delete size that is used in product variants'], 422);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Size $size)
-    {
-        //
+        $size->delete();
+        return response()->json(['message' => 'Size deleted successfully']);
     }
 }

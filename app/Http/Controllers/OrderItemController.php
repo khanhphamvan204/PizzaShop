@@ -1,65 +1,81 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class OrderItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $orderItems = OrderItem::with(['order.user', 'productVariant.product', 'productVariant.size', 'productVariant.crust'])->get();
+        return response()->json([
+            'status' => 'success',
+            'data' => $orderItems
+        ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|exists:orders,id',
+            'product_variant_id' => 'required|exists:product_variants,id',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $orderItem = OrderItem::create($request->all());
+        return response()->json([
+            'status' => 'success',
+            'data' => $orderItem->load(['order.user', 'productVariant.product'])
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(OrderItem $orderItem)
     {
-        //
+        return response()->json([
+            'status' => 'success',
+            'data' => $orderItem->load(['order.user', 'productVariant.product', 'productVariant.size', 'productVariant.crust'])
+        ], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(OrderItem $orderItem)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, OrderItem $orderItem)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required|exists:orders,id',
+            'product_variant_id' => 'required|exists:product_variants,id',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $orderItem->update($request->all());
+        return response()->json([
+            'status' => 'success',
+            'data' => $orderItem->load(['order.user', 'productVariant.product'])
+        ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(OrderItem $orderItem)
     {
-        //
+        $orderItem->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Order item deleted successfully'
+        ], 200);
     }
 }

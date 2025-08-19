@@ -1,65 +1,79 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\News;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class NewsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $news = News::all();
+        return response()->json([
+            'status' => 'success',
+            'data' => $news
+        ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:200',
+            'content' => 'required|string',
+            'image_url' => 'nullable|string|max:255'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $news = News::create($request->all());
+        return response()->json([
+            'status' => 'success',
+            'data' => $news
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(News $news)
     {
-        //
+        return response()->json([
+            'status' => 'success',
+            'data' => $news
+        ], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(News $news)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, News $news)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:200',
+            'content' => 'required|string',
+            'image_url' => 'nullable|string|max:255'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $news->update($request->all());
+        return response()->json([
+            'status' => 'success',
+            'data' => $news
+        ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(News $news)
     {
-        //
+        $news->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'News deleted successfully'
+        ], 200);
     }
 }

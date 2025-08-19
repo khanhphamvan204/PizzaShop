@@ -1,65 +1,79 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\CartItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CartItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $cartItems = CartItem::with(['cart.user', 'productVariant.product', 'productVariant.size', 'productVariant.crust'])->get();
+        return response()->json([
+            'status' => 'success',
+            'data' => $cartItems
+        ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'cart_id' => 'required|exists:carts,id',
+            'product_variant_id' => 'required|exists:product_variants,id',
+            'quantity' => 'required|integer|min:1'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $cartItem = CartItem::create($request->all());
+        return response()->json([
+            'status' => 'success',
+            'data' => $cartItem->load(['cart.user', 'productVariant.product'])
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(CartItem $cartItem)
     {
-        //
+        return response()->json([
+            'status' => 'success',
+            'data' => $cartItem->load(['cart.user', 'productVariant.product', 'productVariant.size', 'productVariant.crust'])
+        ], 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(CartItem $cartItem)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, CartItem $cartItem)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'cart_id' => 'required|exists:carts,id',
+            'product_variant_id' => 'required|exists:product_variants,id',
+            'quantity' => 'required|integer|min:1'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $cartItem->update($request->all());
+        return response()->json([
+            'status' => 'success',
+            'data' => $cartItem->load(['cart.user', 'productVariant.product'])
+        ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(CartItem $cartItem)
     {
-        //
+        $cartItem->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Cart item deleted successfully'
+        ], 200);
     }
 }
