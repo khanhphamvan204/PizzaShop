@@ -35,7 +35,7 @@ class OrderItemController extends Controller
         $orderItem = OrderItem::create($request->all());
         return response()->json([
             'status' => 'success',
-            'data' => $orderItem->load(['order.user', 'productVariant.product'])
+            'data' => $orderItem->load(['order.user', 'productVariant.product', 'productVariant.size', 'productVariant.crust'])
         ], 201);
     }
 
@@ -66,7 +66,7 @@ class OrderItemController extends Controller
         $orderItem->update($request->all());
         return response()->json([
             'status' => 'success',
-            'data' => $orderItem->load(['order.user', 'productVariant.product'])
+            'data' => $orderItem->load(['order.user', 'productVariant.product', 'productVariant.size', 'productVariant.crust'])
         ], 200);
     }
 

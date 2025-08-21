@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Size;
@@ -10,58 +9,69 @@ class SizeController extends Controller
 {
     public function index()
     {
-        $sizes = Size::latest()->get();
-        return response()->json($sizes);
+        $sizes = Size::with('variants')->get();
+        return response()->json([
+            'status' => 'success',
+            'data' => $sizes
+        ], 200);
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:50',
+            'name' => 'required|string|max:50',
             'diameter' => 'required|numeric|min:0'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         $size = Size::create($request->all());
-        return response()->json($size, 201);
+        return response()->json([
+            'status' => 'success',
+            'data' => $size->load('variants')
+        ], 201);
     }
 
-    public function show($id)
+    public function show(Size $size)
     {
-        $size = Size::findOrFail($id);
-        return response()->json($size);
+        return response()->json([
+            'status' => 'success',
+            'data' => $size->load('variants')
+        ], 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Size $size)
     {
-        $size = Size::findOrFail($id);
-
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:50',
+            'name' => 'required|string|max:50',
             'diameter' => 'required|numeric|min:0'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         $size->update($request->all());
-        return response()->json($size);
+        return response()->json([
+            'status' => 'success',
+            'data' => $size->load('variants')
+        ], 200);
     }
 
-    public function destroy($id)
+    public function destroy(Size $size)
     {
-        $size = Size::findOrFail($id);
-        
-        // Check if size is used in any product variants
-        if ($size->productVariants()->count() > 0) {
-            return response()->json(['error' => 'Cannot delete size that is used in product variants'], 422);
-        }
-
         $size->delete();
-        return response()->json(['message' => 'Size deleted successfully']);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Size deleted successfully'
+        ], 200);
     }
 }

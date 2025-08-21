@@ -9,52 +9,69 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('products')->latest()->get();
-        return response()->json($categories);
+        $categories = Category::with('products')->get();
+        return response()->json([
+            'status' => 'success',
+            'data' => $categories
+        ], 200);
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:100',
+            'name' => 'required|string|max:100',
             'description' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         $category = Category::create($request->all());
-        return response()->json($category, 201);
+        return response()->json([
+            'status' => 'success',
+            'data' => $category->load('products')
+        ], 201);
     }
 
-    public function show($id)
+    public function show(Category $category)
     {
-        $category = Category::with('products')->findOrFail($id);
-        return response()->json($category);
+        return response()->json([
+            'status' => 'success',
+            'data' => $category->load('products')
+        ], 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        $category = Category::findOrFail($id);
-
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:100',
+            'name' => 'required|string|max:100',
             'description' => 'nullable|string'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         $category->update($request->all());
-        return response()->json($category);
+        return response()->json([
+            'status' => 'success',
+            'data' => $category->load('products')
+        ], 200);
     }
 
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        $category = Category::findOrFail($id);
         $category->delete();
-        return response()->json(['message' => 'Category deleted successfully']);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Category deleted successfully'
+        ], 200);
     }
 }

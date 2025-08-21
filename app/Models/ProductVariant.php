@@ -36,4 +36,8 @@ class ProductVariant extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+    public function comboItems()
+    {
+        return $this->hasMany(ComboItem::class, 'product_variant_id');
+    }
 }

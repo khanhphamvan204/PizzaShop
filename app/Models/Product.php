@@ -24,4 +24,8 @@ class Product extends Model
     {
         return $this->hasMany(Review::class);
     }
+    public function happyHourPromotions()
+    {
+        return $this->hasMany(HappyHourProduct::class, 'product_id');
+    }
 }

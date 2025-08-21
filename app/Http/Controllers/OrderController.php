@@ -1,21 +1,19 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Models\OrderItem;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::with(['user', 'items.productVariant.product', 'coupon', 'payment'])
-                      ->latest()
-                      ->paginate(20);
-        return response()->json($orders);
+        $orders = Order::with(['user', 'coupon', 'orderItems.productVariant', 'payment'])->get();
+        return response()->json([
+            'status' => 'success',
+            'data' => $orders
+        ], 200);
     }
 
     public function store(Request $request)
@@ -23,103 +21,63 @@ class OrderController extends Controller
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|exists:users,id',
             'total_amount' => 'required|numeric|min:0',
-            'shipping_address' => 'required|string',
-            'coupon_id' => 'nullable|exists:coupons,id',
-            'items' => 'required|array|min:1',
-            'items.*.product_variant_id' => 'required|exists:product_variants,id',
-            'items.*.quantity' => 'required|integer|min:1',
-            'items.*.price' => 'required|numeric|min:0'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        DB::beginTransaction();
-        try {
-            $order = Order::create([
-                'user_id' => $request->user_id,
-                'total_amount' => $request->total_amount,
-                'shipping_address' => $request->shipping_address,
-                'coupon_id' => $request->coupon_id,
-                'status' => 'pending'
-            ]);
-
-            foreach ($request->items as $item) {
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_variant_id' => $item['product_variant_id'],
-                    'quantity' => $item['quantity'],
-                    'price' => $item['price']
-                ]);
-            }
-
-            DB::commit();
-            return response()->json($order->load(['items.productVariant.product', 'user']), 201);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json(['error' => 'Failed to create order'], 500);
-        }
-    }
-
-    public function show($id)
-    {
-        $order = Order::with(['user', 'items.productVariant.product.category', 'items.productVariant.size', 'items.productVariant.crust', 'coupon', 'payment'])
-                     ->findOrFail($id);
-        return response()->json($order);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $order = Order::findOrFail($id);
-
-        $validator = Validator::make($request->all(), [
             'status' => 'required|in:pending,confirmed,shipped,delivered,cancelled',
-            'shipping_address' => 'nullable|string'
+            'shipping_address' => 'nullable|string',
+            'coupon_id' => 'nullable|exists:coupons,id'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
-        $order->update($request->only(['status', 'shipping_address']));
-        return response()->json($order);
+        $order = Order::create($request->all());
+        return response()->json([
+            'status' => 'success',
+            'data' => $order->load(['user', 'coupon', 'orderItems', 'payment'])
+        ], 201);
     }
 
-    public function destroy($id)
+    public function show(Order $order)
     {
-        $order = Order::findOrFail($id);
-        
-        if (!in_array($order->status, ['pending', 'cancelled'])) {
-            return response()->json(['error' => 'Cannot delete confirmed or processed orders'], 422);
-        }
-
-        $order->delete();
-        return response()->json(['message' => 'Order deleted successfully']);
+        return response()->json([
+            'status' => 'success',
+            'data' => $order->load(['user', 'coupon', 'orderItems.productVariant', 'payment'])
+        ], 200);
     }
 
-    public function getUserOrders($userId)
+    public function update(Request $request, Order $order)
     {
-        $orders = Order::where('user_id', $userId)
-                      ->with(['items.productVariant.product', 'payment'])
-                      ->latest()
-                      ->get();
-        return response()->json($orders);
-    }
-
-    public function updateStatus(Request $request, $id)
-    {
-        $order = Order::findOrFail($id);
-
         $validator = Validator::make($request->all(), [
-            'status' => 'required|in:pending,confirmed,shipped,delivered,cancelled'
+            'user_id' => 'required|exists:users,id',
+            'total_amount' => 'required|numeric|min:0',
+            'status' => 'required|in:pending,confirmed,shipped,delivered,cancelled',
+            'shipping_address' => 'nullable|string',
+            'coupon_id' => 'nullable|exists:coupons,id'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
-        $order->update(['status' => $request->status]);
-        return response()->json($order);
+        $order->update($request->all());
+        return response()->json([
+            'status' => 'success',
+            'data' => $order->load(['user', 'coupon', 'orderItems', 'payment'])
+        ], 200);
+    }
+
+    public function destroy(Order $order)
+    {
+        $order->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Order deleted successfully'
+        ], 200);
     }
 }

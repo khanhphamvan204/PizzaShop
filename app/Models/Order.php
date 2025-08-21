@@ -34,4 +34,13 @@ class Order extends Model
     {
         return $this->hasOne(Payment::class);
     }
+    public function happyHourPromotion()
+    {
+        return $this->belongsTo(HappyHourPromotion::class, 'happy_hour_promotion_id');
+    }
+
+    public function combo()
+    {
+        return $this->belongsTo(Combo::class, 'combo_id');
+    }
 }

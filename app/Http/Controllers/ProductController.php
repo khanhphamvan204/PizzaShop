@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Product;
@@ -10,67 +9,91 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with(['category', 'variants.size', 'variants.crust', 'reviews'])
-                          ->latest()
-                          ->paginate(12);
-        return response()->json($products);
+        $products = Product::with(['category', 'variants.size', 'variants.crust', 'reviews'])->get();
+        return response()->json([
+            'status' => 'success',
+            'data' => $products
+        ], 200);
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:100',
+            'name' => 'required|string|max:100',
             'description' => 'nullable|string',
-            'image_url' => 'nullable|url|max:255',
-            'category_id' => 'required|exists:categories,id'
+            'image_url' => 'nullable|string|max:255',
+            'category_id' => 'nullable|exists:categories,id'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         $product = Product::create($request->all());
-        return response()->json($product->load('category'), 201);
+        return response()->json([
+            'status' => 'success',
+            'data' => $product->load(['category', 'variants', 'reviews'])
+        ], 201);
     }
 
-    public function show($id)
+    public function show(Product $product)
     {
-        $product = Product::with(['category', 'variants.size', 'variants.crust', 'reviews.user'])
-                         ->findOrFail($id);
-        return response()->json($product);
+        return response()->json([
+            'status' => 'success',
+            'data' => $product->load(['category', 'variants.size', 'variants.crust', 'reviews'])
+        ], 200);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
-        $product = Product::findOrFail($id);
-
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:100',
+            'name' => 'required|string|max:100',
             'description' => 'nullable|string',
-            'image_url' => 'nullable|url|max:255',
-            'category_id' => 'required|exists:categories,id'
+            'image_url' => 'nullable|string|max:255',
+            'category_id' => 'nullable|exists:categories,id'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
         }
 
         $product->update($request->all());
-        return response()->json($product->load('category'));
+        return response()->json([
+            'status' => 'success',
+            'data' => $product->load(['category', 'variants', 'reviews'])
+        ], 200);
     }
 
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        $product = Product::findOrFail($id);
         $product->delete();
-        return response()->json(['message' => 'Product deleted successfully']);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Product deleted successfully'
+        ], 200);
     }
-
-    public function getByCategory($categoryId)
+    public function featured()
     {
-        $products = Product::where('category_id', $categoryId)
-                          ->with(['variants.size', 'variants.crust'])
-                          ->get();
-        return response()->json($products);
+        $products = Product::query()
+            ->select('products.*')
+            ->selectRaw('SUM(order_items.quantity) as total_sold') // Tính tổng số lượng bán
+            ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+            ->join('order_items', 'product_variants.id', '=', 'order_items.product_variant_id')
+            ->groupBy('products.id')
+            ->orderByDesc('total_sold') // Sắp xếp theo tổng số lượng bán
+            ->with(['category', 'variants.size', 'variants.crust', 'reviews'])
+            ->limit(5) // Giới hạn 10 sản phẩm
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $products
+        ], 200);
     }
 }

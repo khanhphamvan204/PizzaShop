@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
@@ -12,13 +11,13 @@ class CartController extends Controller
     public function index($userId = null, $sessionId = null)
     {
         $query = Cart::with(['items.productVariant.product', 'items.productVariant.size', 'items.productVariant.crust']);
-        
+
         if ($userId) {
             $cart = $query->where('user_id', $userId)->first();
         } elseif ($sessionId) {
             $cart = $query->where('session_id', $sessionId)->first();
         } else {
-            return response()->json(['error' => 'User ID or Session ID required'], 422);
+            return response()->json(['status' => 'error', 'message' => 'User ID or Session ID required'], 422);
         }
 
         if (!$cart) {
@@ -28,7 +27,10 @@ class CartController extends Controller
             ]);
         }
 
-        return response()->json($cart);
+        return response()->json([
+            'status' => 'success',
+            'data' => $cart->load(['items.productVariant.product', 'items.productVariant.size', 'items.productVariant.crust'])
+        ], 200);
     }
 
     public function addItem(Request $request)
@@ -41,15 +43,14 @@ class CartController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 422);
         }
 
         if (!$request->user_id && !$request->session_id) {
-            return response()->json(['error' => 'User ID or Session ID required'], 422);
+            return response()->json(['status' => 'error', 'message' => 'User ID or Session ID required'], 422);
         }
 
-        // Find or create cart
-        $cart = Cart::where(function($query) use ($request) {
+        $cart = Cart::where(function ($query) use ($request) {
             if ($request->user_id) {
                 $query->where('user_id', $request->user_id);
             } else {
@@ -64,7 +65,6 @@ class CartController extends Controller
             ]);
         }
 
-        // Check if item already exists in cart
         $existingItem = CartItem::where([
             'cart_id' => $cart->id,
             'product_variant_id' => $request->product_variant_id
@@ -83,48 +83,57 @@ class CartController extends Controller
             ]);
         }
 
-        return response()->json($cartItem->load(['productVariant.product', 'productVariant.size', 'productVariant.crust']), 201);
+        return response()->json([
+            'status' => 'success',
+            'data' => $cartItem->load(['productVariant.product', 'productVariant.size', 'productVariant.crust'])
+        ], 201);
     }
 
-    public function updateItem(Request $request, $itemId)
+    public function updateItem(Request $request, CartItem $cartItem)
     {
-        $cartItem = CartItem::findOrFail($itemId);
-
         $validator = Validator::make($request->all(), [
             'quantity' => 'required|integer|min:1'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 422);
         }
 
         $cartItem->update(['quantity' => $request->quantity]);
-        return response()->json($cartItem);
+        return response()->json([
+            'status' => 'success',
+            'data' => $cartItem->load(['productVariant.product', 'productVariant.size', 'productVariant.crust'])
+        ], 200);
     }
 
-    public function removeItem($itemId)
+    public function removeItem(CartItem $cartItem)
     {
-        $cartItem = CartItem::findOrFail($itemId);
         $cartItem->delete();
-        return response()->json(['message' => 'Item removed from cart']);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Item removed from cart'
+        ], 200);
     }
 
     public function clearCart($userId = null, $sessionId = null)
     {
         $query = Cart::query();
-        
+
         if ($userId) {
             $cart = $query->where('user_id', $userId)->first();
         } elseif ($sessionId) {
             $cart = $query->where('session_id', $sessionId)->first();
         } else {
-            return response()->json(['error' => 'User ID or Session ID required'], 422);
+            return response()->json(['status' => 'error', 'message' => 'User ID or Session ID required'], 422);
         }
 
         if ($cart) {
             $cart->items()->delete();
         }
 
-        return response()->json(['message' => 'Cart cleared successfully']);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Cart cleared successfully'
+        ], 200);
     }
 }

@@ -34,7 +34,7 @@ class CartItemController extends Controller
         $cartItem = CartItem::create($request->all());
         return response()->json([
             'status' => 'success',
-            'data' => $cartItem->load(['cart.user', 'productVariant.product'])
+            'data' => $cartItem->load(['cart.user', 'productVariant.product', 'productVariant.size', 'productVariant.crust'])
         ], 201);
     }
 
@@ -64,7 +64,7 @@ class CartItemController extends Controller
         $cartItem->update($request->all());
         return response()->json([
             'status' => 'success',
-            'data' => $cartItem->load(['cart.user', 'productVariant.product'])
+            'data' => $cartItem->load(['cart.user', 'productVariant.product', 'productVariant.size', 'productVariant.crust'])
         ], 200);
     }
 
