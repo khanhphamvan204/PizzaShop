@@ -1,77 +1,52 @@
 <?php
+// 6. CrustController.php
 namespace App\Http\Controllers;
 
 use App\Models\Crust;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class CrustController extends Controller
 {
     public function index()
     {
-        $crusts = Crust::with('variants')->get();
-        return response()->json([
-            'status' => 'success',
-            'data' => $crusts
-        ], 200);
+        $crusts = Crust::all();
+        return response()->json($crusts);
     }
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'name' => 'required|string|max:50',
             'description' => 'nullable|string'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $crust = Crust::create($request->all());
-        return response()->json([
-            'status' => 'success',
-            'data' => $crust->load('variants')
-        ], 201);
+        $crust = Crust::create($request->only(['name', 'description']));
+        return response()->json($crust, 201);
     }
 
-    public function show(Crust $crust)
+    public function show($id)
     {
-        return response()->json([
-            'status' => 'success',
-            'data' => $crust->load('variants')
-        ], 200);
+        $crust = Crust::findOrFail($id);
+        return response()->json($crust);
     }
 
-    public function update(Request $request, Crust $crust)
+    public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
+        $crust = Crust::findOrFail($id);
+
+        $request->validate([
             'name' => 'required|string|max:50',
             'description' => 'nullable|string'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $crust->update($request->all());
-        return response()->json([
-            'status' => 'success',
-            'data' => $crust->load('variants')
-        ], 200);
+        $crust->update($request->only(['name', 'description']));
+        return response()->json($crust);
     }
 
-    public function destroy(Crust $crust)
+    public function destroy($id)
     {
+        $crust = Crust::findOrFail($id);
         $crust->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Crust deleted successfully'
-        ], 200);
+        return response()->json(['message' => 'Crust deleted successfully']);
     }
 }

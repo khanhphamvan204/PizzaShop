@@ -1,77 +1,62 @@
 <?php
+// 15. FaqController.php
 namespace App\Http\Controllers;
 
 use App\Models\Faq;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class FaqController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $faqs = Faq::all();
-        return response()->json([
-            'status' => 'success',
-            'data' => $faqs
-        ], 200);
+        $query = Faq::query();
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('question', 'like', "%{$search}%")
+                    ->orWhere('answer', 'like', "%{$search}%");
+            });
+        }
+
+        $faqs = $query->orderBy('created_at', 'desc')->get();
+        return response()->json($faqs);
     }
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'question' => 'required|string|max:255',
             'answer' => 'required|string'
         ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
 
         $faq = Faq::create($request->all());
-        return response()->json([
-            'status' => 'success',
-            'data' => $faq
-        ], 201);
+        return response()->json($faq, 201);
     }
 
-    public function show(Faq $faq)
+    public function show($id)
     {
-        return response()->json([
-            'status' => 'success',
-            'data' => $faq
-        ], 200);
+        $faq = Faq::findOrFail($id);
+        return response()->json($faq);
     }
 
-    public function update(Request $request, Faq $faq)
+    public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
+        $faq = Faq::findOrFail($id);
+
+        $request->validate([
             'question' => 'required|string|max:255',
             'answer' => 'required|string'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
         $faq->update($request->all());
-        return response()->json([
-            'status' => 'success',
-            'data' => $faq
-        ], 200);
+        return response()->json($faq);
     }
 
-    public function destroy(Faq $faq)
+    public function destroy($id)
     {
+        $faq = Faq::findOrFail($id);
         $faq->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'FAQ deleted successfully'
-        ], 200);
+        return response()->json(['message' => 'FAQ deleted successfully']);
     }
 }

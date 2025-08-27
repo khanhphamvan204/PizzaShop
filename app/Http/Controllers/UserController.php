@@ -1,104 +1,124 @@
 <?php
+
+// 1. UserController.php
 namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with(['orders', 'carts', 'reviews', 'contacts'])->get();
-        return response()->json([
-            'status' => 'success',
-            'data' => $users
-        ], 200);
+        $query = User::query();
+
+        if ($request->has('role')) {
+            $query->where('role', $request->role);
+        }
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('username', 'like', "%{$search}%")
+                    ->orWhere('full_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $users = $query->paginate(15);
+        return response()->json($users);
     }
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'username' => 'required|string|max:50|unique:users',
             'password' => 'required|string|min:6',
-            'email' => 'required|email|max:100|unique:users',
+            'email' => 'required|email|unique:users',
             'full_name' => 'nullable|string|max:100',
-            'address' => 'nullable|string|max:255',
+            'address' => 'nullable|string',
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|in:customer,admin'
+            'role' => 'in:customer,admin'
         ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
 
         $user = User::create([
             'username' => $request->username,
-            'password' => Hash::bcrypt($request->password),
+            'password' => Hash::make($request->password),
             'email' => $request->email,
             'full_name' => $request->full_name,
             'address' => $request->address,
             'phone' => $request->phone,
-            'role' => $request->role
+            'role' => $request->role ?? 'customer'
         ]);
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $user->load(['orders', 'carts', 'reviews', 'contacts'])
-        ], 201);
+        return response()->json($user, 201);
     }
 
-    public function show(User $user)
+    public function show($id)
     {
-        return response()->json([
-            'status' => 'success',
-            'data' => $user->load(['orders', 'carts', 'reviews', 'contacts'])
-        ], 200);
+        $user = User::findOrFail($id);
+        return response()->json($user);
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'username' => 'required|string|max:50|unique:users,username,' . $user->id,
-            'password' => 'nullable|string|min:6',
-            'email' => 'required|email|max:100|unique:users,email,' . $user->id,
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'username' => ['required', 'string', 'max:50', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
             'full_name' => 'nullable|string|max:100',
-            'address' => 'nullable|string|max:255',
+            'address' => 'nullable|string',
             'phone' => 'nullable|string|max:20',
-            'role' => 'required|in:customer,admin'
+            'role' => 'in:customer,admin'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
+        $updateData = $request->only(['username', 'email', 'full_name', 'address', 'phone', 'role']);
+
+        if ($request->filled('password')) {
+            $request->validate(['password' => 'string|min:6']);
+            $updateData['password'] = Hash::make($request->password);
         }
 
-        $data = $request->all();
-        if ($request->has('password') && $request->password) {
-            $data['password'] = Hash::bcrypt($request->password);
-        } else {
-            unset($data['password']);
-        }
-
-        $user->update($data);
-        return response()->json([
-            'status' => 'success',
-            'data' => $user->load(['orders', 'carts', 'reviews', 'contacts'])
-        ], 200);
+        $user->update($updateData);
+        return response()->json($user);
     }
 
-    public function destroy(User $user)
+    public function destroy($id)
     {
+        $user = User::findOrFail($id);
         $user->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User deleted successfully'
-        ], 200);
+        return response()->json(['message' => 'User deleted successfully']);
     }
+
+    public function profile()
+    {
+        return response()->json(Auth::user());
+    }
+
+    // public function updateProfile(Request $request)
+    // {
+    //     $user = Auth::user();
+
+    //     $request->validate([
+    //         'username' => ['required', 'string', 'max:50', Rule::unique('users')->ignore($user->id)],
+    //         'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
+    //         'full_name' => 'nullable|string|max:100',
+    //         'address' => 'nullable|string',
+    //         'phone' => 'nullable|string|max:20'
+    //     ]);
+
+    //     $updateData = $request->only(['username', 'email', 'full_name', 'address', 'phone']);
+
+    //     if ($request->filled('password')) {
+    //         $request->validate(['password' => 'string|min:6']);
+    //         $updateData['password'] = Hash::make($request->password);
+    //     }
+
+    //     $user->update($updateData);
+    //     return response()->json($user);
+    // }
 }

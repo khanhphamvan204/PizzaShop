@@ -1,99 +1,101 @@
 <?php
+// 3. ProductController.php
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with(['category', 'variants.size', 'variants.crust', 'reviews'])->get();
-        return response()->json([
-            'status' => 'success',
-            'data' => $products
-        ], 200);
+        $query = Product::with(['category', 'variants.size', 'variants.crust']);
+
+        if ($request->has('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $products = $query->paginate(12);
+        return response()->json($products);
     }
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'description' => 'nullable|string',
+            'image_url' => 'nullable|string|max:255',
+            'category_id' => 'nullable|exists:categories,id',
+            'variants' => 'required|array',
+            'variants.*.size_id' => 'nullable|exists:sizes,id',
+            'variants.*.crust_id' => 'nullable|exists:crusts,id',
+            'variants.*.price' => 'required|numeric|min:0',
+            'variants.*.stock' => 'integer|min:0'
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $product = Product::create($request->only(['name', 'description', 'image_url', 'category_id']));
+
+            foreach ($request->variants as $variantData) {
+                $product->variants()->create($variantData);
+            }
+
+            DB::commit();
+            return response()->json($product->load('variants'), 201);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => 'Failed to create product'], 500);
+        }
+    }
+
+    public function show($id)
+    {
+        $product = Product::with(['category', 'variants.size', 'variants.crust', 'reviews.user'])
+            ->findOrFail($id);
+        return response()->json($product);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        $request->validate([
             'name' => 'required|string|max:100',
             'description' => 'nullable|string',
             'image_url' => 'nullable|string|max:255',
             'category_id' => 'nullable|exists:categories,id'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $product = Product::create($request->all());
-        return response()->json([
-            'status' => 'success',
-            'data' => $product->load(['category', 'variants', 'reviews'])
-        ], 201);
+        $product->update($request->only(['name', 'description', 'image_url', 'category_id']));
+        return response()->json($product);
     }
 
-    public function show(Product $product)
+    public function destroy($id)
     {
-        return response()->json([
-            'status' => 'success',
-            'data' => $product->load(['category', 'variants.size', 'variants.crust', 'reviews'])
-        ], 200);
-    }
-
-    public function update(Request $request, Product $product)
-    {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:100',
-            'description' => 'nullable|string',
-            'image_url' => 'nullable|string|max:255',
-            'category_id' => 'nullable|exists:categories,id'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $product->update($request->all());
-        return response()->json([
-            'status' => 'success',
-            'data' => $product->load(['category', 'variants', 'reviews'])
-        ], 200);
-    }
-
-    public function destroy(Product $product)
-    {
+        $product = Product::findOrFail($id);
         $product->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Product deleted successfully'
-        ], 200);
+        return response()->json(['message' => 'Product deleted successfully']);
     }
+
     public function featured()
     {
-        $products = Product::query()
-            ->select('products.*')
-            ->selectRaw('SUM(order_items.quantity) as total_sold') // Tính tổng số lượng bán
-            ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
-            ->join('order_items', 'product_variants.id', '=', 'order_items.product_variant_id')
-            ->groupBy('products.id')
-            ->orderByDesc('total_sold') // Sắp xếp theo tổng số lượng bán
-            ->with(['category', 'variants.size', 'variants.crust', 'reviews'])
-            ->limit(5) // Giới hạn 10 sản phẩm
+        $products = Product::with(['category', 'variants'])
+            ->whereHas('variants', function ($query) {
+                $query->where('stock', '>', 0);
+            })
+            ->limit(8)
             ->get();
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $products
-        ], 200);
+        return response()->json($products);
     }
 }

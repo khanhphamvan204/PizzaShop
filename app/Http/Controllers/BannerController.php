@@ -1,81 +1,74 @@
 <?php
+// 13. BannerController.php
 namespace App\Http\Controllers;
 
 use App\Models\Banner;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class BannerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $banners = Banner::all();
-        return response()->json([
-            'status' => 'success',
-            'data' => $banners
-        ], 200);
+        $query = Banner::query();
+
+        if ($request->has('active')) {
+            $query->where('active', $request->boolean('active'));
+        }
+
+        if ($request->has('position')) {
+            $query->where('position', $request->position);
+        }
+
+        $banners = $query->orderBy('created_at', 'desc')->get();
+        return response()->json($banners);
     }
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'image_url' => 'required|string|max:255',
             'link' => 'nullable|string|max:255',
             'position' => 'required|in:homepage_top,homepage_bottom,product_page',
             'active' => 'boolean'
         ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
 
         $banner = Banner::create($request->all());
-        return response()->json([
-            'status' => 'success',
-            'data' => $banner
-        ], 201);
+        return response()->json($banner, 201);
     }
 
-    public function show(Banner $banner)
+    public function show($id)
     {
-        return response()->json([
-            'status' => 'success',
-            'data' => $banner
-        ], 200);
+        $banner = Banner::findOrFail($id);
+        return response()->json($banner);
     }
 
-    public function update(Request $request, Banner $banner)
+    public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
+        $banner = Banner::findOrFail($id);
+
+        $request->validate([
             'image_url' => 'required|string|max:255',
             'link' => 'nullable|string|max:255',
             'position' => 'required|in:homepage_top,homepage_bottom,product_page',
             'active' => 'boolean'
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
         $banner->update($request->all());
-        return response()->json([
-            'status' => 'success',
-            'data' => $banner
-        ], 200);
+        return response()->json($banner);
     }
 
-    public function destroy(Banner $banner)
+    public function destroy($id)
     {
+        $banner = Banner::findOrFail($id);
         $banner->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Banner deleted successfully'
-        ], 200);
+        return response()->json(['message' => 'Banner deleted successfully']);
+    }
+
+    public function getByPosition($position)
+    {
+        $banners = Banner::where('position', $position)
+            ->where('active', true)
+            ->get();
+        return response()->json($banners);
     }
 }
