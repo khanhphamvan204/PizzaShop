@@ -10,42 +10,52 @@ use App\Models\Coupon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Order::with(['user', 'items.productVariant.product', 'items.combo', 'coupon']);
+        try {
+            $query = Order::with(['user', 'items.productVariant.product', 'items.combo', 'coupon']);
 
-        if (Auth::user()->role !== 'admin') {
-            $query->where('user_id', Auth::id());
+            if (Auth::user()->role !== 'admin') {
+                $query->where('user_id', Auth::id());
+            }
+
+            if ($request->has('status')) {
+                $query->where('status', $request->status);
+            }
+
+            if ($request->has('user_id') && Auth::user()->role === 'admin') {
+                $query->where('user_id', $request->user_id);
+            }
+
+            $orders = $query->orderBy('created_at', 'desc')->get();
+            return response()->json($orders);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to fetch orders',
+                'message' => $e->getMessage()
+            ], 500);
         }
-
-        if ($request->has('status')) {
-            $query->where('status', $request->status);
-        }
-
-        if ($request->has('user_id') && Auth::user()->role === 'admin') {
-            $query->where('user_id', $request->user_id);
-        }
-
-        $orders = $query->orderBy('created_at', 'desc')->paginate(15);
-        return response()->json($orders);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'shipping_address' => 'required|string',
-            'coupon_code' => 'nullable|string'
-        ]);
-
-        if (!Auth::check()) {
-            return response()->json(['error' => 'Authentication required'], 401);
-        }
-
-        DB::beginTransaction();
         try {
+            $request->validate([
+                'shipping_address' => 'required|string',
+                'coupon_code' => 'nullable|string'
+            ]);
+
+            if (!Auth::check()) {
+                return response()->json(['error' => 'Authentication required'], 401);
+            }
+
+            DB::beginTransaction();
+
             // Lấy giỏ hàng
             $cart = Cart::where('user_id', Auth::id())->first();
             if (!$cart) {
@@ -78,16 +88,25 @@ class OrderController extends Controller
                     ->where('expiry_date', '>=', now())
                     ->first();
 
-                if ($coupon && $totalAmount >= $coupon->min_order_amount) {
-                    if ($coupon->discount_percentage) {
-                        $discount = ($totalAmount * $coupon->discount_percentage) / 100;
-                        if ($coupon->max_discount_amount) {
-                            $discount = min($discount, $coupon->max_discount_amount);
+                if ($coupon) {
+                    if ($totalAmount >= $coupon->min_order_amount) {
+                        if ($coupon->discount_percentage) {
+                            $discount = ($totalAmount * $coupon->discount_percentage) / 100;
+                            if ($coupon->max_discount_amount) {
+                                $discount = min($discount, $coupon->max_discount_amount);
+                            }
+                            $totalAmount -= $discount;
+                        } elseif ($coupon->discount_amount) {
+                            $discount = $coupon->discount_amount;
+                            if ($coupon->max_discount_amount) {
+                                $discount = min($discount, $coupon->max_discount_amount);
+                            }
                         }
-                        $totalAmount -= $discount;
-                    } elseif ($coupon->discount_amount) {
-                        $totalAmount -= $coupon->discount_amount;
+                    } else {
+                        return response()->json(['error' => 'Order amount does not meet coupon minimum'], 400);
                     }
+                } else {
+                    return response()->json(['error' => 'Invalid or expired coupon'], 400);
                 }
             }
 
@@ -120,50 +139,85 @@ class OrderController extends Controller
 
             return response()->json($order->load(['items', 'coupon']), 201);
 
+        } catch (ValidationException $ve) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'messages' => $ve->errors()
+            ], 422);
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['error' => 'Failed to create order'], 500);
+            return response()->json([
+                'error' => 'Failed to create order',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
     public function show($id)
     {
-        $order = Order::with(['user', 'items.productVariant.product', 'items.combo', 'coupon', 'payments'])
-            ->findOrFail($id);
+        try {
+            $order = Order::with(['user', 'items.productVariant.product', 'items.combo', 'coupon', 'payments'])
+                ->findOrFail($id);
 
-        if (Auth::user()->role !== 'admin' && $order->user_id !== Auth::id()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+            if (Auth::user()->role !== 'admin' && $order->user_id !== Auth::id()) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            return response()->json($order);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to fetch order',
+                'message' => $e->getMessage()
+            ], 404);
         }
-
-        return response()->json($order);
     }
 
     public function updateStatus(Request $request, $id)
     {
-        $request->validate([
-            'status' => 'required|in:pending,confirmed,shipped,delivered,cancelled'
-        ]);
+        try {
+            $request->validate([
+                'status' => 'required|in:pending,confirmed,shipped,delivered,cancelled'
+            ]);
 
-        $order = Order::findOrFail($id);
-        $order->update(['status' => $request->status]);
+            $order = Order::findOrFail($id);
+            $order->update(['status' => $request->status]);
 
-        return response()->json($order);
+            return response()->json($order);
+
+        } catch (ValidationException $ve) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'messages' => $ve->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to update status',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function cancel($id)
     {
-        $order = Order::findOrFail($id);
+        try {
+            $order = Order::findOrFail($id);
 
-        if (Auth::user()->role !== 'admin' && $order->user_id !== Auth::id()) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+            if (Auth::user()->role !== 'admin' && $order->user_id !== Auth::id()) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            if (in_array($order->status, ['shipped', 'delivered'])) {
+                return response()->json(['error' => 'Cannot cancel shipped or delivered order'], 400);
+            }
+
+            $order->update(['status' => 'cancelled']);
+
+            return response()->json($order);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to cancel order',
+                'message' => $e->getMessage()
+            ], 500);
         }
-
-        if (in_array($order->status, ['shipped', 'delivered'])) {
-            return response()->json(['error' => 'Cannot cancel shipped or delivered order'], 400);
-        }
-
-        $order->update(['status' => 'cancelled']);
-
-        return response()->json($order);
     }
 }
