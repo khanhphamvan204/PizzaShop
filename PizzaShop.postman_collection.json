@@ -1,0 +1,3266 @@
+{
+	"info": {
+		"_postman_id": "70ec1c5b-bcda-4d39-88db-dcf0fdea0da0",
+		"name": "PizzaShop",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Scripts\" tab**\n\nAdding tests to your requests can help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/fa30ea0a-373d-4545-a668-e7b283cca343/aW1hZ2UucG5n\" alt=\"\" height=\"1530\" width=\"2162\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n    \n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44309294",
+		"_collection_link": "https://khanh-9716692.postman.co/workspace/Khanh's-Workspace~21028e77-adbc-4196-8de6-0d5da9d6039a/collection/44309294-70ec1c5b-bcda-4d39-88db-dcf0fdea0da0?action=share&source=collection_link&creator=44309294"
+	},
+	"item": [
+		{
+			"name": "Banner",
+			"item": [
+				{
+					"name": "Get data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/banners",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"banners"
+							],
+							"query": [
+								{
+									"key": "active",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "position",
+									"value": "homepage",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/banners/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"banners",
+								"1"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "1",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"image_url\": \"images/example.jpg\",\n    \"link\": \"/promotions\",\n    \"position\": \"homepage_top\",\n    \"active\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/banners",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"banners"
+							],
+							"query": [
+								{
+									"key": "image_url",
+									"value": "images/",
+									"disabled": true
+								},
+								{
+									"key": "link",
+									"value": "/promotions",
+									"disabled": true
+								},
+								{
+									"key": "position",
+									"value": "homepage_top",
+									"disabled": true
+								},
+								{
+									"key": "active",
+									"value": "false",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Update data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"image_url\": \"images/example.jpg\",\n    \"link\": \"/promotions\",\n    \"position\": \"homepage_top\",\n    \"active\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/banners/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"banners",
+								"11"
+							]
+						},
+						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/banners/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"banners",
+								"11"
+							]
+						},
+						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "Get data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NTMxNDgsImV4cCI6MTc1NjY1Njc0OCwibmJmIjoxNzU2NjUzMTQ4LCJqdGkiOiJXY3hZaUNhUnRZeUFKR1Z2Iiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.EfL7mGksvZph3KPuBKxgDn26dynlGHc1Hvl2LHxcfSQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/cart",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart"
+							],
+							"query": [
+								{
+									"key": "active",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "position",
+									"value": "homepage_bottom",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+					},
+					"response": []
+				},
+				{
+					"name": "Add data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NTMxNDgsImV4cCI6MTc1NjY1Njc0OCwibmJmIjoxNzU2NjUzMTQ4LCJqdGkiOiJXY3hZaUNhUnRZeUFKR1Z2Iiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.EfL7mGksvZph3KPuBKxgDn26dynlGHc1Hvl2LHxcfSQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\n//   \"product_variant_id\": 5,\n//   \"quantity\": 2\n// }\n{\n  \"combo_id\": 1,\n  \"quantity\": 1\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items"
+							],
+							"query": [
+								{
+									"key": "image_url",
+									"value": "images/",
+									"disabled": true
+								},
+								{
+									"key": "link",
+									"value": "/promotions",
+									"disabled": true
+								},
+								{
+									"key": "position",
+									"value": "homepage_top",
+									"disabled": true
+								},
+								{
+									"key": "active",
+									"value": "false",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Update item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NTMxNDgsImV4cCI6MTc1NjY1Njc0OCwibmJmIjoxNzU2NjUzMTQ4LCJqdGkiOiJXY3hZaUNhUnRZeUFKR1Z2Iiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.EfL7mGksvZph3KPuBKxgDn26dynlGHc1Hvl2LHxcfSQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantity\": 5\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items/15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items",
+								"15"
+							]
+						},
+						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NTMxNDgsImV4cCI6MTc1NjY1Njc0OCwibmJmIjoxNzU2NjUzMTQ4LCJqdGkiOiJXY3hZaUNhUnRZeUFKR1Z2Iiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.EfL7mGksvZph3KPuBKxgDn26dynlGHc1Hvl2LHxcfSQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cart/items/15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"items",
+								"15"
+							]
+						},
+						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Clear item",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NTMxNDgsImV4cCI6MTc1NjY1Njc0OCwibmJmIjoxNzU2NjUzMTQ4LCJqdGkiOiJXY3hZaUNhUnRZeUFKR1Z2Iiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.EfL7mGksvZph3KPuBKxgDn26dynlGHc1Hvl2LHxcfSQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/cart/clear",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"clear"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Post data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"khanh\",\r\n  \"password\": \"123456\",\r\n  \"email\": \"khanh@example.com\",\r\n  \"full_name\": \"Khanh Pham\",\r\n  \"address\": \"123 Nguyễn Văn Cừ, Quận 5, TP.HCM\",\r\n  \"phone\": \"0987654321\",\r\n  \"role\": \"admin\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Medium\",\r\n    \"diameter\": 25\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/13",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"admin12\",\r\n  \"password\": \"123456\",\r\n  \"email\": \"admin12@example.com\",\r\n  \"full_name\": \"Admin User\",\r\n  \"address\": \"HCM\",\r\n  \"phone\": \"0901234567\",\r\n  \"role\": \"admin\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch data",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"admin13\",\r\n  \"email\": \"admin13@example.com\",\r\n  \"full_name\": \"Admin Updated\",\r\n  \"address\": \"HCM\",\r\n  \"phone\": \"0987654321\",\r\n  \"role\": \"admin\",\r\n  \"password\": \"12345678\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/13",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NTI2ODUsImV4cCI6MTc1NjY1NjI4NSwibmJmIjoxNzU2NjUyNjg1LCJqdGkiOiJpNnVkVWZ3TzVLYW1YYjRlIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.ONso9v8bnvc7E104Z5BFKOnQi3Yvp9_Xuu3Tue_HAx4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"admin1\",\r\n  \"password\": \"123456\",\r\n  \"email\": \"admin1@example.com\",\r\n  \"full_name\": \"Admin User\",\r\n  \"address\": \"HCM\",\r\n  \"phone\": \"0901234567\",\r\n  \"role\": \"admin\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"khanhpham@example.com\",\r\n  \"password\": \"123456\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NTI5MjcsImV4cCI6MTc1NjY1NjUyNywibmJmIjoxNzU2NjUyOTI3LCJqdGkiOiJEbXdMekVuNG0xVEt6OGJkIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.mp3q0CjwolVonZLAcvIX2vvC6LRX7PGZ77rTD9RQxwg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NTI5MjcsImV4cCI6MTc1NjY1NjUyNywibmJmIjoxNzU2NjUyOTI3LCJqdGkiOiJEbXdMekVuNG0xVEt6OGJkIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.mp3q0CjwolVonZLAcvIX2vvC6LRX7PGZ77rTD9RQxwg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "Get data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/categories/20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"20"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Pizza\",\r\n    \"description\": \"Các loại pizza ngon\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update data",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Pizza Updated1\",\r\n    \"description\": \"Mô tả cập nhật cho pizza\"\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/categories/5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Pizza\",\r\n    \"description\": \"Các loại pizza ngon\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/categories/5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Combo",
+			"item": [
+				{
+					"name": "Get data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/combos",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"combos"
+							],
+							"query": [
+								{
+									"key": "active",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "current",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/combos/6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"combos",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Combo Pizza Thập Cẩm\",\r\n  \"description\": \"Combo 2 pizza + 2 nước ngọt\",\r\n  \"price\": 250000,\r\n  \"image_url\": \"https://example.com/combo.jpg\",\r\n  \"start_date\": \"2025-09-01\",\r\n  \"end_date\": \"2025-09-30\",\r\n  \"is_active\": true,\r\n  \"items\": [\r\n    {\"product_variant_id\": 1, \"quantity\": 1},\r\n    {\"product_variant_id\": 2, \"quantity\": 2}\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/combos",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"combos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put data",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Combo Pizza Thập Cẩm Updated\",\r\n  \"description\": \"Combo 2 pizza + 2 nước ngọt (update)\",\r\n  \"price\": 300000,\r\n  \"image_url\": \"https://example.com/combo-updated.jpg\",\r\n  \"start_date\": \"2025-09-01\",\r\n  \"end_date\": \"2025-10-15\",\r\n  \"is_active\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/combos/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"combos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/combos/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"combos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Active",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Combo Pizza Thập Cẩm\",\r\n  \"description\": \"Combo 2 pizza + 2 nước ngọt\",\r\n  \"price\": 250000,\r\n  \"image_url\": \"https://example.com/combo.jpg\",\r\n  \"start_date\": \"2025-09-01\",\r\n  \"end_date\": \"2025-09-30\",\r\n  \"is_active\": true,\r\n  \"items\": [\r\n    {\"product_variant_id\": 1, \"quantity\": 1},\r\n    {\"product_variant_id\": 2, \"quantity\": 2}\r\n  ]\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/combos/active",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"combos",
+								"active"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ComboItem",
+			"item": [
+				{
+					"name": "Get data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/combo-items/13",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"combo-items",
+								"13"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put data",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"quantity\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/combo-items/14",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"combo-items",
+								"14"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/combo-items/5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"combo-items",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contact",
+			"item": [
+				{
+					"name": "Get data",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/contacts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"contacts"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "Lê Văn A",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2MTQwODQsImV4cCI6MTc1NjYxNzY4NCwibmJmIjoxNzU2NjE0MDg0LCJqdGkiOiJEdWhjcmVJbXl2VHBKS2RMIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.2nOykd_V14ounG8Tbrt1nmAed3KSr3G_cLGGiha1v94",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"nguyenvana@example.com\",\r\n    \"email\": \"nguyenvana@example.com\",\r\n    \"message\": \"Tôi muốn hỏi về sản phẩm.\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/contacts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2MTQwODQsImV4cCI6MTc1NjYxNzY4NCwibmJmIjoxNzU2NjE0MDg0LCJqdGkiOiJEdWhjcmVJbXl2VHBKS2RMIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.2nOykd_V14ounG8Tbrt1nmAed3KSr3G_cLGGiha1v94",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"nguyenvana@example.com\",\r\n    \"email\": \"nguyenvana@example.com\",\r\n    \"message\": \"Tôi muốn hỏi về sản phẩm.\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/contacts/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"contacts",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2MTQwODQsImV4cCI6MTc1NjYxNzY4NCwibmJmIjoxNzU2NjE0MDg0LCJqdGkiOiJEdWhjcmVJbXl2VHBKS2RMIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.2nOykd_V14ounG8Tbrt1nmAed3KSr3G_cLGGiha1v94",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"nguyenvana@example.com\",\r\n    \"email\": \"nguyenvana@example.com\",\r\n    \"message\": \"Tôi muốn hỏi về sản phẩm.\"\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/contacts/10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"contacts",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Counpon",
+			"item": [
+				{
+					"name": "Get data",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/coupons",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"coupons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/coupons/10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"coupons",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\": \"SUMMER2025s\",\r\n    \"discount_percentage\": 10,\r\n    \"expiry_date\": \"2025-12-31\",\r\n    \"min_order_amount\": 100000,\r\n    \"max_discount_amount\": 50000,\r\n    \"is_active\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/coupons",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"coupons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put data",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\": \"1\",\r\n    \"discount_amount\": 10000000,\r\n    \"expiry_date\": \"2025-12-31\",\r\n    \"min_order_amount\": 150000,\r\n    \"max_discount_amount\": 60000,\r\n    \"is_active\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/coupons/6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"coupons",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\": \"SUMMER2025\",\r\n    \"discount_percentage\": 20,\r\n    \"expiry_date\": \"2025-12-31\",\r\n    \"min_order_amount\": 150000,\r\n    \"max_discount_amount\": 60000,\r\n    \"is_active\": true\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/coupons/6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"coupons",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\": \"NEWUSER\",\r\n    \"order_amount\": 2000000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/coupons/validate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"coupons",
+								"validate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Crust",
+			"item": [
+				{
+					"name": "Get data",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\": \"FLASH25\",\r\n    \"order_amount\": 200000\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/crusts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"crusts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/crusts/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"crusts",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Thin Crust\",\r\n    \"description\": \"Vỏ mỏng, giòn\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/crusts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"crusts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put data",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Thick Crust\",\r\n    \"description\": \"Vỏ dày, mềm\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/crusts/12",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"crusts",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Thin Crust\",\r\n    \"description\": \"Vỏ mỏng, giòn\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/crusts/12",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"crusts",
+								"12"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Faq",
+			"item": [
+				{
+					"name": "Get data",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"question\": \"Làm sao để hủy đơn hàng?\",\r\n    \"answer\": \"Bạn có thể hủy đơn trong mục Đơn hàng của tài khoản.\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/faqs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"faqs"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "pizza",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/faqs/14",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"faqs",
+								"14"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"question\": \"Làm sao để đặt pizza?\",\r\n    \"answer\": \"Bạn có thể đặt trực tiếp qua website hoặc app.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/faqs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"faqs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put data",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"question\": \"Làm sao để đặt pizza online?\",\r\n    \"answer\": \"Bạn có thể đặt trực tiếp qua website hoặc app.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/faqs/14",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"faqs",
+								"14"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"question\": \"Làm sao để đặt pizza online?\",\r\n    \"answer\": \"Bạn có thể đặt trực tiếp qua website hoặc app.\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/faqs/15",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"faqs",
+								"15"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "News",
+			"item": [
+				{
+					"name": "Get data",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"question\": \"Làm sao để đặt pizza?\",\r\n    \"answer\": \"Bạn có thể đặt trực tiếp qua website hoặc app.\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/news",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"news"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "tiramisu",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Latest",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/news/latest/3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"news",
+								"latest",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/news/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"news",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Tin tức mới về pizza\",\r\n    \"content\": \"Hôm nay pizza shop mở chi nhánh mới...\",\r\n    \"image_url\": \"http://example.com/image.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/news/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"news",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put data",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Tin tức cập nhật về pizza\",\r\n    \"content\": \"Thông tin mới nhất hôm nay...\",\r\n    \"image_url\": \"http://example.com/new-image.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/news/12",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"news",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/news/12",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"news",
+								"12"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Get data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2MzMyODIsImV4cCI6MTc1NjYzNjg4MiwibmJmIjoxNzU2NjMzMjgyLCJqdGkiOiJDUVZOd1VhQ1FVQWh1RGNlIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.LBQIDrYPSHYsudER_BpXyl8xOjRMP6y_oHrR4ecmsvc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"shipping_address\": \"123 Đường ABC, Quận 1, TP.HCM\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/orders/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"status\": \"pending\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/orders/11/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"11",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2MzM1OTIsImV4cCI6MTc1NjYzNzE5MiwibmJmIjoxNzU2NjMzNTkyLCJqdGkiOiIxeUo5V3paVFhWaEZvcE44Iiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.G6EGXLPR2CHOT7bEescKl5oo3ud28jyNzI_FY6qYEkc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/orders/11/cancel",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"11",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "OrderItem",
+			"item": [
+				{
+					"name": "Get data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order-items",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order-items"
+							],
+							"query": [
+								{
+									"key": "order_id",
+									"value": "11",
+									"disabled": true
+								},
+								{
+									"key": "product_id",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "combo_id",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"order_id\": 11,\r\n    \"product_variant_id\": 2, // hoặc combo_id\r\n    \"combo_id\": null,\r\n    \"quantity\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/order-items",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order-items"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order-items/12",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order-items",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"quantity\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/order-items/12",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order-items",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"order_id\": 11,\r\n    \"product_variant_id\": 2, // hoặc combo_id\r\n    \"combo_id\": null,\r\n    \"quantity\": 3\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/order-items/12",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order-items",
+								"12"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "By order",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"order_id\": 11,\r\n    \"product_variant_id\": 2, // hoặc combo_id\r\n    \"combo_id\": null,\r\n    \"quantity\": 3\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/order-items/by-order/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order-items",
+								"by-order",
+								"11"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Best seller products",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"order_id\": 11,\r\n    \"product_variant_id\": 2, // hoặc combo_id\r\n    \"combo_id\": null,\r\n    \"quantity\": 3\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/order-items/stats/best-selling-products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order-items",
+								"stats",
+								"best-selling-products"
+							],
+							"query": [
+								{
+									"key": "days",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Best seller combos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/order-items/stats/best-selling-combos",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"order-items",
+								"stats",
+								"best-selling-combos"
+							],
+							"query": [
+								{
+									"key": "days",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "Get data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NDE0NjgsImV4cCI6MTc1NjY0NTA2OCwibmJmIjoxNzU2NjQxNDY4LCJqdGkiOiJLVTRLN2VxUHBIT3c0Q0VZIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.FupROHeH0VUn_uIg8pzeiK9biG_13_In2NgyIKTI6wI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/payments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"payments"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "method",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "order_id",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NDE0NjgsImV4cCI6MTc1NjY0NTA2OCwibmJmIjoxNzU2NjQxNDY4LCJqdGkiOiJLVTRLN2VxUHBIT3c0Q0VZIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.FupROHeH0VUn_uIg8pzeiK9biG_13_In2NgyIKTI6wI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/payments/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"order_id\": 11,\r\n    \"amount\": 50000,\r\n    \"method\": \"cash\",\r\n    \"transaction_id\": \"TX12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/payments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"completed\",\r\n    \"transaction_id\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/payments/11/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"11",
+								"status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Get data",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"order_id\": 11,\r\n    \"amount\": 50000,\r\n    \"method\": \"cash\",\r\n    \"transaction_id\": \"TX12345\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "pizza",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2Mzc2ODQsImV4cCI6MTc1NjY0MTI4NCwibmJmIjoxNzU2NjM3Njg0LCJqdGkiOiJZWXpwbDNFQUd4ejRqaE5CIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.RdSBDaPS-0qP08nZYLO_B8HUws6QiEnsHhF9WdORrzk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"order_id\": 11,\r\n    \"amount\": 50000,\r\n    \"method\": \"cash\",\r\n    \"transaction_id\": \"TX12345\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/products/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"11"
+							],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "pizza",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Pizza Margherita\",\r\n  \"description\": \"Classic Italian pizza\",\r\n  \"image_url\": \"https://example.com/pizza.jpg\",\r\n  \"category_id\": 1,\r\n  \"variants\": [\r\n    {\r\n      \"size_id\": 1,\r\n      \"crust_id\": 1,\r\n      \"price\": 120000,\r\n      \"stock\": 10\r\n    },\r\n    {\r\n      \"size_id\": 2,\r\n      \"crust_id\": 1,\r\n      \"price\": 150000,\r\n      \"stock\": 5\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put data",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Pizza Margherita XL\",\r\n  \"description\": \"Updated description\",\r\n  \"image_url\": \"https://example.com/pizza-xl.jpg\",\r\n  \"category_id\": 1\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/products/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Pizza Margherita\",\r\n  \"description\": \"Classic Italian pizza\",\r\n  \"image_url\": \"https://example.com/pizza.jpg\",\r\n  \"category_id\": 1,\r\n  \"variants\": [\r\n    {\r\n      \"size_id\": 1,\r\n      \"crust_id\": 1,\r\n      \"price\": 120000,\r\n      \"stock\": 10\r\n    },\r\n    {\r\n      \"size_id\": 2,\r\n      \"crust_id\": 1,\r\n      \"price\": 150000,\r\n      \"stock\": 5\r\n    }\r\n  ]\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/products/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Featured",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Pizza Margherita\",\r\n  \"description\": \"Classic Italian pizza\",\r\n  \"image_url\": \"https://example.com/pizza.jpg\",\r\n  \"category_id\": 1,\r\n  \"variants\": [\r\n    {\r\n      \"size_id\": 1,\r\n      \"crust_id\": 1,\r\n      \"price\": 120000,\r\n      \"stock\": 10\r\n    },\r\n    {\r\n      \"size_id\": 2,\r\n      \"crust_id\": 1,\r\n      \"price\": 150000,\r\n      \"stock\": 5\r\n    }\r\n  ]\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/products/featured",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"featured"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product variant",
+			"item": [
+				{
+					"name": "Get data",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Pizza Margherita\",\r\n  \"description\": \"Classic Italian pizza\",\r\n  \"image_url\": \"https://example.com/pizza.jpg\",\r\n  \"category_id\": 1,\r\n  \"variants\": [\r\n    {\r\n      \"size_id\": 1,\r\n      \"crust_id\": 1,\r\n      \"price\": 120000,\r\n      \"stock\": 10\r\n    },\r\n    {\r\n      \"size_id\": 2,\r\n      \"crust_id\": 1,\r\n      \"price\": 150000,\r\n      \"stock\": 5\r\n    }\r\n  ]\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/product-variants",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product-variants"
+							],
+							"query": [
+								{
+									"key": "product_id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Pizza Margherita\",\r\n  \"description\": \"Classic Italian pizza\",\r\n  \"image_url\": \"https://example.com/pizza.jpg\",\r\n  \"category_id\": 1,\r\n  \"variants\": [\r\n    {\r\n      \"size_id\": 1,\r\n      \"crust_id\": 1,\r\n      \"price\": 120000,\r\n      \"stock\": 10\r\n    },\r\n    {\r\n      \"size_id\": 2,\r\n      \"crust_id\": 1,\r\n      \"price\": 150000,\r\n      \"stock\": 5\r\n    }\r\n  ]\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/product-variants/14",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product-variants",
+								"14"
+							],
+							"query": [
+								{
+									"key": "product_id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"product_id\": 1,\r\n  \"size_id\": 1,\r\n  \"crust_id\": 1,\r\n  \"price\": 120000,\r\n  \"stock\": 10\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/product-variants",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product-variants"
+							],
+							"query": [
+								{
+									"key": "product_id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put data",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"price\": 130000,\r\n  \"stock\": 8\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/product-variants/14",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product-variants",
+								"14"
+							],
+							"query": [
+								{
+									"key": "product_id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"product_id\": 1,\r\n  \"size_id\": 1,\r\n  \"crust_id\": 1,\r\n  \"price\": 120000,\r\n  \"stock\": 10\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/product-variants/14",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"product-variants",
+								"14"
+							],
+							"query": [
+								{
+									"key": "product_id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Review",
+			"item": [
+				{
+					"name": "Get data",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NDM3NzcsImV4cCI6MTc1NjY0NzM3NywibmJmIjoxNzU2NjQzNzc3LCJqdGkiOiJjTUNneDhpSXZscUxzYjduIiwic3ViIjoiMTIiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaEBleGFtcGxlLmNvbSJ9.INAY5H5xlh7CQSayAaGrhFGo5Awq8bimV-iRfLBuxgY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"product_id\": 1,\r\n  \"size_id\": 1,\r\n  \"crust_id\": 1,\r\n  \"price\": 120000,\r\n  \"stock\": 10\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reviews",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "product_id",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "combo_id",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "rating",
+									"value": "4",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NDM4MjUsImV4cCI6MTc1NjY0NzQyNSwibmJmIjoxNzU2NjQzODI1LCJqdGkiOiJOZnIzUWszUXNVTTFVTjZ5Iiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.QDRvR0sf_Qr2gxRX9D8Yk-IVHOucXizZNwoXvx3pdOI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"product_id\": 1,\r\n  \"size_id\": 1,\r\n  \"crust_id\": 1,\r\n  \"price\": 120000,\r\n  \"stock\": 10\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reviews/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reviews",
+								"1"
+							],
+							"query": [
+								{
+									"key": "product_id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NDE0NjgsImV4cCI6MTc1NjY0NTA2OCwibmJmIjoxNzU2NjQxNDY4LCJqdGkiOiJLVTRLN2VxUHBIT3c0Q0VZIiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.FupROHeH0VUn_uIg8pzeiK9biG_13_In2NgyIKTI6wI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"product_id\": 1,\r\n  \"rating\": 5,\r\n  \"comment\": \"Great product!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reviews",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NDM4MjUsImV4cCI6MTc1NjY0NzQyNSwibmJmIjoxNzU2NjQzODI1LCJqdGkiOiJOZnIzUWszUXNVTTFVTjZ5Iiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.QDRvR0sf_Qr2gxRX9D8Yk-IVHOucXizZNwoXvx3pdOI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"rating\": 4,\r\n  \"comment\": \"Updated comment\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reviews/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reviews",
+								"11"
+							],
+							"query": [
+								{
+									"key": "product_id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"product_id\": 1,\r\n  \"size_id\": 1,\r\n  \"crust_id\": 1,\r\n  \"price\": 120000,\r\n  \"stock\": 10\r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/reviews/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"reviews",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Size",
+			"item": [
+				{
+					"name": "Get data",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NDM4MjUsImV4cCI6MTc1NjY0NzQyNSwibmJmIjoxNzU2NjQzODI1LCJqdGkiOiJOZnIzUWszUXNVTTFVTjZ5Iiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.QDRvR0sf_Qr2gxRX9D8Yk-IVHOucXizZNwoXvx3pdOI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"rating\": 4,\r\n  \"comment\": \"Updated comment\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sizes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sizes"
+							],
+							"query": [
+								{
+									"key": "product_id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sizes/12",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sizes",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Medium\",\r\n    \"diameter\": 25\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sizes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sizes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Put data",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Large\",\r\n    \"diameter\": 30\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sizes/12",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sizes",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Medium\",\r\n    \"diameter\": 25\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sizes/12",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sizes",
+								"12"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000"
+		}
+	]
+}
