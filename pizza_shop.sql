@@ -89,47 +89,47 @@ CREATE TABLE product_variants (
 );
 
 -- Trigger để kiểm tra size_id và crust_id trong product_variants
-DELIMITER //
-CREATE TRIGGER before_product_variants_insert
-BEFORE INSERT ON product_variants
-FOR EACH ROW
-BEGIN
-    DECLARE product_category INT;
-    SELECT category_id INTO product_category FROM products WHERE id = NEW.product_id;
-    
-    IF product_category IN (1, 2, 3, 4, 5, 6) THEN
-        IF NEW.size_id IS NULL OR NEW.crust_id IS NULL THEN
-            SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Pizza products must have size_id and crust_id';
-        END IF;
-    ELSEIF product_category IN (7, 8, 9, 10) THEN
-        IF NEW.size_id IS NOT NULL OR NEW.crust_id IS NOT NULL THEN
-            SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Non-pizza products must not have size_id or crust_id';
-        END IF;
-    END IF;
-END//
+-- DELIMITER //
+-- CREATE TRIGGER before_product_variants_insert
+-- BEFORE INSERT ON product_variants
+-- FOR EACH ROW
+-- BEGIN
+--     DECLARE product_category INT;
+--     SELECT category_id INTO product_category FROM products WHERE id = NEW.product_id;
+--     
+--     IF product_category IN (1, 2, 3, 4, 5, 6) THEN
+--         IF NEW.size_id IS NULL OR NEW.crust_id IS NULL THEN
+--             SIGNAL SQLSTATE '45000'
+--             SET MESSAGE_TEXT = 'Pizza products must have size_id and crust_id';
+--         END IF;
+--     ELSEIF product_category IN (7, 8, 9, 10) THEN
+--         IF NEW.size_id IS NOT NULL OR NEW.crust_id IS NOT NULL THEN
+--             SIGNAL SQLSTATE '45000'
+--             SET MESSAGE_TEXT = 'Non-pizza products must not have size_id or crust_id';
+--         END IF;
+--     END IF;
+-- END//
 
-CREATE TRIGGER before_product_variants_update
-BEFORE UPDATE ON product_variants
-FOR EACH ROW
-BEGIN
-    DECLARE product_category INT;
-    SELECT category_id INTO product_category FROM products WHERE id = NEW.product_id;
-    
-    IF product_category IN (1, 2, 3, 4, 5, 6) THEN
-        IF NEW.size_id IS NULL OR NEW.crust_id IS NULL THEN
-            SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Pizza products must have size_id and crust_id';
-        END IF;
-    ELSEIF product_category IN (7, 8, 9, 10) THEN
-        IF NEW.size_id IS NOT NULL OR NEW.crust_id IS NOT NULL THEN
-            SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Non-pizza products must not have size_id or crust_id';
-        END IF;
-    END IF;
-END//
-DELIMITER ;
+-- CREATE TRIGGER before_product_variants_update
+-- BEFORE UPDATE ON product_variants
+-- FOR EACH ROW
+-- BEGIN
+--     DECLARE product_category INT;
+--     SELECT category_id INTO product_category FROM products WHERE id = NEW.product_id;
+--     
+--     IF product_category IN (1, 2, 3, 4, 5, 6) THEN
+--         IF NEW.size_id IS NULL OR NEW.crust_id IS NULL THEN
+--             SIGNAL SQLSTATE '45000'
+--             SET MESSAGE_TEXT = 'Pizza products must have size_id and crust_id';
+--         END IF;
+--     ELSEIF product_category IN (7, 8, 9, 10) THEN
+--         IF NEW.size_id IS NOT NULL OR NEW.crust_id IS NOT NULL THEN
+--             SIGNAL SQLSTATE '45000'
+--             SET MESSAGE_TEXT = 'Non-pizza products must not have size_id or crust_id';
+--         END IF;
+--     END IF;
+-- END//
+-- DELIMITER ;
 
 -- Bảng combos: Combo khuyến mãi
 CREATE TABLE combos (
