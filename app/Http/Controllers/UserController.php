@@ -201,7 +201,7 @@ class UserController extends Controller
             ], 15 * 60); // 15 phút
 
             // Đặt rate limit 5 phút
-            Cache::put($rateLimitKey, true, 5 * 60);
+            Cache::put($rateLimitKey, true, 1);
 
             // Gửi email
             $resetUrl = url('/reset-password?email=' . urlencode($email) . '&token=' . $token);
@@ -391,6 +391,302 @@ class UserController extends Controller
 
             return response()->json([
                 'message' => 'Không có yêu cầu đặt lại mật khẩu nào để hủy'
+            ], 404);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Có lỗi xảy ra',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Gửi email xác thực
+     */
+    public function sendVerificationEmail(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|email'
+            ]);
+
+            $email = $request->email;
+
+            // Kiểm tra user có tồn tại không
+            $user = User::where('email', $email)->first();
+            if (!$user) {
+                return response()->json([
+                    'error' => 'Email không tồn tại trong hệ thống'
+                ], 404);
+            }
+
+            // Kiểm tra giới hạn yêu cầu (chống spam)
+            $rateLimitKey = 'email_verification_rate_limit_' . $email;
+            if (Cache::has($rateLimitKey)) {
+                return response()->json([
+                    'error' => 'Bạn chỉ có thể gửi yêu cầu xác thực email mỗi 2 phút'
+                ], 429);
+            }
+
+            // Tạo token xác thực ngẫu nhiên
+            $token = Str::random(60);
+
+            // Lưu token vào cache với thời gian hết hạn 24 giờ
+            $cacheKey = 'email_verification_' . $email;
+            Cache::put($cacheKey, [
+                'token' => $token,
+                'email' => $email,
+                'user_id' => $user->id,
+                'created_at' => Carbon::now(),
+                'expires_at' => Carbon::now()->addHours(24)
+            ], 24 * 60 * 60); // 24 giờ
+
+            // Đặt rate limit 2 phút
+            Cache::put($rateLimitKey, true, 2 * 60);
+
+            // Gửi email xác thực
+            $verificationUrl = url('/verify-email?email=' . urlencode($email) . '&token=' . $token);
+
+            Mail::send('emails.email-verification', [
+                'user' => $user,
+                'verificationUrl' => $verificationUrl,
+                'token' => $token
+            ], function ($message) use ($user) {
+                $message->to($user->email, $user->full_name ?: $user->username)
+                    ->subject('Xác thực địa chỉ email');
+            });
+
+            return response()->json([
+                'message' => 'Email xác thực đã được gửi thành công',
+                'expires_in' => '24 giờ'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Không thể gửi email xác thực',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Xác thực email với token (chỉ xác thực trong cache, không lưu vào database)
+     */
+    public function verifyEmail(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|email',
+                'token' => 'required|string'
+            ]);
+
+            $email = $request->email;
+            $token = $request->token;
+
+            // Lấy thông tin từ cache
+            $cacheKey = 'email_verification_' . $email;
+            $verificationData = Cache::get($cacheKey);
+
+            if (!$verificationData) {
+                return response()->json([
+                    'error' => 'Token xác thực không hợp lệ hoặc đã hết hạn'
+                ], 400);
+            }
+
+            // Kiểm tra token
+            if ($verificationData['token'] !== $token) {
+                return response()->json([
+                    'error' => 'Token xác thực không đúng'
+                ], 400);
+            }
+
+            // Kiểm tra thời gian hết hạn
+            if (Carbon::now()->greaterThan($verificationData['expires_at'])) {
+                Cache::forget($cacheKey);
+                return response()->json([
+                    'error' => 'Token xác thực đã hết hạn'
+                ], 400);
+            }
+
+            // Tìm user
+            $user = User::where('email', $email)->first();
+            if (!$user) {
+                Cache::forget($cacheKey);
+                return response()->json([
+                    'error' => 'Không tìm thấy người dùng'
+                ], 404);
+            }
+
+            // Đánh dấu email đã được xác thực trong cache (dùng cho login)
+            $verifiedKey = 'email_verified_' . $email;
+            Cache::put($verifiedKey, [
+                'email' => $email,
+                'user_id' => $user->id,
+                'verified_at' => Carbon::now(),
+                'verified' => true
+            ], 7 * 24 * 60 * 60); // Lưu trong 7 ngày
+
+            // Xóa token verification khỏi cache
+            Cache::forget($cacheKey);
+
+            return response()->json([
+                'message' => 'Email đã được xác thực thành công',
+                'verified_at' => Carbon::now()->toISOString(),
+                'can_login' => true
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Có lỗi xảy ra khi xác thực email',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Kiểm tra trạng thái xác thực email (từ cache)
+     */
+    public function checkVerificationStatus(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|email'
+            ]);
+
+            $email = $request->email;
+            $user = User::where('email', $email)->first();
+
+            if (!$user) {
+                return response()->json([
+                    'error' => 'Email không tồn tại trong hệ thống'
+                ], 404);
+            }
+
+            // Kiểm tra trong cache xem email đã được verify chưa
+            $verifiedKey = 'email_verified_' . $email;
+            $verificationData = Cache::get($verifiedKey);
+
+            $isVerified = !is_null($verificationData);
+
+            return response()->json([
+                'email' => $email,
+                'is_verified' => $isVerified,
+                'verified_at' => $isVerified ? $verificationData['verified_at']->toISOString() : null,
+                'username' => $user->username,
+                'full_name' => $user->full_name,
+                'can_login' => $isVerified
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Có lỗi xảy ra khi kiểm tra trạng thái xác thực',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Kiểm tra email có được verify chưa (dùng cho login)
+     */
+    public function isEmailVerified($email)
+    {
+        $verifiedKey = 'email_verified_' . $email;
+        return Cache::has($verifiedKey);
+    }
+
+    /**
+     * Gửi lại email xác thực cho user hiện tại (authenticated user)
+     */
+    public function resendVerificationEmail()
+    {
+        try {
+            $user = Auth::user();
+
+            if (!$user) {
+                return response()->json([
+                    'error' => 'Bạn cần đăng nhập để thực hiện chức năng này'
+                ], 401);
+            }
+
+            // Kiểm tra email đã được xác thực chưa
+            if ($this->isEmailVerified($user->email)) {
+                return response()->json([
+                    'error' => 'Email của bạn đã được xác thực trước đó'
+                ], 400);
+            }
+
+            // Kiểm tra giới hạn yêu cầu (chống spam)
+            $rateLimitKey = 'email_verification_rate_limit_' . $user->email;
+            if (Cache::has($rateLimitKey)) {
+                return response()->json([
+                    'error' => 'Bạn chỉ có thể gửi yêu cầu xác thực email mỗi 2 phút'
+                ], 429);
+            }
+
+            // Tạo token xác thực ngẫu nhiên
+            $token = Str::random(60);
+
+            // Lưu token vào cache với thời gian hết hạn 24 giờ
+            $cacheKey = 'email_verification_' . $user->email;
+            Cache::put($cacheKey, [
+                'token' => $token,
+                'email' => $user->email,
+                'user_id' => $user->id,
+                'created_at' => Carbon::now(),
+                'expires_at' => Carbon::now()->addHours(24)
+            ], 24 * 60 * 60); // 24 giờ
+
+            // Đặt rate limit 2 phút
+            Cache::put($rateLimitKey, true, 2 * 60);
+
+            // Gửi email xác thực
+            $verificationUrl = url('/verify-email?email=' . urlencode($user->email) . '&token=' . $token);
+
+            Mail::send('emails.email-verification', [
+                'user' => $user,
+                'verificationUrl' => $verificationUrl,
+                'token' => $token
+            ], function ($message) use ($user) {
+                $message->to($user->email, $user->full_name ?: $user->username)
+                    ->subject('Xác thực địa chỉ email');
+            });
+
+            return response()->json([
+                'message' => 'Email xác thực đã được gửi lại thành công',
+                'expires_in' => '24 giờ'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Không thể gửi lại email xác thực',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Hủy token xác thực email
+     */
+    public function cancelEmailVerification(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|email'
+            ]);
+
+            $email = $request->email;
+            $cacheKey = 'email_verification_' . $email;
+
+            if (Cache::has($cacheKey)) {
+                Cache::forget($cacheKey);
+                return response()->json([
+                    'message' => 'Yêu cầu xác thực email đã được hủy'
+                ]);
+            }
+
+            return response()->json([
+                'message' => 'Không có yêu cầu xác thực email nào để hủy'
             ], 404);
 
         } catch (\Exception $e) {

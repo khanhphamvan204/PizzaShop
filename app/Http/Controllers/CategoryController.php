@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Category;
@@ -29,10 +30,11 @@ class CategoryController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:100',
-                'description' => 'nullable|string'
+                'description' => 'nullable|string',
+                'url' => 'nullable|string|max:255'
             ]);
 
-            $category = Category::create($request->only(['name', 'description']));
+            $category = Category::create($request->only(['name', 'description', 'url']));
             return response()->json([
                 'success' => true,
                 'message' => 'Category created successfully',
@@ -79,11 +81,12 @@ class CategoryController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:100',
-                'description' => 'nullable|string'
+                'description' => 'nullable|string',
+                'url' => 'nullable|string|max:255'
             ]);
 
             $category = Category::findOrFail($id);
-            $category->update($request->only(['name', 'description']));
+            $category->update($request->only(['name', 'description', 'url']));
 
             return response()->json([
                 'success' => true,

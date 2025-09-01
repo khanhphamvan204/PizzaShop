@@ -264,3 +264,27 @@ Route::get('/reset-password', function (Request $request) {                // �
     $token = $request->query('token');
     return view('reset-password-form', compact('email', 'token'));
 });
+
+
+// Email Verification API Routes
+Route::prefix('email-verification')->group(function () {
+    // Gửi email xác thực
+    Route::post('/send', [UserController::class, 'sendVerificationEmail']);
+
+    // Xác thực email với token (API endpoint)
+    Route::post('/verify', [UserController::class, 'verifyEmail'])
+        ->name('api.verification.verify');
+
+    // Kiểm tra trạng thái xác thực
+    Route::get('/status', [UserController::class, 'checkVerificationStatus'])
+        ->name('api.verification.status');
+
+    // Gửi lại email xác thực (cho user đã đăng nhập)
+    Route::post('/resend', [UserController::class, 'resendVerificationEmail'])
+        ->middleware('auth:sanctum')
+        ->name('api.verification.resend');
+
+    // Hủy token xác thực
+    Route::post('/cancel', [UserController::class, 'cancelEmailVerification'])
+        ->name('api.verification.cancel');
+});

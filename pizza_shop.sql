@@ -21,6 +21,7 @@ CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description TEXT,
+    url VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -480,17 +481,17 @@ INSERT INTO users (username, password, email, full_name, address, phone, role) V
 ('khachhang8', '$2b$12$hash10...', 'khach8@example.com', 'Hoàng Thị H', '707 Đường Nguyễn Văn Cừ', '0980123456', 'customer');
 
 -- Dữ liệu mẫu cho bảng categories
-INSERT INTO categories (name, description) VALUES
-('Pizza Hải Sản', 'Pizza với các loại hải sản tươi ngon'),
-('Pizza Chay', 'Pizza dành cho người ăn chay'),
-('Pizza Thịt', 'Pizza với các loại thịt phong phú'),
-('Pizza Phô Mai', 'Pizza đậm vị phô mai'),
-('Pizza Truyền Thống', 'Pizza theo công thức cổ điển'),
-('Pizza Đặc Biệt', 'Pizza sáng tạo độc quyền'),
-('Nước Uống', 'Các loại nước giải khát'),
-('Món Tráng Miệng', 'Bánh ngọt và kem'),
-('Món Ăn Kèm', 'Khoai tây chiên, gà chiên, salad'),
-('Combo Khuyến Mãi', 'Combo giá ưu đãi');
+INSERT INTO categories (name, description, url) VALUES
+('Pizza Hải Sản', 'Pizza với các loại hải sản tươi ngon', '/categories/pizza-hai-san'),
+('Pizza Chay', 'Pizza dành cho người ăn chay', '/categories/pizza-chay'),
+('Pizza Thịt', 'Pizza với các loại thịt phong phú', '/categories/pizza-thit'),
+('Pizza Phô Mai', 'Pizza đậm vị phô mai', '/categories/pizza-pho-mai'),
+('Pizza Truyền Thống', 'Pizza theo công thức cổ điển', '/categories/pizza-truyen-thong'),
+('Pizza Đặc Biệt', 'Pizza sáng tạo độc quyền', '/categories/pizza-dac-biet'),
+('Nước Uống', 'Các loại nước giải khát', '/categories/nuoc-uong'),
+('Món Tráng Miệng', 'Bánh ngọt và kem', '/categories/mon-trang-mieng'),
+('Món Ăn Kèm', 'Khoai tây chiên, gà chiên, salad', '/categories/mon-an-kem'),
+('Combo Khuyến Mãi', 'Combo giá ưu đãi', '/categories/combo-khuyen-mai');
 
 -- Dữ liệu mẫu cho bảng coupons
 INSERT INTO coupons (code, discount_percentage, discount_amount, expiry_date, min_order_amount, max_discount_amount) VALUES
