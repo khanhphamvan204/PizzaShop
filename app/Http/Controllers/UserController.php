@@ -201,7 +201,7 @@ class UserController extends Controller
             ], 15 * 60); // 15 phút
 
             // Đặt rate limit 5 phút
-            Cache::put($rateLimitKey, true, 5);
+            Cache::put($rateLimitKey, true, 5 * 60);
 
             // Gửi email
             $resetUrl = url('/reset-password?email=' . urlencode($email) . '&token=' . $token);

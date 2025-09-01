@@ -527,7 +527,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"username\": \"khanh\",\r\n  \"password\": \"123456\",\r\n  \"email\": \"khanh@example.com\",\r\n  \"full_name\": \"Khanh Pham\",\r\n  \"address\": \"123 Nguyễn Văn Cừ, Quận 5, TP.HCM\",\r\n  \"phone\": \"0987654321\",\r\n  \"role\": \"admin\"\r\n}\r\n",
+							"raw": "{\r\n  \"username\": \"khadadas\",\r\n  \"password\": \"123456\",\r\n  \"email\": \"khanh322131@gmail.com\",\r\n  \"full_name\": \"Khanh Pham\",\r\n  \"address\": \"123 Nguyễn Văn Cừ, Quận 5, TP.HCM\",\r\n  \"phone\": \"0987654321\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -535,13 +535,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/user",
+							"raw": "{{base_url}}/api/users",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
-								"user"
+								"users"
 							]
 						}
 					},
@@ -3225,6 +3225,168 @@
 								"api",
 								"sizes",
 								"12"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reset password",
+			"item": [
+				{
+					"name": "Forgot",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTY2NTMxNDgsImV4cCI6MTc1NjY1Njc0OCwibmJmIjoxNzU2NjUzMTQ4LCJqdGkiOiJXY3hZaUNhUnRZeUFKR1Z2Iiwic3ViIjoiMTEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3IiwiZW1haWwiOiJraGFuaHBoYW1AZXhhbXBsZS5jb20ifQ.EfL7mGksvZph3KPuBKxgDn26dynlGHc1Hvl2LHxcfSQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"khanh@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/password/forgot",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"password",
+								"forgot"
+							],
+							"query": [
+								{
+									"key": "active",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "position",
+									"value": "homepage_bottom",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"khanh@gmail.com\",\r\n    \"token\": \"mqyJcnWTjFP7nVxd6mFigk6aMY7IKr8TRavuB7V0XI5kwikLvRB1v0wDJwdX\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/password/verify-token",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"password",
+								"verify-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"khanh@gmail.com\",\r\n    \"token\": \"mqyJcnWTjFP7nVxd6mFigk6aMY7IKr8TRavuB7V0XI5kwikLvRB1v0wDJwdX\",\r\n    \"password\": \"newpassword123\",\r\n    \"password_confirmation\": \"newpassword123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/password/reset",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"password",
+								"reset"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user@example.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/cancel-reset",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cancel-reset"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": null,
+									"disabled": true
+								}
 							]
 						}
 					},

@@ -945,6 +945,124 @@ GET    /api/contacts/{id}          # 🔍 Chi tiết liên hệ (admin)
 DELETE /api/contacts/{id}          # 🗑️ Xóa liên hệ (admin)
 ```
 
+## 🔒 **API Quên mật khẩu**
+
+```http
+POST   /api/password/forgot        # 📧 Gửi email đặt lại mật khẩu
+POST   /api/password/verify-token  # ✅ Xác thực token reset
+POST   /api/password/reset         # 🔑 Đặt lại mật khẩu mới
+POST   /api/password/cancel-reset  # ❌ Hủy yêu cầu reset
+GET    /reset-password             # 📝 Form đặt lại mật khẩu (Web)
+```
+
+### **Chi tiết API:**
+
+**1. Gửi email đặt lại mật khẩu**
+```http
+POST /api/password/forgot
+Content-Type: application/json
+
+{
+    "email": "user@example.com"
+}
+
+# Response Success (200)
+{
+    "message": "Password reset email sent successfully",
+    "expires_in": "15 phút"
+}
+
+# Response Error (404/429)
+{
+    "error": "Email does not exist"
+    // hoặc "You can only request a password reset once every 5 minutes"
+}
+```
+
+**2. Xác thực token reset**
+```http
+POST /api/password/verify-token
+Content-Type: application/json
+
+{
+    "email": "user@example.com",
+    "token": "QlrgjJUkSFuaoxIzjKLNwrGly81ppzvYiHox6qHk..."
+}
+
+# Response Success (200)
+{
+    "valid": true,
+    "email": "user@example.com",
+    "username": "john_doe",
+    "expires_at": "2025-09-01T10:15:00.000Z",
+    "time_remaining": "12 phút"
+}
+
+# Response Error (400)
+{
+    "valid": false,
+    "error": "Token không hợp lệ hoặc đã hết hạn"
+}
+```
+
+**3. Đặt lại mật khẩu**
+```http
+POST /api/password/reset
+Content-Type: application/json
+
+{
+    "email": "user@example.com",
+    "token": "QlrgjJUkSFuaoxIzjKLNwrGly81ppzvYiHox6qHk...",
+    "password": "newpassword123",
+    "password_confirmation": "newpassword123"
+}
+
+# Response Success (200)
+{
+    "message": "Mật khẩu đã được cập nhật thành công. Vui lòng đăng nhập lại với mật khẩu mới."
+}
+
+# Response Error (400)
+{
+    "error": "Token đã hết hạn"
+}
+```
+
+**4. Hủy yêu cầu reset**
+```http
+POST /api/password/cancel-reset
+Content-Type: application/json
+
+{
+    "email": "user@example.com"
+}
+
+# Response Success (200)
+{
+    "message": "Yêu cầu đặt lại mật khẩu đã được hủy"
+}
+```
+
+**5. Form đặt lại mật khẩu (Web Interface)**
+```http
+GET /reset-password?email=user@example.com&token=abc123
+# Hiển thị giao diện form để người dùng nhập mật khẩu mới
+```
+
+### **🔐 Bảo mật & Giới hạn:**
+- ⏱️ Token có hiệu lực **15 phút**
+- 🔄 Chỉ sử dụng **1 lần duy nhất**
+- 🚫 Rate limit: **1 lần/5 phút** mỗi email
+- 📧 Email template responsive với thiết kế Pizza Shop
+- 🛡️ Token được lưu trong cache, tự động xóa sau khi sử dụng
+
+### **📝 Flow hoạt động:**
+1. User nhập email → `POST /api/password/forgot`
+2. Nhận email với link reset → Click vào link
+3. Mở form → `GET /reset-password?email=...&token=...`
+4. Form tự động verify token → `POST /api/password/verify-token`
+5. User nhập mật khẩu mới → `POST /api/password/reset`
+
 ---
 
 ## 📝 **Chi tiết tham số và response**
