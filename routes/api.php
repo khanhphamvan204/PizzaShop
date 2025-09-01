@@ -20,6 +20,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SizeController;
+use App\Http\Controllers\EmailVerificationController;
 
 // =====================================
 // 🛒 CART ROUTES (Giỏ hàng)
@@ -266,25 +267,20 @@ Route::get('/reset-password', function (Request $request) {                // �
 });
 
 
-// Email Verification API Routes
-Route::prefix('email-verification')->group(function () {
-    // Gửi email xác thực
-    Route::post('/send', [UserController::class, 'sendVerificationEmail']);
+Route::prefix('verification')->group(function () {
+    // Xác thực email tồn tại (không kiểm tra User)
+    Route::post('/send-email-otp', [EmailVerificationController::class, 'sendEmailOTP']);
 
-    // Xác thực email với token (API endpoint)
-    Route::post('/verify', [UserController::class, 'verifyEmail'])
-        ->name('api.verification.verify');
+
+    // Xác thực OTP
+    Route::post('/verify-email-otp', [EmailVerificationController::class, 'verifyEmailOTP']);
+
+    // Gửi lại OTP
+    Route::post('/resend-email-otp', [EmailVerificationController::class, 'resendEmailOTP']);
+
+    // Hủy xác thực
+    Route::post('/cancel-email-verification', [EmailVerificationController::class, 'cancelEmailVerification']);
 
     // Kiểm tra trạng thái xác thực
-    Route::get('/status', [UserController::class, 'checkVerificationStatus'])
-        ->name('api.verification.status');
-
-    // Gửi lại email xác thực (cho user đã đăng nhập)
-    Route::post('/resend', [UserController::class, 'resendVerificationEmail'])
-        ->middleware('auth:sanctum')
-        ->name('api.verification.resend');
-
-    // Hủy token xác thực
-    Route::post('/cancel', [UserController::class, 'cancelEmailVerification'])
-        ->name('api.verification.cancel');
+    Route::post('/check-verification-status', [EmailVerificationController::class, 'checkVerificationStatus']);
 });
