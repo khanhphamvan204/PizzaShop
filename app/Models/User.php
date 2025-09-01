@@ -19,8 +19,8 @@ class User extends Authenticatable implements JWTSubject
         'phone',
         'role'
     ];
+    protected $hidden = ['created_at', 'updated_at', 'password'];
 
-    protected $hidden = ['password'];
 
     public function orders()
     {

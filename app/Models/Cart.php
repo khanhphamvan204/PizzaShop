@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cart extends Model
 {
     protected $fillable = ['user_id'];
-    public $timestamps = false;
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function user()
     {

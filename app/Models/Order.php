@@ -14,6 +14,7 @@ class Order extends Model
         'shipping_address',
         'coupon_id'
     ];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function user()
     {

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Review extends Model
 {
     protected $fillable = ['product_id', 'combo_id', 'user_id', 'rating', 'comment'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function product()
     {

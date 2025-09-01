@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class OrderItem extends Model
 {
     protected $fillable = ['order_id', 'product_variant_id', 'combo_id', 'quantity', 'price'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function order()
     {

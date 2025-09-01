@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Size extends Model
 {
     protected $fillable = ['name', 'diameter'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function variants()
     {

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
+use App\Http\Resources\ProductVariantResource;
 
 class ProductVariantController extends Controller
 {
@@ -17,6 +18,7 @@ class ProductVariantController extends Controller
 
             $variants = $query->get();
             return response()->json($variants);
+            // return ProductVariantResource::collection($variants);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Failed to fetch product variants',

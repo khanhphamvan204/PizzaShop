@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = ['name', 'description', 'image_url', 'category_id'];
+    protected $hidden = ['created_at', 'updated_at'];
+
 
     public function category()
     {

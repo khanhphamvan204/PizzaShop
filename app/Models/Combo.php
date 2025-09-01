@@ -16,6 +16,7 @@ class Combo extends Model
         'end_date',
         'is_active'
     ];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function items()
     {

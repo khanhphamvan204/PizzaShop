@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Contact extends Model
 {
     protected $fillable = ['user_id', 'name', 'email', 'message'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function user()
     {

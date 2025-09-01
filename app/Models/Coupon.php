@@ -16,6 +16,7 @@ class Coupon extends Model
         'max_discount_amount',
         'is_active'
     ];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function orders()
     {
