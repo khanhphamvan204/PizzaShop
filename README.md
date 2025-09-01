@@ -26,7 +26,7 @@
 - [💻 Công nghệ sử dụng](#-công-nghệ-sử-dụng)
 - [⚡ Quick Start](#-quick-start)
 - [🔧 API Reference](#-api-reference)
-- [🔒 Bảo mật](#-bảo mật)
+- [🔒 Bảo mật](#-bảo-mật)
 - [🎯 Roadmap](#-roadmap)
 - [🤝 Contributing](#-contributing)
 
@@ -58,6 +58,7 @@
 - ⭐ **Review system** 5 sao
 - 🎟️ **Mã giảm giá** thông minh
 - 📱 **Mobile-first design**
+- 🍱 **Combo deals** tiết kiệm
 
 </td>
 <td width="50%">
@@ -70,6 +71,7 @@
 - 🎨 **Content management** (banners, news)
 - 📈 **Analytics & Reports**
 - 🔧 **System settings**
+- 🎯 **Coupon management**
 
 </td>
 </tr>
@@ -115,6 +117,8 @@ graph LR
 | ⭐ Pizza Đặc Biệt | Sáng tạo độc quyền | Chef's special |
 | 🥤 Nước Uống | Giải khát đa dạng | Fresh drinks |
 | 🍰 Tráng Miệng | Bánh ngọt, kem | Sweet endings |
+| 🍟 Món Ăn Kèm | Khoai tây chiên, gà chiên | Side dishes |
+| 🎁 Combo Khuyến Mãi | Combo giá ưu đãi | Value packages |
 
 </div>
 
@@ -123,33 +127,31 @@ graph LR
 ```yaml
 Sizes:
   - 🔸 Mini (12cm): Perfect for kids
-  - 🔹 Nhỏ (20cm): Individual serving  
-  - 🔶 Vừa (25cm): For 2-3 people
-  - 🔷 Lớn (30cm): Family size
-  - 🟠 Siêu Lớn (40cm): Party size
+  - 🔹 Siêu Nhỏ (15cm): Light meal
+  - 🔸 Cỡ Nhỏ Đặc Biệt (18cm): Individual  
+  - 🔹 Nhỏ (20cm): Single serving
+  - 🔶 Cỡ Trung (22.5cm): For couples
+  - 🔷 Vừa (25cm): For 2-3 people
+  - 🔶 Lớn (30cm): Family size
+  - 🔷 Cỡ Lớn Đặc Biệt (32cm): Extra large
+  - 🟠 Cỡ Đại (35cm): Party size
+  - 🟡 Gia Đình (40cm): Super family
 
 Crusts:
   - 🥖 Đế Mỏng: Crispy & light
   - 🍞 Đế Dày: Soft & fluffy  
   - 🧀 Viền Phô Mai: Cheese-stuffed crust
   - 🌭 Đế Nhân Nhồi: Sausage-filled
-  - 🌿 Đế Thảo Mộc: Herbed crust
+  - 🔥 Đế Giòn: Extra crispy
+  - 🌿 Đế Nguyên Cám: Whole wheat healthy
+  - 🚫 Đế Không Gluten: Gluten-free option
+  - 🧄 Đế Hành Lá: Green onion flavored
+  - 🌶️ Đế Tiêu Đen: Black pepper crust
+  - 🌿 Đế Thảo Mộc: Italian herbs
 ```
 
 ---
 
-### 🛒 **3. Giỏ hàng thông minh**
-
-```mermaid
-flowchart TD
-    A[🛒 Add to Cart] --> B{👤 User Status}
-    B -->|Logged In| C[💾 Save to User Cart]
-    B -->|Guest| D[🍪 Save to Session]
-    C --> E[🔄 Sync Across Devices]
-    D --> F[⏰ Temporary Storage]
-    E --> G[💳 Checkout]
-    F --> G
-```
 
 **✨ Features:**
 - 🔄 **Auto-sync** cho user đăng nhập
@@ -157,25 +159,53 @@ flowchart TD
 - 🍪 **Session storage** cho guest
 - ⚡ **Real-time updates** khi thay đổi
 - 🧮 **Auto-calculate** tổng tiền, thuế, phí ship
+- 🍱 **Combo support** - có thể thêm cả sản phẩm lẻ và combo
 
 ---
 
-### 💳 **4. Hệ thống thanh toán**
+### 🍱 **4. Hệ thống Combo**
+
+```mermaid
+graph TB
+    A[🍱 Combos] --> B[📋 Combo Items]
+    B --> C[🍕 Product Variants]
+    C --> D[📏 Sizes]
+    C --> E[🥖 Crusts]
+    A --> F[💰 Special Pricing]
+    A --> G[📅 Time-limited]
+```
+
+**🎯 Combo Features:**
+- 🎁 **Bundle Products**: Kết hợp nhiều sản phẩm với giá ưu đãi
+- 📅 **Time-limited**: Có thời hạn bắt đầu và kết thúc
+- 💰 **Special Pricing**: Giá combo thấp hơn mua lẻ
+- 🔄 **Flexible Quantities**: Số lượng linh hoạt cho từng item
+- 📱 **Easy Management**: Admin dễ dàng tạo/chỉnh sửa combo
+
+---
+
+### 💳 **5. Hệ thống thanh toán**
 
 <div align="center">
 
 | 💳 **Phương thức** | 🏷️ **Phí** | ⏱️ **Xử lý** | 🔒 **Bảo mật** |
 |:---:|:---:|:---:|:---:|
-| 💵 COD | Miễn phí | Tức thì | ⭐⭐⭐ |
+| 💵 Cash (COD) | Miễn phí | Tức thì | ⭐⭐⭐ |
 | 💳 Credit Card | 2.9% | 1-3 phút | ⭐⭐⭐⭐⭐ |
 | 🏦 Bank Transfer | Miễn phí | 15-30 phút | ⭐⭐⭐⭐ |
 | 💙 PayPal | 3.4% | Tức thì | ⭐⭐⭐⭐⭐ |
 
 </div>
 
+**💡 Payment Features:**
+- 🛡️ **One Payment Rule**: Mỗi đơn hàng chỉ có 1 payment thành công
+- 🔄 **Status Tracking**: Pending → Completed/Failed
+- 🧾 **Transaction ID**: Lưu trữ mã giao dịch
+- 📊 **Payment Analytics**: Thống kê theo phương thức
+
 ---
 
-### 👤 **5. Quản lý tài khoản**
+### 👤 **6. Quản lý tài khoản**
 
 ```yaml
 Authentication:
@@ -187,7 +217,7 @@ Authentication:
 User Dashboard:
   📊 Overview: Order stats, points earned
   📦 Order History: Track all purchases  
-  ⭐ Reviews: Rate & comment products
+  ⭐ Reviews: Rate & comment products/combos
   🎟️ Coupons: Available vouchers
   📍 Addresses: Multiple delivery locations
   🔔 Notifications: Order updates, promotions
@@ -195,7 +225,7 @@ User Dashboard:
 
 ---
 
-### 🔧 **6. Admin Panel**
+### 🔧 **7. Admin Panel**
 
 <div align="center">
 
@@ -206,12 +236,14 @@ graph TB
     A --> D[🛍️ Orders] 
     A --> E[👥 Customers]
     A --> F[🎨 Content]
+    A --> G[🍱 Combos]
+    A --> H[🎟️ Coupons]
     
     B --> B1[💰 Revenue Charts]
     B --> B2[📈 Sales Trends]
     
     C --> C1[➕ Add Product]
-    C --> C2[✏️ Edit Product]
+    C --> C2[✏️ Edit Variants]
     C --> C3[📸 Image Upload]
     
     D --> D1[📋 Order List]
@@ -224,6 +256,12 @@ graph TB
     F --> F1[🎨 Banners]
     F --> F2[📰 News]
     F --> F3[❓ FAQ]
+    
+    G --> G1[🍱 Create Combo]
+    G --> G2[📋 Manage Items]
+    
+    H --> H1[🎟️ Create Coupon]
+    H --> H2[📊 Usage Stats]
 ```
 
 </div>
@@ -235,10 +273,12 @@ graph TB
 - 🔔 **Push Notifications** cho orders mới
 - 📊 **Advanced Analytics** với filters
 - 🎨 **WYSIWYG Editor** cho content
+- 🍱 **Combo Management** tạo và quản lý combo
+- 🎟️ **Smart Coupons** với điều kiện phức tạp
 
 ---
 
-### 🎟️ **7. Hệ thống khuyến mãi**
+### 🎟️ **8. Hệ thống khuyến mãi**
 
 <table>
 <tr>
@@ -247,15 +287,16 @@ graph TB
 #### 💯 **Percentage Discount**
 ```yaml
 Examples:
-  PIZZA10: 10% off
-  SUMMER20: 20% off  
-  FLASH25: 25% off
-  VIP15: 15% off
+  PIZZA10: 10% off (min 200k, max 50k)
+  SUMMER20: 20% off (min 300k, max 100k)
+  FLASH25: 25% off (min 500k, max 150k)
+  VIP15: 15% off (min 250k, max 75k)
 
-Conditions:
-  Min Order: 200k+
-  Valid Until: Set expiry
-  Usage Limit: Per user/total
+Features:
+  ✅ Min order amount
+  ✅ Max discount cap
+  ✅ Expiry date
+  ✅ Active/Inactive status
 ```
 
 </td>
@@ -264,32 +305,35 @@ Conditions:
 #### 💰 **Fixed Amount**
 ```yaml
 Examples:
-  FREESHIP: -30k shipping
-  NEWUSER: -50k first order
-  COMBO50: -50k combo deals
-  PIZZADAY: -20k special day
+  FREESHIP: -30k shipping (min 150k)
+  NEWUSER: -50k first order (min 100k)
+  COMBO50: -50k combo deals (min 400k)
+  PIZZADAY: -20k special day (min 150k)
 
 Benefits:
-  Easy to understand
-  Great for small orders
-  Shipping incentives
+  ✅ Easy to understand
+  ✅ Great for small orders
+  ✅ Shipping incentives
+  ✅ New customer attraction
 ```
 
 </td>
 <td width="34%">
 
-#### 🎁 **Special Offers**
+#### 🎁 **Smart Validation**
 ```yaml
-Examples:
-  BUY2GET1: Free pizza
-  LOYALTY: Points system
-  BIRTHDAY: Special discount
-  WEEKEND: Weekend deals
+Business Rules:
+  ⚡ Either percentage OR amount
+  ⚡ Not both at same time
+  ⚡ Auto-check minimum order
+  ⚡ Validate expiry date
+  ⚡ Usage tracking
 
-Features:
-  Auto-apply eligible
-  Stack with points
-  Member exclusive
+Database Constraints:
+  ✅ CHECK constraints
+  ✅ UNIQUE coupon codes
+  ✅ Proper data types
+  ✅ Audit timestamps
 ```
 
 </td>
@@ -307,6 +351,7 @@ erDiagram
     USERS ||--o{ ORDERS : places
     USERS ||--o{ CARTS : owns
     USERS ||--o{ REVIEWS : writes
+    USERS ||--o{ CONTACTS : submits
     
     PRODUCTS ||--o{ PRODUCT_VARIANTS : has
     PRODUCTS }|--|| CATEGORIES : belongs_to
@@ -317,11 +362,18 @@ erDiagram
     ORDERS ||--|| PAYMENTS : has
     
     CARTS ||--o{ CART_ITEMS : contains
-    CART_ITEMS }|--|| PRODUCT_VARIANTS : references
-    ORDER_ITEMS }|--|| PRODUCT_VARIANTS : references
+    CART_ITEMS }|--o| PRODUCT_VARIANTS : references
+    CART_ITEMS }|--o| COMBOS : references
+    ORDER_ITEMS }|--o| PRODUCT_VARIANTS : references
+    ORDER_ITEMS }|--o| COMBOS : references
     
     PRODUCT_VARIANTS }|--|| SIZES : has
     PRODUCT_VARIANTS }|--|| CRUSTS : has
+    
+    COMBOS ||--o{ COMBO_ITEMS : contains
+    COMBO_ITEMS }|--|| PRODUCT_VARIANTS : includes
+    
+    REVIEWS }|--o| COMBOS : rates
 ```
 
 ### 🗃️ **Core Tables**
@@ -331,10 +383,18 @@ erDiagram
 
 ```sql
 -- 👤 Users: Customer & Admin accounts
-users (id, username, password, email, full_name, address, phone, role, timestamps)
+users (
+  id, username, password, email, full_name, 
+  address, phone, role[customer|admin], 
+  created_at, updated_at
+)
 
--- 📞 Contacts: Customer inquiries  
-contacts (id, user_id, name, email, message, created_at)
+-- 📞 Contacts: Customer inquiries (flexible user/guest)
+contacts (
+  id, user_id?, name?, email, message, 
+  created_at, updated_at
+)
+-- Logic: user_id thì auto-fill name/email, guest thì required name/email
 ```
 </details>
 
@@ -342,20 +402,24 @@ contacts (id, user_id, name, email, message, created_at)
 <summary>🍕 <strong>Products & Catalog</strong></summary>
 
 ```sql
--- 🏷️ Categories: Product classification
-categories (id, name, description, created_at)
+-- 🏷️ Categories: 10 product types
+categories (id, name, description, created_at, updated_at)
 
--- 🍕 Products: Pizza and items
+-- 🍕 Products: Pizza and items  
 products (id, name, description, image_url, category_id, timestamps)
 
--- 📏 Sizes: Pizza dimensions  
-sizes (id, name, diameter, created_at)
+-- 📏 Sizes: 10 pizza dimensions
+sizes (id, name, diameter, created_at, updated_at)
 
--- 🥖 Crusts: Pizza base types
-crusts (id, name, description, created_at)
+-- 🥖 Crusts: 10 pizza base types
+crusts (id, name, description, created_at, updated_at)
 
--- 🎛️ Product Variants: Size + Crust + Price combinations
-product_variants (id, product_id, size_id, crust_id, price, stock, timestamps)
+-- 🎛️ Product Variants: Price combinations
+product_variants (
+  id, product_id, size_id?, crust_id?, 
+  price, stock, created_at, updated_at
+)
+-- Logic: Pizza cần size+crust, non-pizza thì NULL
 ```
 </details>
 
@@ -363,20 +427,56 @@ product_variants (id, product_id, size_id, crust_id, price, stock, timestamps)
 <summary>🛒 <strong>Shopping & Orders</strong></summary>
 
 ```sql
--- 🛒 Carts: Shopping baskets
-carts (id, user_id, session_id, created_at)
+-- 🛒 Carts: Shopping baskets (user-based)
+carts (id, user_id, created_at, updated_at)
 
--- 📦 Cart Items: Products in cart
-cart_items (id, cart_id, product_variant_id, quantity)
+-- 📦 Cart Items: Products OR combos in cart
+cart_items (
+  id, cart_id, product_variant_id?, combo_id?, 
+  quantity, created_at, updated_at
+)
+-- Logic: Either product_variant_id OR combo_id (XOR)
 
--- 🛍️ Orders: Purchase records
-orders (id, user_id, total_amount, status, shipping_address, coupon_id, created_at)
+-- 🛍️ Orders: Purchase records with auto-total
+orders (
+  id, user_id, total_amount[auto-calculated], 
+  status[pending|confirmed|shipped|delivered|cancelled], 
+  shipping_address, coupon_id?, created_at, updated_at
+)
 
--- 📋 Order Items: Products in order
-order_items (id, order_id, product_variant_id, quantity, price)
+-- 📋 Order Items: Products OR combos in order
+order_items (
+  id, order_id, product_variant_id?, combo_id?, 
+  quantity, price, created_at, updated_at
+)
+-- Logic: Either product_variant_id OR combo_id (XOR)
 
--- 💳 Payments: Transaction records
-payments (id, order_id, amount, method, status, transaction_id, created_at)
+-- 💳 Payments: One completed payment per order
+payments (
+  id, order_id, amount, 
+  method[cash|credit_card|bank_transfer|paypal], 
+  status[pending|completed|failed], 
+  transaction_id?, created_at, updated_at
+)
+```
+</details>
+
+<details>
+<summary>🍱 <strong>Combos & Bundles</strong></summary>
+
+```sql
+-- 🍱 Combos: Bundle deals with time limits
+combos (
+  id, name, description, price, image_url,
+  start_date?, end_date?, is_active, 
+  created_at, updated_at
+)
+
+-- 📋 Combo Items: Products included in combo
+combo_items (
+  id, combo_id, product_variant_id, 
+  quantity, created_at, updated_at
+)
 ```
 </details>
 
@@ -384,20 +484,34 @@ payments (id, order_id, amount, method, status, transaction_id, created_at)
 <summary>🎯 <strong>Marketing & Content</strong></summary>
 
 ```sql
--- 🎟️ Coupons: Discount codes
-coupons (id, code, discount_percentage, discount_amount, expiry_date, min_order_amount, created_at)
+-- 🎟️ Coupons: Smart discount system
+coupons (
+  id, code[unique], discount_percentage?, discount_amount?, 
+  expiry_date?, min_order_amount?, max_discount_amount?,
+  is_active, created_at, updated_at
+)
+-- Logic: Either percentage OR amount (XOR)
 
--- ⭐ Reviews: Product ratings
-reviews (id, product_id, user_id, rating, comment, created_at)
+-- ⭐ Reviews: Product OR combo ratings
+reviews (
+  id, product_id?, combo_id?, user_id, 
+  rating[1-5], comment?, created_at, updated_at
+)
+-- Logic: Either product_id OR combo_id (XOR)
+-- Unique: user can review each product/combo only once
 
--- 🎨 Banners: Promotional images
-banners (id, image_url, link, position, active, created_at)
+-- 🎨 Banners: Position-based ads
+banners (
+  id, image_url, link?, 
+  position[homepage_top|homepage_bottom|product_page], 
+  active, created_at, updated_at
+)
 
 -- 📰 News: Company updates
-news (id, title, content, image_url, created_at)
+news (id, title, content, image_url?, created_at, updated_at)
 
--- ❓ FAQ: Frequently asked questions
-faq (id, question, answer, created_at)
+-- ❓ FAQ: Customer support
+faq (id, question, answer, created_at, updated_at)
 ```
 </details>
 
@@ -408,17 +522,71 @@ faq (id, question, answer, created_at)
 | 📊 **Table** | 🔢 **Records** | 📝 **Description** |
 |:---:|:---:|:---|
 | 👥 Users | 10 | 8 customers + 2 admins |
-| 🏷️ Categories | 10 | Pizza types, drinks, desserts |
+| 🏷️ Categories | 10 | Pizza types, drinks, desserts, combos |
 | 🍕 Products | 10 | Various pizzas and items |
-| 📏 Sizes | 10 | From mini to family size |
-| 🥖 Crusts | 10 | Thin, thick, stuffed crusts |
+| 📏 Sizes | 10 | From mini (12cm) to family (40cm) |
+| 🥖 Crusts | 10 | Thin, thick, stuffed, specialty crusts |
+| 🎛️ Product Variants | 11 | Size+crust combinations with prices |
+| 🍱 Combos | 2 | Couple combo & Family combo |
+| 📋 Combo Items | 6 | Products included in combos |
 | 🎟️ Coupons | 10 | Percentage & fixed discounts |
 | 🛍️ Orders | 10 | Different statuses & customers |
+| 📦 Order Items | 11 | Mix of products and combos |
+| 💳 Payments | 10 | Various payment methods |
 | ⭐ Reviews | 10 | 1-5 star ratings with comments |
+| 🛒 Carts | 8 | Active customer carts |
 | 🎨 Banners | 10 | Homepage & product page ads |
 | 📰 News | 10 | Promotions & updates |
+| ❓ FAQ | 10 | Common questions & answers |
+| 📞 Contacts | 10 | Customer inquiries (mix users/guests) |
 
 </div>
+
+---
+
+### 🔧 **Advanced Database Features**
+
+#### 🛡️ **Triggers & Constraints**
+
+```sql
+-- ✅ Order Items Validation
+-- Đảm bảo order_items có EITHER product_variant_id OR combo_id (không cả hai, không thiếu)
+
+-- ✅ Cart Items Validation  
+-- Đảm bảo cart_items có EITHER product_variant_id OR combo_id
+
+-- ✅ Auto Total Calculation
+-- Tự động tính total_amount khi thêm/sửa/xóa order_items
+
+-- ✅ Payment Validation
+-- Mỗi order chỉ có thể có 1 payment với status 'completed'
+
+-- ✅ Contact Logic
+-- Nếu user_id có thì auto-fill name/email từ users table
+-- Nếu guest thì require name và email
+
+-- ✅ Coupon Validation
+-- Either discount_percentage OR discount_amount (không cả hai)
+
+-- ✅ Review Constraints
+-- User chỉ có thể review mỗi product/combo 1 lần
+-- Either product_id OR combo_id (không cả hai)
+```
+
+#### 📊 **Indexes for Performance**
+
+```sql
+-- 🚀 Optimized queries
+idx_orders_user_id              -- Fast user order lookup
+idx_order_items_order_id        -- Quick order details
+idx_cart_items_cart_id          -- Instant cart loading
+idx_payments_order_id           -- Payment tracking
+idx_reviews_user_id             -- User reviews
+idx_products_category_id        -- Category filtering
+idx_combo_items_combo_id        -- Combo details
+idx_cart_items_product_variant_id -- Cart product lookup
+idx_order_items_product_variant_id -- Order product lookup
+```
 
 ---
 
@@ -449,6 +617,7 @@ Framework: Laravel/CodeIgniter
 Database: MySQL 8.0+
 Server: Apache/Nginx
 Cache: Redis
+ORM: Eloquent/Active Record
 ```
 
 </td>
@@ -461,6 +630,7 @@ Framework: Express.js
 Database: MySQL + Sequelize
 Auth: JWT/Passport
 Cache: Redis
+Validation: Joi/Yup
 ```
 
 </td>
@@ -473,6 +643,7 @@ Framework: Django/FastAPI
 Database: MySQL + SQLAlchemy
 Auth: Django Auth/OAuth2
 Cache: Redis
+Validation: Pydantic
 ```
 
 </td>
@@ -581,78 +752,303 @@ PAYMENT_PAYPAL_CLIENT_ID=your_paypal_id
 
 ---
 
-## 🔧 API Reference
+# 🔧 Tài liệu API
 
-### 🔐 **Authentication Endpoints**
-
-```http
-POST   /api/auth/register          # 📝 User registration
-POST   /api/auth/login             # 🔐 User login  
-POST   /api/auth/logout            # 🚪 User logout
-POST   /api/auth/refresh           # 🔄 Refresh token
-POST   /api/auth/forgot-password   # 🔑 Password reset
-```
-
-### 🍕 **Product Endpoints**
+## 🔐 **API Xác thực**
 
 ```http
-GET    /api/products               # 📋 List all products
-GET    /api/products/{id}          # 🔍 Get product details
-GET    /api/products/search        # 🔎 Search products
-GET    /api/categories             # 🏷️ List categories
-GET    /api/products/featured      # ⭐ Featured products
+POST   /api/auth/login             # 🔐 Đăng nhập người dùng
+GET    /api/auth/me               # 👤 Lấy thông tin người dùng hiện tại
+POST   /api/auth/logout           # 🚪 Đăng xuất người dùng
+GET    /api/profile               # 👤 Lấy thông tin hồ sơ (yêu cầu đăng nhập)
 ```
 
-### 🛒 **Cart & Order Endpoints**
+## 🍕 **API Sản phẩm**
 
 ```http
-GET    /api/cart                   # 👀 View cart
-POST   /api/cart/add               # ➕ Add to cart
-PUT    /api/cart/update/{id}       # ✏️ Update cart item
-DELETE /api/cart/remove/{id}       # 🗑️ Remove from cart
-POST   /api/cart/clear             # 🧹 Clear cart
-
-POST   /api/orders                 # 🛍️ Create order
-GET    /api/orders                 # 📋 List user orders
-GET    /api/orders/{id}            # 🔍 Order details
-PUT    /api/orders/{id}/cancel     # ❌ Cancel order
+GET    /api/products               # 📋 Danh sách tất cả sản phẩm
+POST   /api/products               # ➕ Tạo sản phẩm mới (admin)
+GET    /api/products/featured      # ⭐ Sản phẩm nổi bật
+GET    /api/products/{id}          # 🔍 Chi tiết sản phẩm
+PUT    /api/products/{id}          # ✏️ Cập nhật sản phẩm (admin)
+DELETE /api/products/{id}          # 🗑️ Xóa sản phẩm (admin)
 ```
 
-### 👑 **Admin Endpoints**
+## 🏷️ **API Danh mục**
 
 ```http
-GET    /api/admin/dashboard        # 📊 Admin dashboard
-GET    /api/admin/orders           # 📦 Manage orders
-PUT    /api/admin/orders/{id}      # ✏️ Update order status
-GET    /api/admin/customers        # 👥 Customer list
-POST   /api/admin/products         # ➕ Add product
-PUT    /api/admin/products/{id}    # ✏️ Update product
-DELETE /api/admin/products/{id}    # 🗑️ Delete product
+GET    /api/categories             # 📋 Danh sách danh mục
+POST   /api/categories             # ➕ Tạo danh mục mới (admin)
+GET    /api/categories/{id}        # 🔍 Chi tiết danh mục
+PUT    /api/categories/{id}        # ✏️ Cập nhật danh mục (admin)
+DELETE /api/categories/{id}        # 🗑️ Xóa danh mục (admin)
 ```
 
-### 📊 **Response Format**
+## 📏 **API Kích thước & Loại đế**
 
+```http
+GET    /api/sizes                  # 📏 Danh sách kích thước
+POST   /api/sizes                  # ➕ Tạo kích thước mới (admin)
+GET    /api/sizes/{id}             # 🔍 Chi tiết kích thước
+PUT    /api/sizes/{id}             # ✏️ Cập nhật kích thước (admin)
+DELETE /api/sizes/{id}             # 🗑️ Xóa kích thước (admin)
+
+GET    /api/crusts                 # 🥖 Danh sách loại đế pizza
+POST   /api/crusts                 # ➕ Tạo loại đế mới (admin)
+GET    /api/crusts/{id}            # 🔍 Chi tiết loại đế
+PUT    /api/crusts/{id}            # ✏️ Cập nhật loại đế (admin)
+DELETE /api/crusts/{id}            # 🗑️ Xóa loại đế (admin)
+```
+
+## 🛒 **API Giỏ hàng**
+
+```http
+GET    /api/cart/products          # 📋 Lấy tất cả sản phẩm cho giỏ hàng
+GET    /api/cart                   # 👀 Xem giỏ hàng (yêu cầu đăng nhập)
+POST   /api/cart/items             # ➕ Thêm vào giỏ hàng (yêu cầu đăng nhập)
+PUT    /api/cart/items/{itemId}    # ✏️ Cập nhật sản phẩm trong giỏ (yêu cầu đăng nhập)
+DELETE /api/cart/items/{itemId}    # 🗑️ Xóa khỏi giỏ hàng (yêu cầu đăng nhập)
+DELETE /api/cart/clear             # 🧹 Xóa toàn bộ giỏ hàng (yêu cầu đăng nhập)
+```
+
+## 🍱 **API Combo**
+
+```http
+GET    /api/combos                 # 🍱 Danh sách tất cả combo
+POST   /api/combos                 # ➕ Tạo combo mới (admin)
+GET    /api/combos/active          # ✅ Combo đang hoạt động
+GET    /api/combos/{id}            # 🔍 Chi tiết combo
+PUT    /api/combos/{id}            # ✏️ Cập nhật combo (admin)
+DELETE /api/combos/{id}            # 🗑️ Xóa combo (admin)
+```
+
+## 🍕 **API Sản phẩm trong Combo**
+
+```http
+GET    /api/combo-items/{id}       # 🔍 Chi tiết sản phẩm trong combo
+PUT    /api/combo-items/{id}       # ✏️ Cập nhật sản phẩm trong combo
+DELETE /api/combo-items/{id}       # 🗑️ Xóa sản phẩm khỏi combo
+```
+
+## 🛍️ **API Đơn hàng**
+
+```http
+GET    /api/orders                 # 📋 Danh sách đơn hàng (yêu cầu đăng nhập)
+POST   /api/orders                 # 🛍️ Tạo đơn hàng mới (yêu cầu đăng nhập)
+GET    /api/orders/{id}            # 🔍 Chi tiết đơn hàng (yêu cầu đăng nhập)
+PATCH  /api/orders/{id}/status     # ✏️ Cập nhật trạng thái đơn hàng
+POST   /api/orders/{id}/cancel     # ❌ Hủy đơn hàng (yêu cầu đăng nhập)
+```
+
+## 📦 **API Chi tiết đơn hàng**
+
+```http
+GET    /api/order-items            # 📋 Danh sách chi tiết đơn hàng (yêu cầu đăng nhập)
+POST   /api/order-items            # ➕ Thêm sản phẩm vào đơn hàng (yêu cầu đăng nhập)
+GET    /api/order-items/{id}       # 🔍 Chi tiết sản phẩm trong đơn hàng (yêu cầu đăng nhập)
+PUT    /api/order-items/{id}       # ✏️ Cập nhật sản phẩm trong đơn hàng (yêu cầu đăng nhập)
+DELETE /api/order-items/{id}       # 🗑️ Xóa sản phẩm khỏi đơn hàng (yêu cầu đăng nhập)
+GET    /api/order-items/by-order/{orderId}           # 📦 Lấy chi tiết theo đơn hàng (yêu cầu đăng nhập)
+GET    /api/order-items/stats/best-selling-products  # 📊 Sản phẩm bán chạy nhất (yêu cầu đăng nhập)
+GET    /api/order-items/stats/best-selling-combos    # 📊 Combo bán chạy nhất (yêu cầu đăng nhập)
+```
+
+## 💳 **API Thanh toán**
+
+```http
+GET    /api/payments               # 📋 Danh sách thanh toán (yêu cầu đăng nhập)
+POST   /api/payments               # ➕ Tạo thanh toán mới (yêu cầu đăng nhập)
+GET    /api/payments/{id}          # 🔍 Chi tiết thanh toán (yêu cầu đăng nhập)
+PATCH  /api/payments/{id}/status   # ✏️ Cập nhật trạng thái thanh toán
+```
+
+## 🎟️ **API Mã giảm giá**
+
+```http
+GET    /api/coupons                # 📋 Danh sách mã giảm giá
+POST   /api/coupons                # ➕ Tạo mã giảm giá mới (admin)
+GET    /api/coupons/{id}           # 🔍 Chi tiết mã giảm giá
+PUT    /api/coupons/{id}           # ✏️ Cập nhật mã giảm giá (admin)
+DELETE /api/coupons/{id}           # 🗑️ Xóa mã giảm giá (admin)
+POST   /api/coupons/validate       # ✅ Kiểm tra tính hợp lệ của mã giảm giá
+```
+
+## 🔧 **API Biến thể sản phẩm**
+
+```http
+GET    /api/product-variants       # 📋 Danh sách biến thể sản phẩm
+POST   /api/product-variants       # ➕ Tạo biến thể mới (admin)
+GET    /api/product-variants/{id}  # 🔍 Chi tiết biến thể
+PUT    /api/product-variants/{id}  # ✏️ Cập nhật biến thể (admin)
+DELETE /api/product-variants/{id}  # 🗑️ Xóa biến thể (admin)
+```
+
+## ⭐ **API Đánh giá**
+
+```http
+GET    /api/reviews                # 📋 Danh sách đánh giá (yêu cầu đăng nhập)
+POST   /api/reviews                # ➕ Tạo đánh giá mới (yêu cầu đăng nhập)
+GET    /api/reviews/{id}           # 🔍 Chi tiết đánh giá (yêu cầu đăng nhập)
+PUT    /api/reviews/{id}           # ✏️ Cập nhật đánh giá (yêu cầu đăng nhập)
+PATCH  /api/reviews/{id}           # ✏️ Cập nhật đánh giá (yêu cầu đăng nhập)
+DELETE /api/reviews/{id}           # 🗑️ Xóa đánh giá (yêu cầu đăng nhập)
+```
+
+## 👥 **API Người dùng**
+
+```http
+GET    /api/users                  # 📋 Danh sách người dùng (admin)
+POST   /api/users                  # ➕ Tạo người dùng mới (admin)
+GET    /api/users/{id}             # 🔍 Chi tiết người dùng (admin)
+PUT    /api/users/{id}             # ✏️ Cập nhật người dùng (admin)
+PATCH  /api/users/{id}             # ✏️ Cập nhật người dùng (admin)
+DELETE /api/users/{id}             # 🗑️ Xóa người dùng (admin)
+```
+
+## 🎨 **API Quản lý Banner**
+
+```http
+GET    /api/banners                # 🎨 Danh sách banner
+POST   /api/banners                # ➕ Tạo banner mới (admin)
+GET    /api/banners/{id}           # 🔍 Chi tiết banner
+PUT    /api/banners/{id}           # ✏️ Cập nhật banner (admin)
+DELETE /api/banners/{id}           # 🗑️ Xóa banner (admin)
+```
+
+## 📰 **API Tin tức**
+
+```http
+GET    /api/news                   # 📰 Danh sách tin tức
+POST   /api/news                   # ➕ Tạo tin tức mới (admin)
+GET    /api/news/latest/{count?}   # 📰 Tin tức mới nhất (count tùy chọn)
+GET    /api/news/{id}              # 🔍 Chi tiết tin tức
+PUT    /api/news/{id}              # ✏️ Cập nhật tin tức (admin)
+DELETE /api/news/{id}              # 🗑️ Xóa tin tức (admin)
+```
+
+## ❓ **API Câu hỏi thường gặp**
+
+```http
+GET    /api/faqs                   # ❓ Danh sách FAQ
+POST   /api/faqs                   # ➕ Tạo FAQ mới (admin)
+GET    /api/faqs/{id}              # 🔍 Chi tiết FAQ
+PUT    /api/faqs/{id}              # ✏️ Cập nhật FAQ (admin)
+DELETE /api/faqs/{id}              # 🗑️ Xóa FAQ (admin)
+```
+
+## 📞 **API Liên hệ**
+
+```http
+GET    /api/contacts               # 📋 Danh sách liên hệ (admin)
+POST   /api/contacts               # 📞 Gửi form liên hệ
+GET    /api/contacts/{id}          # 🔍 Chi tiết liên hệ (admin)
+DELETE /api/contacts/{id}          # 🗑️ Xóa liên hệ (admin)
+```
+
+---
+
+## 📝 **Chi tiết tham số và response**
+
+### 🔐 Đăng nhập
+**POST** `/api/auth/login`
 ```json
+// Request
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+
+// Response
 {
   "success": true,
-  "message": "Operation successful",
-  "data": {
-    "id": 1,
-    "name": "Pizza Margherita",
-    "price": 150000,
-    "variants": [...]
-  },
-  "meta": {
-    "pagination": {
-      "current_page": 1,
-      "total_pages": 5,
-      "per_page": 20,
-      "total_items": 100
-    }
-  }
+  "token": "jwt_token_here",
+  "user": { ... }
 }
 ```
 
+### 🛒 Thêm vào giỏ hàng
+**POST** `/api/cart/items`
+```json
+// Request (Sản phẩm)
+{
+  "product_variant_id": 1,
+  "quantity": 2
+}
+
+// Request (Combo)
+{
+  "combo_id": 1,
+  "quantity": 1
+}
+```
+
+### 🛍️ Tạo đơn hàng
+**POST** `/api/orders`
+```json
+// Request
+{
+  "shipping_address": "123 Đường ABC, Quận 1, TP.HCM",
+  "coupon_code": "DISCOUNT10"
+}
+```
+
+### ✅ Kiểm tra mã giảm giá
+**POST** `/api/coupons/validate`
+```json
+// Request
+{
+  "code": "DISCOUNT10",
+  "order_amount": 500000
+}
+
+// Response
+{
+  "valid": true,
+  "coupon": { ... },
+  "discount": 50000
+}
+```
+
+### ⭐ Tạo đánh giá
+**POST** `/api/reviews`
+```json
+// Request (Đánh giá sản phẩm)
+{
+  "product_id": 1,
+  "rating": 5,
+  "comment": "Pizza rất ngon!"
+}
+
+// Request (Đánh giá combo)
+{
+  "combo_id": 1,
+  "rating": 4,
+  "comment": "Combo tuyệt vời!"
+}
+```
+
+### 📊 Thống kê sản phẩm bán chạy
+**GET** `/api/order-items/stats/best-selling-products?days=30&limit=10`
+
+### 📊 Thống kê combo bán chạy
+**GET** `/api/order-items/stats/best-selling-combos?days=30&limit=10`
+
+---
+
+## 🔒 **Yêu cầu xác thực**
+
+- 🟢 **Công khai**: Có thể truy cập mà không cần đăng nhập
+- 🔐 **Yêu cầu đăng nhập**: Cần JWT token trong header `Authorization: Bearer {token}`
+- 👑 **Admin**: Chỉ admin mới có thể truy cập
+
+## 📊 **Các tham số query phổ biến**
+
+- `?active=true/false` - Lọc theo trạng thái hoạt động
+- `?search=keyword` - Tìm kiếm theo từ khóa
+- `?status=pending/confirmed/shipped/delivered/cancelled` - Lọc theo trạng thái
+- `?days=30` - Thống kê trong X ngày
+- `?limit=10` - Giới hạn số kết quả
+- `?position=homepage_top/homepage_bottom/product_page` - Lọc banner theo vị trí
 ---
 
 ## 🔒 Bảo mật
@@ -664,61 +1060,66 @@ DELETE /api/admin/products/{id}    # 🗑️ Delete product
 <td width="50%">
 
 #### 🔐 **Authentication & Authorization**
-- ✅ **Password Hashing**: bcrypt/argon2
+- ✅ **Password Hashing**: bcrypt with salt
 - ✅ **JWT Tokens**: Secure & stateless
 - ✅ **Role-based Access**: Admin vs Customer
 - ✅ **Session Management**: Secure sessions
-- ✅ **2FA Support**: Optional two-factor auth
+- ✅ **Input Validation**: All inputs sanitized
 
 </td>
 <td width="50%">
 
 #### 🛡️ **Data Protection**  
-- ✅ **SQL Injection**: Prepared statements
+- ✅ **SQL Injection**: Prepared statements only
 - ✅ **XSS Protection**: Input sanitization
 - ✅ **CSRF Protection**: CSRF tokens
 - ✅ **HTTPS Enforcement**: SSL/TLS required
-- ✅ **Data Encryption**: Sensitive data encrypted
+- ✅ **Database Triggers**: Business logic protection
 
 </td>
 </tr>
 </table>
 
-### 🔍 **Security Checklist**
+### 🔍 **Security Features**
 
 - [x] 🔒 **HTTPS Only** - All communications encrypted
-- [x] 🛡️ **Input Validation** - All user inputs validated
+- [x] 🛡️ **Input Validation** - All user inputs validated & sanitized
 - [x] 🔐 **Secure Headers** - Security headers implemented  
-- [x] 🚫 **Rate Limiting** - Prevent abuse & DDoS
+- [x] 🚫 **Rate Limiting** - Prevent abuse & DDoS attacks
 - [x] 📝 **Audit Logs** - Track all admin actions
 - [x] 🔄 **Regular Updates** - Dependencies kept current
-- [x] 🧪 **Security Testing** - Regular penetration testing
+- [x] 🧪 **Security Testing** - Regular vulnerability scanning
 - [x] 💾 **Backup Strategy** - Regular encrypted backups
+- [x] 🎯 **Database Constraints** - Business rules enforced at DB level
+- [x] 💳 **Payment Security** - PCI DSS compliance for card payments
 
 ---
 
 ## 🎯 Roadmap
 
 ### 🚀 **Version 1.1 (Next Release)**
-- [ ] 📱 **Mobile App** (React Native)
-- [ ] 🔔 **Push Notifications** 
-- [ ] 🗺️ **Real-time Delivery Tracking**
-- [ ] 💬 **Live Chat Support**
-- [ ] 🎁 **Loyalty Points System**
+- [ ] 📱 **Mobile App** (React Native/Flutter)
+- [ ] 🔔 **Push Notifications** real-time
+- [ ] 🗺️ **Live Delivery Tracking** with GPS
+- [ ] 💬 **Live Chat Support** customer service
+- [ ] 🎁 **Loyalty Points System** advanced rewards
+- [ ] 🤖 **Chatbot** for FAQ automation
 
 ### 🌟 **Version 1.2 (Future)**
-- [ ] 🤖 **AI Recommendations**
-- [ ] 🎨 **Pizza Builder Tool** 
-- [ ] 📊 **Advanced Analytics**
-- [ ] 🌐 **Multi-language Support**
-- [ ] 💰 **Cryptocurrency Payments**
+- [ ] 🤖 **AI Recommendations** based on order history
+- [ ] 🎨 **Pizza Builder Tool** drag & drop toppings
+- [ ] 📊 **Advanced Analytics** with ML insights
+- [ ] 🌐 **Multi-language Support** (EN, VI, JP)
+- [ ] 💰 **Cryptocurrency Payments** (Bitcoin, Ethereum)
+- [ ] 📸 **AR Pizza Preview** augmented reality
 
 ### 🔮 **Version 2.0 (Long-term)**
-- [ ] 🏪 **Multi-store Management**
-- [ ] 🤝 **Franchise System**
-- [ ] 📱 **POS Integration**
-- [ ] 🚁 **Drone Delivery**
-- [ ] 🌍 **International Expansion**
+- [ ] 🏪 **Multi-store Management** franchise system
+- [ ] 🤝 **B2B Portal** for corporate clients
+- [ ] 📱 **POS Integration** in-store system
+- [ ] 🚁 **Drone Delivery** automated delivery
+- [ ] 🌍 **International Expansion** multi-currency
+- [ ] 🔮 **IoT Integration** smart kitchen equipment
 
 ---
 
@@ -739,6 +1140,28 @@ DELETE /api/admin/products/{id}    # 🗑️ Delete product
 3. 💾 **Commit** your changes (`git commit -m 'Add some AmazingFeature'`)
 4. 📤 **Push** to the branch (`git push origin feature/AmazingFeature`)
 5. 🔀 **Open** a Pull Request
+
+### 📝 **Development Guidelines**
+
+```yaml
+Code Style:
+  ✅ Follow PSR-12 for PHP
+  ✅ ESLint rules for JavaScript
+  ✅ Meaningful variable names
+  ✅ Comprehensive comments
+
+Database:
+  ✅ All changes via migrations
+  ✅ Maintain referential integrity
+  ✅ Add proper indexes
+  ✅ Test triggers thoroughly
+
+Testing:
+  ✅ Unit tests for business logic
+  ✅ Integration tests for APIs
+  ✅ Database constraint testing
+  ✅ Security vulnerability tests
+```
 
 ### 👥 **Contributors**
 
@@ -767,6 +1190,26 @@ DELETE /api/admin/products/{id}    # 🗑️ Delete product
 ### 📱 **Hotline**: 1900-PIZZA (24/7)
 
 </div>
+
+---
+
+## 📄 License
+
+```
+MIT License
+
+Copyright (c) 2025 Pizza Shop Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+```
 
 ---
 

@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProductController;
@@ -183,4 +184,16 @@ Route::prefix('users')->group(function () {
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/profile', [UserController::class, 'profile']);
+});
+
+
+Route::post('/password/forgot', [UserController::class, 'sendPasswordResetEmail']);
+Route::post('/password/verify-token', [UserController::class, 'verifyResetToken']);
+Route::post('/password/reset', [UserController::class, 'resetPassword']);
+Route::post('/password/cancel-reset', [UserController::class, 'cancelPasswordReset']);
+
+Route::get('/reset-password', function (Request $request) {
+    $email = $request->query('email');
+    $token = $request->query('token');
+    return view('reset-password-form', compact('email', 'token'));
 });
