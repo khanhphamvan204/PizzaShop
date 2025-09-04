@@ -5,9 +5,8 @@ USE pizza_shop;
 -- Bảng users: Quản lý tài khoản người dùng và admin
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
     full_name VARCHAR(100),
     address TEXT,
     phone VARCHAR(20),
@@ -414,47 +413,47 @@ CREATE TABLE contacts (
 );
 
 -- Trigger để kiểm tra logic user_id, name, email trong contacts
-DELIMITER //
-CREATE TRIGGER before_contacts_insert
-BEFORE INSERT ON contacts
-FOR EACH ROW
-BEGIN
-    DECLARE user_email VARCHAR(100);
-    IF NEW.user_id IS NOT NULL THEN
-        SELECT email INTO user_email FROM users WHERE id = NEW.user_id;
-        IF NEW.email != user_email THEN
-            SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Email must match the user email when user_id is provided';
-        END IF;
-        SET NEW.name = (SELECT full_name FROM users WHERE id = NEW.user_id);
-    ELSE
-        IF NEW.name IS NULL OR NEW.email IS NULL THEN
-            SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Name and email are required when user_id is NULL';
-        END IF;
-    END IF;
-END//
+-- DELIMITER //
+-- CREATE TRIGGER before_contacts_insert
+-- BEFORE INSERT ON contacts
+-- FOR EACH ROW
+-- BEGIN
+--     DECLARE user_email VARCHAR(100);
+--     IF NEW.user_id IS NOT NULL THEN
+--         SELECT email INTO user_email FROM users WHERE id = NEW.user_id;
+--         IF NEW.email != user_email THEN
+--             SIGNAL SQLSTATE '45000'
+--             SET MESSAGE_TEXT = 'Email must match the user email when user_id is provided';
+--         END IF;
+--         SET NEW.name = (SELECT full_name FROM users WHERE id = NEW.user_id);
+--     ELSE
+--         IF NEW.name IS NULL OR NEW.email IS NULL THEN
+--             SIGNAL SQLSTATE '45000'
+--             SET MESSAGE_TEXT = 'Name and email are required when user_id is NULL';
+--         END IF;
+--     END IF;
+-- END//
 
-CREATE TRIGGER before_contacts_update
-BEFORE UPDATE ON contacts
-FOR EACH ROW
-BEGIN
-    DECLARE user_email VARCHAR(100);
-    IF NEW.user_id IS NOT NULL THEN
-        SELECT email INTO user_email FROM users WHERE id = NEW.user_id;
-        IF NEW.email != user_email THEN
-            SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Email must match the user email when user_id is provided';
-        END IF;
-        SET NEW.name = (SELECT full_name FROM users WHERE id = NEW.user_id);
-    ELSE
-        IF NEW.name IS NULL OR NEW.email IS NULL THEN
-            SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Name and email are required when user_id is NULL';
-        END IF;
-    END IF;
-END//
-DELIMITER ;
+-- CREATE TRIGGER before_contacts_update
+-- BEFORE UPDATE ON contacts
+-- FOR EACH ROW
+-- BEGIN
+--     DECLARE user_email VARCHAR(100);
+--     IF NEW.user_id IS NOT NULL THEN
+--         SELECT email INTO user_email FROM users WHERE id = NEW.user_id;
+--         IF NEW.email != user_email THEN
+--             SIGNAL SQLSTATE '45000'
+--             SET MESSAGE_TEXT = 'Email must match the user email when user_id is provided';
+--         END IF;
+--         SET NEW.name = (SELECT full_name FROM users WHERE id = NEW.user_id);
+--     ELSE
+--         IF NEW.name IS NULL OR NEW.email IS NULL THEN
+--             SIGNAL SQLSTATE '45000'
+--             SET MESSAGE_TEXT = 'Name and email are required when user_id is NULL';
+--         END IF;
+--     END IF;
+-- END//
+-- DELIMITER ;
 
 -- Thêm các chỉ mục để tối ưu hóa truy vấn
 CREATE INDEX idx_orders_user_id ON orders(user_id);
@@ -468,17 +467,17 @@ CREATE INDEX idx_cart_items_product_variant_id ON cart_items(product_variant_id)
 CREATE INDEX idx_order_items_product_variant_id ON order_items(product_variant_id);
 
 -- Dữ liệu mẫu cho bảng users
-INSERT INTO users (username, password, email, full_name, address, phone, role) VALUES
-('admin1', '$2b$12$hash1...', 'admin1@example.com', 'Nguyễn Văn Admin', '123 Đường Lê Lợi, Quận 1, TP.HCM', '0901234567', 'admin'),
-('admin2', '$2b$12$hash2...', 'admin2@example.com', 'Trần Thị Quản Lý', '456 Đường Nguyễn Huệ, Quận 1, TP.HCM', '0902345678', 'admin'),
-('khachhang1', '$2b$12$hash3...', 'khach1@example.com', 'Lê Văn A', '789 Đường Võ Văn Tần, Quận 3', '0913456789', 'customer'),
-('khachhang2', '$2b$12$hash4...', 'khach2@example.com', 'Phạm Thị B', '101 Đường Nguyễn Trãi, Quận 5', '0924567890', 'customer'),
-('khachhang3', '$2b$12$hash5...', 'khach3@example.com', 'Hoàng Văn C', '202 Đường Cách Mạng Tháng 8', '0935678901', 'customer'),
-('khachhang4', '$2b$12$hash6...', 'khach4@example.com', 'Nguyễn Thị D', '303 Đường Điện Biên Phủ', '0946789012', 'customer'),
-('khachhang5', '$2b$12$hash7...', 'khach5@example.com', 'Trần Văn E', '404 Đường Hai Bà Trưng', '0957890123', 'customer'),
-('khachhang6', '$2b$12$hash8...', 'khach6@example.com', 'Lê Thị F', '505 Đường Lê Đại Hành', '0968901234', 'customer'),
-('khachhang7', '$2b$12$hash9...', 'khach7@example.com', 'Phạm Văn G', '606 Đường Trường Chinh', '0979012345', 'customer'),
-('khachhang8', '$2b$12$hash10...', 'khach8@example.com', 'Hoàng Thị H', '707 Đường Nguyễn Văn Cừ', '0980123456', 'customer');
+INSERT INTO users (password, email, full_name, address, phone, role) VALUES
+('$2b$12$hash1...', 'admin1@example.com', 'Nguyễn Văn Admin', '123 Đường Lê Lợi, Quận 1, TP.HCM', '0901234567', 'admin'),
+('$2b$12$hash2...', 'admin2@example.com', 'Trần Thị Quản Lý', '456 Đường Nguyễn Huệ, Quận 1, TP.HCM', '0902345678', 'admin'),
+('$2b$12$hash3...', 'khach1@example.com', 'Lê Văn A', '789 Đường Võ Văn Tần, Quận 3', '0913456789', 'customer'),
+('$2b$12$hash4...', 'khach2@example.com', 'Phạm Thị B', '101 Đường Nguyễn Trãi, Quận 5', '0924567890', 'customer'),
+('$2b$12$hash5...', 'khach3@example.com', 'Hoàng Văn C', '202 Đường Cách Mạng Tháng 8', '0935678901', 'customer'),
+('$2b$12$hash6...', 'khach4@example.com', 'Nguyễn Thị D', '303 Đường Điện Biên Phủ', '0946789012', 'customer'),
+('$2b$12$hash7...', 'khach5@example.com', 'Trần Văn E', '404 Đường Hai Bà Trưng', '0957890123', 'customer'),
+('$2b$12$hash8...', 'khach6@example.com', 'Lê Thị F', '505 Đường Lê Đại Hành', '0968901234', 'customer'),
+('$2b$12$hash9...', 'khach7@example.com', 'Phạm Văn G', '606 Đường Trường Chinh', '0979012345', 'customer'),
+('$2b$12$hash10...', 'khach8@example.com', 'Hoàng Thị H', '707 Đường Nguyễn Văn Cừ', '0980123456', 'customer');
 
 -- Dữ liệu mẫu cho bảng categories
 INSERT INTO categories (name, description, url) VALUES
