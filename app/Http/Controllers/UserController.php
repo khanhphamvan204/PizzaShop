@@ -1,5 +1,5 @@
 <?php
-// 1. UserController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -27,8 +27,7 @@ class UserController extends Controller
             if ($request->has('search')) {
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
-                    $q->where('username', 'like', "%{$search}%")
-                        ->orWhere('full_name', 'like', "%{$search}%")
+                    $q->where('full_name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             }
@@ -47,9 +46,8 @@ class UserController extends Controller
     {
         try {
             $request->validate([
-                'username' => 'required|string|max:50|unique:users',
                 'password' => 'required|string|min:6',
-                'email' => 'required|email|unique:users',
+                'email' => 'required|email|unique:users,email',
                 'full_name' => 'nullable|string|max:100',
                 'address' => 'nullable|string',
                 'phone' => 'nullable|string|max:20',
@@ -57,7 +55,6 @@ class UserController extends Controller
             ]);
 
             $user = User::create([
-                'username' => $request->username,
                 'password' => Hash::make($request->password),
                 'email' => $request->email,
                 'full_name' => $request->full_name,
@@ -100,15 +97,14 @@ class UserController extends Controller
             $user = User::findOrFail($id);
 
             $request->validate([
-                'username' => ['required', 'string', 'max:50', Rule::unique('users')->ignore($user->id)],
-                'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
+                'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
                 'full_name' => 'nullable|string|max:100',
                 'address' => 'nullable|string',
                 'phone' => 'nullable|string|max:20',
                 'role' => 'in:customer,admin'
             ]);
 
-            $updateData = $request->only(['username', 'email', 'full_name', 'address', 'phone', 'role']);
+            $updateData = $request->only(['email', 'full_name', 'address', 'phone', 'role']);
 
             if ($request->filled('password')) {
                 $request->validate(['password' => 'string|min:6']);
@@ -156,8 +152,6 @@ class UserController extends Controller
             ], 500);
         }
     }
-
-
 
     /**
      * Gửi email reset password
@@ -211,7 +205,7 @@ class UserController extends Controller
                 'resetUrl' => $resetUrl,
                 'token' => $token
             ], function ($message) use ($user) {
-                $message->to($user->email, $user->full_name ?: $user->username)
+                $message->to($user->email, $user->full_name)
                     ->subject('Password Reset Request');
             });
 
@@ -283,7 +277,6 @@ class UserController extends Controller
             return response()->json([
                 'valid' => true,
                 'email' => $email,
-                'username' => $user->username,
                 'expires_at' => $resetData['expires_at']->toISOString(),
                 'time_remaining' => Carbon::now()->diffInMinutes($resetData['expires_at'], false) . ' phút'
             ]);
@@ -354,9 +347,6 @@ class UserController extends Controller
             // Xóa token khỏi cache (chỉ sử dụng 1 lần)
             Cache::forget($cacheKey);
 
-            // Xóa tất cả session của user (đăng xuất khỏi tất cả thiết bị)
-            // Cache::forget('user_sessions_' . $user->id);
-
             return response()->json([
                 'message' => 'Mật khẩu đã được cập nhật thành công. Vui lòng đăng nhập lại với mật khẩu mới.'
             ]);
@@ -400,5 +390,4 @@ class UserController extends Controller
             ], 500);
         }
     }
-
 }
