@@ -31,7 +31,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/banners",
+							"raw": "{{base_url}}/api/banners?active=1",
 							"host": [
 								"{{base_url}}"
 							],
@@ -42,8 +42,7 @@
 							"query": [
 								{
 									"key": "active",
-									"value": "0",
-									"disabled": true
+									"value": "1"
 								},
 								{
 									"key": "position",
@@ -527,7 +526,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"username\": \"khadadas\",\r\n  \"password\": \"123456\",\r\n  \"email\": \"khanh322131@gmail.com\",\r\n  \"full_name\": \"Khanh Pham\",\r\n  \"address\": \"123 Nguyễn Văn Cừ, Quận 5, TP.HCM\",\r\n  \"phone\": \"0987654321\"\r\n}\r\n",
+							"raw": "{\r\n  \"email\": \"khanhphamvan7891011@gmail.com\",\r\n  \"password\": \"123456\",\r\n  \"full_name\": \"Khanh Pham\",\r\n  \"address\": \"123 Nguyễn Văn Cừ, Quận 5, TP.HCM\",\r\n  \"phone\": \"0987654321\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -610,7 +609,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"username\": \"admin12\",\r\n  \"password\": \"123456\",\r\n  \"email\": \"admin12@example.com\",\r\n  \"full_name\": \"Admin User\",\r\n  \"address\": \"HCM\",\r\n  \"phone\": \"0901234567\",\r\n  \"role\": \"admin\"\r\n}\r\n",
+							"raw": "{\r\n  \"username\": \"admin12\",\r\n  \"password\": \"123456\",\r\n  \"email\": \"khanhphamvan7891011@gmail.com\",\r\n  \"full_name\": \"Admin User\",\r\n  \"address\": \"HCM\",\r\n  \"phone\": \"0901234567\",\r\n  \"role\": \"admin\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -637,7 +636,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"username\": \"admin13\",\r\n  \"email\": \"admin13@example.com\",\r\n  \"full_name\": \"Admin Updated\",\r\n  \"address\": \"HCM\",\r\n  \"phone\": \"0987654321\",\r\n  \"role\": \"admin\",\r\n  \"password\": \"12345678\"\r\n}\r\n",
+							"raw": "{\r\n  \"email\": \"admin13@example.com\",\r\n  \"full_name\": \"Admin Updated\",\r\n  \"address\": \"HCM\",\r\n  \"phone\": \"0987654321\",\r\n  \"role\": \"admin\",\r\n  \"password\": \"12345678\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -645,14 +644,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/users/13",
+							"raw": "{{base_url}}/api/users/10",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"users",
-								"13"
+								"10"
 							]
 						}
 					},
@@ -688,6 +687,37 @@
 							"path": [
 								"api",
 								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/14",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"14"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": null,
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -2538,12 +2568,12 @@
 							"query": [
 								{
 									"key": "category_id",
-									"value": "1",
+									"value": "7",
 									"disabled": true
 								},
 								{
 									"key": "search",
-									"value": "pizza",
+									"value": "cà chua",
 									"disabled": true
 								}
 							]
@@ -2727,7 +2757,7 @@
 							"raw": "{\r\n  \"name\": \"Pizza Margherita\",\r\n  \"description\": \"Classic Italian pizza\",\r\n  \"image_url\": \"https://example.com/pizza.jpg\",\r\n  \"category_id\": 1,\r\n  \"variants\": [\r\n    {\r\n      \"size_id\": 1,\r\n      \"crust_id\": 1,\r\n      \"price\": 120000,\r\n      \"stock\": 10\r\n    },\r\n    {\r\n      \"size_id\": 2,\r\n      \"crust_id\": 1,\r\n      \"price\": 150000,\r\n      \"stock\": 5\r\n    }\r\n  ]\r\n}\r\n"
 						},
 						"url": {
-							"raw": "{{base_url}}/api/product-variants",
+							"raw": "{{base_url}}/api/product-variants?product_id=1&size_id=1",
 							"host": [
 								"{{base_url}}"
 							],
@@ -2738,8 +2768,11 @@
 							"query": [
 								{
 									"key": "product_id",
-									"value": "1",
-									"disabled": true
+									"value": "1"
+								},
+								{
+									"key": "size_id",
+									"value": "1"
 								}
 							]
 						}
@@ -3252,7 +3285,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"khanh@gmail.com\"\r\n}",
+							"raw": "{\r\n    \"email\":\"khanhphamvan7891011@gmail.com\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -3393,6 +3426,397 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Verify password",
+			"item": [
+				{
+					"name": "Send mail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"khanhphamvan7891011@gmail.com\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/verification/send-email-otp",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"verification",
+								"send-email-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resend",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"khanhphamvan7891011@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/verification/resend-email-otp",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"verification",
+								"resend-email-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"khanhphamvan7891011@gmail.com\",\r\n    \"otp\":\"773898\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/verification/verify-email-otp",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"verification",
+								"verify-email-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check status",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"khanhphamvan7891011@gmail.com\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/verification/check-verification-status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"verification",
+								"check-verification-status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Revenue",
+			"item": [
+				{
+					"name": "Time",
+					"item": [
+						{
+							"name": "Daily",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/revenue/daily?date=04/09/2025",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"revenue",
+										"daily"
+									],
+									"query": [
+										{
+											"key": "date",
+											"value": "04/09/2025"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Weekly",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \r\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/revenue/weekly?week=36&year=2024",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"revenue",
+										"weekly"
+									],
+									"query": [
+										{
+											"key": "week",
+											"value": "36"
+										},
+										{
+											"key": "year",
+											"value": "2024"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Monthly",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \r\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/revenue/monthly?year=2025&month=9",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"revenue",
+										"monthly"
+									],
+									"query": [
+										{
+											"key": "year",
+											"value": "2025"
+										},
+										{
+											"key": "month",
+											"value": "9"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Yearly",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \r\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/revenue/yearly",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"revenue",
+										"yearly"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Product",
+					"item": [
+						{
+							"name": "Top selling product",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/revenue/top-products",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"revenue",
+										"top-products"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Combo",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/revenue/combo",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"revenue",
+										"combo"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Customer",
+					"item": [
+						{
+							"name": "Top customer",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/revenue/top-customers",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"revenue",
+										"top-customers"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Coupon",
+					"item": [
+						{
+							"name": "Coupon",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/revenue/coupons",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"revenue",
+										"coupons"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Dashboard",
+					"item": [
+						{
+							"name": "Dashboard",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/revenue/dashboard",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"revenue",
+										"dashboard"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
 		}
 	],
 	"event": [
@@ -3422,7 +3846,7 @@
 		},
 		{
 			"key": "base_url",
-			"value": "http://localhost:8000"
+			"value": "https://template.postman-echo.com"
 		}
 	]
 }
