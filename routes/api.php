@@ -21,6 +21,7 @@ use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SizeController;
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\RevenueController;
 
 // =====================================
 // 🛒 CART ROUTES (Giỏ hàng)
@@ -268,19 +269,26 @@ Route::get('/reset-password', function (Request $request) {                // �
 
 
 Route::prefix('verification')->group(function () {
-    // Xác thực email tồn tại (không kiểm tra User)
     Route::post('/send-email-otp', [EmailVerificationController::class, 'sendEmailOTP']);
-
-
-    // Xác thực OTP
     Route::post('/verify-email-otp', [EmailVerificationController::class, 'verifyEmailOTP']);
-
-    // Gửi lại OTP
     Route::post('/resend-email-otp', [EmailVerificationController::class, 'resendEmailOTP']);
-
-    // Hủy xác thực
     Route::post('/cancel-email-verification', [EmailVerificationController::class, 'cancelEmailVerification']);
-
-    // Kiểm tra trạng thái xác thực
     Route::post('/check-verification-status', [EmailVerificationController::class, 'checkVerificationStatus']);
+});
+
+Route::prefix('revenue')->group(function () {
+    Route::get('/daily', [RevenueController::class, 'dailyRevenue']);
+    Route::get('/weekly', [RevenueController::class, 'weeklyRevenue']);
+    Route::get('/monthly', [RevenueController::class, 'monthlyRevenue']);
+    Route::get('/yearly', [RevenueController::class, 'yearlyRevenue']);
+
+    // Route::get('/category', [RevenueController::class, 'revenueByCategory']);
+    Route::get('/top-products', [RevenueController::class, 'topSellingProducts']);
+    Route::get('/combo', [RevenueController::class, 'comboRevenue']);
+
+    Route::get('/top-customers', [RevenueController::class, 'topCustomers']);
+
+    Route::get('/coupons', [RevenueController::class, 'revenueWithCoupons']);
+
+    Route::get('/dashboard', [RevenueController::class, 'dashboardStats']);
 });

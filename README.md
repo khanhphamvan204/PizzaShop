@@ -1169,6 +1169,377 @@ GET /reset-password?email=user@example.com&token=abc123
 - `?position=homepage_top/homepage_bottom/product_page` - Lọc banner theo vị trí
 ---
 
+
+# 📊 Revenue Statistics API Documentation
+
+## **Revenue API Endpoints**
+
+```http
+GET    /api/revenue/daily          # 📅 Thống kê doanh thu theo ngày
+GET    /api/revenue/weekly         # 📅 Thống kê doanh thu theo tuần  
+GET    /api/revenue/monthly        # 📅 Thống kê doanh thu theo tháng
+GET    /api/revenue/yearly         # 📅 Thống kê doanh thu theo năm
+
+GET    /api/revenue/top-products   # 🏆 Top sản phẩm bán chạy nhất
+GET    /api/revenue/combo          # 🎯 Thống kê doanh thu combo
+
+GET    /api/revenue/top-customers  # 👑 Top khách hàng VIP
+
+GET    /api/revenue/coupons        # 🎟️ Thống kê doanh thu theo coupon
+
+GET    /api/revenue/dashboard      # 📈 Tổng quan dashboard
+```
+
+---
+
+## **📊 1. THỐNG KÊ DOANH THU THEO THỜI GIAN**
+
+### **1.1 Doanh thu theo ngày**
+```http
+GET /api/revenue/daily?date=05/09/2025
+
+# Response Success (200)
+{
+    "data": [
+        {
+            "date": "05/09/2025",
+            "total_revenue": "2500000.00",
+            "total_orders": 45,
+            "avg_order_value": "555555.56"
+        }
+    ]
+}
+
+# Response Error (400)
+{
+    "error": "Invalid date format. Please use d/m/Y (e.g., 04/09/2025)."
+}
+```
+
+**Parameters:**
+- `date` (optional): Ngày cần thống kê (format: d/m/Y). Mặc định: hôm nay
+
+---
+
+### **1.2 Doanh thu theo tuần**
+```http
+GET /api/revenue/weekly?year=2025&week=36
+
+# Response Success (200)
+{
+    "data": [
+        {
+            "week": 36,
+            "year": 2025,
+            "total_revenue": "15000000.00",
+            "total_orders": 280
+        }
+    ]
+}
+
+# Response Error (400)
+{
+    "error": "Invalid year or week number."
+}
+```
+
+**Parameters:**
+- `year` (optional): Năm cần thống kê. Mặc định: năm hiện tại
+- `week` (optional): Tuần cần thống kê (1-53). Mặc định: tuần hiện tại
+
+---
+
+### **1.3 Doanh thu theo tháng**
+```http
+GET /api/revenue/monthly?year=2025&month=9
+
+# Response Success (200)
+{
+    "data": [
+        {
+            "month": 9,
+            "year": 2025,
+            "month_name": "09/2025",
+            "total_revenue": "50000000.00",
+            "total_orders": 850,
+            "avg_order_value": "588235.29"
+        }
+    ]
+}
+
+# Response Error (400)
+{
+    "error": "Invalid month format. Month must be a number between 1 and 12."
+}
+```
+
+**Parameters:**
+- `year` (optional): Năm cần thống kê. Mặc định: năm hiện tại
+- `month` (optional): Tháng cần thống kê (1-12). Nếu không có sẽ lấy tất cả tháng trong năm
+
+---
+
+### **1.4 Doanh thu theo năm**
+```http
+GET /api/revenue/yearly?year=2025
+
+# Response Success (200)
+{
+    "data": [
+        {
+            "year": 2025,
+            "total_revenue": "500000000.00",
+            "total_orders": 8500,
+            "avg_order_value": "588235.29"
+        }
+    ]
+}
+
+# Response Error (400)
+{
+    "error": "Invalid year format. Year must be a number between 1900 and 9999."
+}
+```
+
+**Parameters:**
+- `year` (optional): Năm cần thống kê. Nếu không có sẽ lấy tất cả năm
+
+---
+
+## **🏆 2. THỐNG KÊ DOANH THU THEO SẢN PHẨM**
+
+### **2.1 Top sản phẩm bán chạy**
+```http
+GET /api/revenue/top-products?limit=10
+
+# Response Success (200)
+{
+    "data": [
+        {
+            "product_name": "Pizza Margherita",
+            "size_name": "Large",
+            "crust_name": "Thin Crust",
+            "total_sold": 150,
+            "total_revenue": "7500000.00",
+            "avg_price": "50000.00"
+        },
+        {
+            "product_name": "Pizza Hawaii",
+            "size_name": "Medium",
+            "crust_name": "Thick Crust",
+            "total_sold": 120,
+            "total_revenue": "6000000.00",
+            "avg_price": "50000.00"
+        }
+    ]
+}
+
+# Response Error (400)
+{
+    "error": "Invalid limit value."
+}
+```
+
+**Parameters:**
+- `limit` (optional): Số lượng sản phẩm trả về. Mặc định: 10
+
+---
+
+### **2.2 Doanh thu combo**
+```http
+GET /api/revenue/combo?limit=10
+
+# Response Success (200)
+{
+    "data": [
+        {
+            "combo_name": "Family Deluxe",
+            "total_sold": 80,
+            "total_revenue": "12000000.00",
+            "combo_price": "150000.00",
+            "total_orders": 65
+        },
+        {
+            "combo_name": "Couple Special",
+            "total_sold": 95,
+            "total_revenue": "9500000.00",
+            "combo_price": "100000.00",
+            "total_orders": 78
+        }
+    ]
+}
+
+# Response Error (500)
+{
+    "error": "Database query failed: [error message]"
+}
+```
+
+**Parameters:**
+- `limit` (optional): Số lượng combo trả về. Mặc định: 10
+
+---
+
+## **👑 3. THỐNG KÊ DOANH THU THEO KHÁCH HÀNG**
+
+### **3.1 Top khách hàng VIP**
+```http
+GET /api/revenue/top-customers?limit=20
+
+# Response Success (200)
+{
+    "data": [
+        {
+            "full_name": "Nguyễn Văn A",
+            "email": "nguyenvana@example.com",
+            "phone": "0901234567",
+            "total_orders": 25,
+            "total_spent": "5000000.00",
+            "avg_order_value": "200000.00",
+            "last_order_date": "05/09/2025"
+        },
+        {
+            "full_name": "Trần Thị B",
+            "email": "tranthib@example.com", 
+            "phone": "0987654321",
+            "total_orders": 20,
+            "total_spent": "4500000.00",
+            "avg_order_value": "225000.00",
+            "last_order_date": "03/09/2025"
+        }
+    ]
+}
+
+# Response Error (400)
+{
+    "error": "Invalid limit value."
+}
+```
+
+**Parameters:**
+- `limit` (optional): Số lượng khách hàng trả về. Mặc định: 20
+
+---
+
+## **🎟️ 4. THỐNG KÊ DOANH THU THEO COUPON**
+
+### **4.1 Doanh thu với coupon**
+```http
+GET /api/revenue/coupons
+
+# Response Success (200)
+{
+    "data": [
+        {
+            "coupon_code": "WELCOME10",
+            "discount_percentage": 10.00,
+            "discount_amount": null,
+            "usage_count": 150,
+            "total_revenue_after_discount": "13500000.00",
+            "total_discount_given": "1500000.00"
+        },
+        {
+            "coupon_code": "FREESHIP",
+            "discount_percentage": null,
+            "discount_amount": "30000.00",
+            "usage_count": 200,
+            "total_revenue_after_discount": "10000000.00",
+            "total_discount_given": "6000000.00"
+        },
+        {
+            "coupon_code": "NO_COUPON",
+            "discount_percentage": null,
+            "discount_amount": null,
+            "usage_count": 500,
+            "total_revenue_after_discount": "25000000.00",
+            "total_discount_given": "0.00"
+        }
+    ]
+}
+
+# Response Error (500)
+{
+    "error": "Database query failed: [error message]"
+}
+```
+
+---
+
+## **📈 5. TỔNG QUAN DASHBOARD**
+
+### **5.1 Thống kê tổng quan**
+```http
+GET /api/revenue/dashboard?start_date=01/09/2025&end_date=05/09/2025
+
+# Response Success (200)
+{
+    "data": {
+        "overview": {
+            "total_revenue": "50000000.00",
+            "total_orders": 850,
+            "unique_customers": 420,
+            "avg_order_value": "588235.29",
+            "highest_order": "2500000.00",
+            "lowest_order": "50000.00"
+        },
+        "order_status": [
+            {
+                "status": "completed",
+                "count": 750,
+                "total_amount": "45000000.00"
+            },
+            {
+                "status": "pending",
+                "count": 50,
+                "total_amount": "3000000.00"
+            },
+            {
+                "status": "cancelled",
+                "count": 50,
+                "total_amount": "2000000.00"
+            }
+        ]
+    }
+}
+
+# Response Error (400)
+{
+    "error": "Invalid date format. Please use d/m/Y (e.g., 04/09/2025)."
+}
+```
+
+**Parameters:**
+- `start_date` (optional): Ngày bắt đầu (format: d/m/Y)
+- `end_date` (optional): Ngày kết thúc (format: d/m/Y)
+
+---
+
+## **🔧 Common Error Responses**
+
+```json
+// 400 - Bad Request
+{
+    "error": "Invalid date format. Please use d/m/Y (e.g., 04/09/2025)."
+}
+
+// 500 - Database Error  
+{
+    "error": "Database query failed: [specific error message]"
+}
+
+// 500 - Unexpected Error
+{
+    "error": "An unexpected error occurred: [specific error message]"
+}
+```
+
+## **📝 Notes**
+
+- Tất cả dữ liệu doanh thu chỉ tính từ các đơn hàng có `payments.status = 'completed'`
+- Định dạng ngày tháng sử dụng: `d/m/Y` (VD: 05/09/2025)
+- Số tiền trả về dưới dạng string để đảm bảo độ chính xác
+- Các API hỗ trợ xử lý lỗi chi tiết với mã HTTP status code phù hợp
+
 ## 🔒 Bảo mật
 
 ### 🛡️ **Security Measures**
