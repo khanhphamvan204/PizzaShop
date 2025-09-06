@@ -101,6 +101,7 @@ class OrderController extends Controller
                             if ($coupon->max_discount_amount) {
                                 $discount = min($discount, $coupon->max_discount_amount);
                             }
+                            $totalAmount -= $discount;
                         }
                     } else {
                         return response()->json(['error' => 'Order amount does not meet coupon minimum'], 400);
