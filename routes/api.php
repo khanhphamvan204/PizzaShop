@@ -241,6 +241,7 @@ Route::prefix('users')->group(function () {
     Route::put('/{id}', [UserController::class, 'update']);                 // ✏️ Cập nhật user (PUT)
     Route::patch('/{id}', [UserController::class, 'update']);               // ✏️ Cập nhật user (PATCH)
     Route::delete('/{id}', [UserController::class, 'destroy']);             // 🗑️ Xóa user
+    Route::post('/change-password', [UserController::class, 'changePassword'])->middleware('auth:api'); // 🔒 Đổi mật khẩu (cần auth)
 });
 
 // =====================================
