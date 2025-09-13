@@ -211,13 +211,16 @@ Route::prefix('product-variants')->group(function () {
 // =====================================
 // ⭐ REVIEW ROUTES (Đánh giá) - Cần đăng nhập
 // =====================================
-Route::prefix('reviews')->middleware('auth:api')->group(function () {
-    Route::get('/', [ReviewController::class, 'index']);                    // 📋 Danh sách đánh giá
-    Route::post('/', [ReviewController::class, 'store']);                   // ➕ Tạo đánh giá mới
-    Route::get('/{id}', [ReviewController::class, 'show']);                 // 🔍 Chi tiết đánh giá
-    Route::put('/{id}', [ReviewController::class, 'update']);               // ✏️ Cập nhật đánh giá (PUT)
-    Route::patch('/{id}', [ReviewController::class, 'update']);             // ✏️ Cập nhật đánh giá (PATCH)
-    Route::delete('/{id}', [ReviewController::class, 'destroy']);           // 🗑️ Xóa đánh giá
+Route::prefix('reviews')->group(function () {
+    Route::get('/', [ReviewController::class, 'index']);                    // 📋 List all reviews
+    Route::get('/{id}', [ReviewController::class, 'show']);                 // 🔍 View a specific review
+
+    Route::middleware('auth:api')->group(function () {
+        Route::post('/', [ReviewController::class, 'store']);               // ➕ Create a new review
+        Route::put('/{id}', [ReviewController::class, 'update']);           // ✏️ Update a review (PUT)
+        Route::patch('/{id}', [ReviewController::class, 'update']);         // ✏️ Update a review (PATCH)
+        Route::delete('/{id}', [ReviewController::class, 'destroy']);       // 🗑️ Delete a review
+    });
 });
 
 // =====================================
