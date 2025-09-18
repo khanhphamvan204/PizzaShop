@@ -41,10 +41,12 @@ Route::prefix('cart')->middleware('auth:api')->group(function () {
 // =====================================
 Route::prefix('banners')->group(function () {
     Route::get('/', [BannerController::class, 'index']);                    // 📋 Danh sách banner
-    Route::post('/', [BannerController::class, 'store']);                   // ➕ Tạo banner mới
     Route::get('/{banner}', [BannerController::class, 'show']);             // 🔍 Chi tiết banner
-    Route::put('/{banner}', [BannerController::class, 'update']);           // ✏️ Cập nhật banner
-    Route::delete('/{banner}', [BannerController::class, 'destroy']);       // 🗑️ Xóa banner
+    Route::middleware('check_role:admin')->group(function () {
+        Route::post('/', [BannerController::class, 'store']);                   // ➕ Tạo banner mới
+        Route::put('/{banner}', [BannerController::class, 'update']);           // ✏️ Cập nhật banner
+        Route::delete('/{banner}', [BannerController::class, 'destroy']);       // 🗑️ Xóa banner
+    });
 });
 
 // =====================================
@@ -64,10 +66,12 @@ Route::prefix('auth')->group(function () {
 // =====================================
 Route::prefix('categories')->group(function () {
     Route::get('/', [CategoryController::class, 'index']);                  // 📋 Danh sách danh mục
-    Route::post('/', [CategoryController::class, 'store']);                 // ➕ Tạo danh mục mới
     Route::get('/{category}', [CategoryController::class, 'show']);         // 🔍 Chi tiết danh mục
-    Route::put('/{category}', [CategoryController::class, 'update']);       // ✏️ Cập nhật danh mục
-    Route::delete('/{category}', [CategoryController::class, 'destroy']);   // 🗑️ Xóa danh mục
+    Route::middleware('check_role:admin')->group(function () {
+        Route::post('/', [CategoryController::class, 'store']);                 // ➕ Tạo danh mục mới
+        Route::put('/{category}', [CategoryController::class, 'update']);       // ✏️ Cập nhật danh mục
+        Route::delete('/{category}', [CategoryController::class, 'destroy']);   // 🗑️ Xóa danh mục
+    });
 });
 
 // =====================================
@@ -76,19 +80,25 @@ Route::prefix('categories')->group(function () {
 Route::prefix('combos')->group(function () {
     Route::get('/active', [ComboController::class, 'active']);              // ✅ Combo đang hoạt động
     Route::get('/', [ComboController::class, 'index']);                     // 📋 Danh sách combo
-    Route::post('/', [ComboController::class, 'store']);                    // ➕ Tạo combo mới
     Route::get('/{id}', [ComboController::class, 'show']);                  // 🔍 Chi tiết combo
-    Route::put('/{id}', [ComboController::class, 'update']);                // ✏️ Cập nhật combo
-    Route::delete('/{id}', [ComboController::class, 'destroy']);            // 🗑️ Xóa combo
+    Route::middleware('check_role:admin')->group(function () {
+        Route::post('/', [ComboController::class, 'store']);                    // ➕ Tạo combo mới
+        Route::put('/{id}', [ComboController::class, 'update']);                // ✏️ Cập nhật combo
+        Route::delete('/{id}', [ComboController::class, 'destroy']);            // 🗑️ Xóa combo
+    });
 });
 
 // =====================================
 // 🍕📦 COMBO ITEMS ROUTES (Items trong combo)
 // =====================================
 Route::prefix('combo-items')->group(function () {
+    Route::get('/', [ComboItemController::class, 'index']);                    // 📋 Danh sách combo items
     Route::get('/{id}', [ComboItemController::class, 'show']);              // 🔍 Chi tiết combo item
-    Route::put('/{id}', [ComboItemController::class, 'update']);            // ✏️ Cập nhật combo item
-    Route::delete('/{id}', [ComboItemController::class, 'destroy']);        // 🗑️ Xóa combo item
+    Route::middleware('check_role:admin')->group(function () {
+        Route::post('/', [ComboItemController::class, 'store']);                    // ➕ Tạo combo item mới
+        Route::put('/{id}', [ComboItemController::class, 'update']);            // ✏️ Cập nhật combo item
+        Route::delete('/{id}', [ComboItemController::class, 'destroy']);        // 🗑️ Xóa combo item
+    });
 });
 
 // =====================================
@@ -106,11 +116,13 @@ Route::prefix('contacts')->group(function () {
 // =====================================
 Route::prefix('coupons')->group(function () {
     Route::get('/', [CouponController::class, 'index']);                    // 📋 Danh sách coupon
-    Route::post('/', [CouponController::class, 'store']);                   // ➕ Tạo coupon mới
     Route::get('/{id}', [CouponController::class, 'show']);                 // 🔍 Chi tiết coupon
-    Route::put('/{id}', [CouponController::class, 'update']);               // ✏️ Cập nhật coupon
-    Route::delete('/{id}', [CouponController::class, 'destroy']);           // 🗑️ Xóa coupon
     Route::post('/validate', [CouponController::class, 'validate']);        // ✅ Kiểm tra mã coupon
+    Route::middleware('check_role:admin')->group(function () {
+        Route::post('/', [CouponController::class, 'store']);                   // ➕ Tạo coupon mới
+        Route::put('/{id}', [CouponController::class, 'update']);               // ✏️ Cập nhật coupon
+        Route::delete('/{id}', [CouponController::class, 'destroy']);           // 🗑️ Xóa coupon
+    });
 });
 
 // =====================================
@@ -118,10 +130,12 @@ Route::prefix('coupons')->group(function () {
 // =====================================
 Route::prefix('crusts')->group(function () {
     Route::get('/', [CrustController::class, 'index']);                     // 📋 Danh sách đế bánh
-    Route::post('/', [CrustController::class, 'store']);                    // ➕ Tạo đế bánh mới
     Route::get('/{id}', [CrustController::class, 'show']);                  // 🔍 Chi tiết đế bánh
-    Route::put('/{id}', [CrustController::class, 'update']);                // ✏️ Cập nhật đế bánh
-    Route::delete('/{id}', [CrustController::class, 'destroy']);            // 🗑️ Xóa đế bánh
+    Route::middleware('check_role:admin')->group(function () {
+        Route::post('/', [CrustController::class, 'store']);                    // ➕ Tạo đế bánh mới
+        Route::put('/{id}', [CrustController::class, 'update']);                // ✏️ Cập nhật đế bánh
+        Route::delete('/{id}', [CrustController::class, 'destroy']);            // 🗑️ Xóa đế bánh
+    });
 });
 
 // =====================================
@@ -129,10 +143,12 @@ Route::prefix('crusts')->group(function () {
 // =====================================
 Route::prefix('faqs')->group(function () {
     Route::get('/', [FaqController::class, 'index']);                       // 📋 Danh sách FAQ
-    Route::post('/', [FaqController::class, 'store']);                      // ➕ Tạo FAQ mới
     Route::get('/{id}', [FaqController::class, 'show']);                    // 🔍 Chi tiết FAQ
-    Route::put('/{id}', [FaqController::class, 'update']);                  // ✏️ Cập nhật FAQ
-    Route::delete('/{id}', [FaqController::class, 'destroy']);              // 🗑️ Xóa FAQ
+    Route::middleware('check_role:admin')->group(function () {
+        Route::post('/', [FaqController::class, 'store']);                      // ➕ Tạo FAQ mới
+        Route::put('/{id}', [FaqController::class, 'update']);                  // ✏️ Cập nhật FAQ
+        Route::delete('/{id}', [FaqController::class, 'destroy']);              // 🗑️ Xóa FAQ
+    });
 });
 
 // =====================================
@@ -140,11 +156,13 @@ Route::prefix('faqs')->group(function () {
 // =====================================
 Route::prefix('news')->group(function () {
     Route::get('/', [NewsController::class, 'index']);                      // 📋 Danh sách tin tức
-    Route::post('/', [NewsController::class, 'store']);                     // ➕ Tạo tin tức mới
-    Route::get('/latest/{count?}', [NewsController::class, 'latest']);      // 🔥 Tin tức mới nhất (limit)
     Route::get('/{id}', [NewsController::class, 'show']);                   // 🔍 Chi tiết tin tức
-    Route::put('/{id}', [NewsController::class, 'update']);                 // ✏️ Cập nhật tin tức
-    Route::delete('/{id}', [NewsController::class, 'destroy']);             // 🗑️ Xóa tin tức
+    Route::get('/latest/{count?}', [NewsController::class, 'latest']);      // 🔥 Tin tức mới nhất (limit)
+    Route::middleware('check_role:admin')->group(function () {
+        Route::post('/', [NewsController::class, 'store']);                     // ➕ Tạo tin tức mới
+        Route::put('/{id}', [NewsController::class, 'update']);                 // ✏️ Cập nhật tin tức
+        Route::delete('/{id}', [NewsController::class, 'destroy']);             // 🗑️ Xóa tin tức
+    });
 });
 
 // =====================================
@@ -190,11 +208,13 @@ Route::prefix('payments')->middleware('auth:api')->group(function () {
 // =====================================
 Route::prefix('products')->group(function () {
     Route::get('/', [ProductController::class, 'index']);                   // 📋 Danh sách sản phẩm
-    Route::post('/', [ProductController::class, 'store']);                  // ➕ Tạo sản phẩm mới
     Route::get('/featured', [ProductController::class, 'featured']);        // ⭐ Sản phẩm nổi bật
     Route::get('/{id}', [ProductController::class, 'show']);                // 🔍 Chi tiết sản phẩm
-    Route::put('/{id}', [ProductController::class, 'update']);              // ✏️ Cập nhật sản phẩm
-    Route::delete('/{id}', [ProductController::class, 'destroy']);          // 🗑️ Xóa sản phẩm
+    Route::middleware('check_role:admin')->group(function () {
+        Route::post('/', [ProductController::class, 'store']);                  // ➕ Tạo sản phẩm mới
+        Route::put('/{id}', [ProductController::class, 'update']);              // ✏️ Cập nhật sản phẩm
+        Route::delete('/{id}', [ProductController::class, 'destroy']);          // 🗑️ Xóa sản phẩm
+    });
 });
 
 // =====================================
@@ -202,10 +222,12 @@ Route::prefix('products')->group(function () {
 // =====================================
 Route::prefix('product-variants')->group(function () {
     Route::get('/', [ProductVariantController::class, 'index']);            // 📋 Danh sách variants
-    Route::post('/', [ProductVariantController::class, 'store']);           // ➕ Tạo variant mới
     Route::get('/{id}', [ProductVariantController::class, 'show']);         // 🔍 Chi tiết variant
-    Route::put('/{id}', [ProductVariantController::class, 'update']);       // ✏️ Cập nhật variant
-    Route::delete('/{id}', [ProductVariantController::class, 'destroy']);   // 🗑️ Xóa variant
+    Route::middleware('check_role:admin')->group(function () {
+        Route::post('/', [ProductVariantController::class, 'store']);           // ➕ Tạo variant mới
+        Route::put('/{id}', [ProductVariantController::class, 'update']);       // ✏️ Cập nhật variant
+        Route::delete('/{id}', [ProductVariantController::class, 'destroy']);   // 🗑️ Xóa variant
+    });
 });
 
 // =====================================
@@ -228,22 +250,26 @@ Route::prefix('reviews')->group(function () {
 // =====================================
 Route::prefix('sizes')->group(function () {
     Route::get('/', [SizeController::class, 'index']);                      // 📋 Danh sách kích thước
-    Route::post('/', [SizeController::class, 'store']);                     // ➕ Tạo kích thước mới
     Route::get('/{id}', [SizeController::class, 'show']);                   // 🔍 Chi tiết kích thước
-    Route::put('/{id}', [SizeController::class, 'update']);                 // ✏️ Cập nhật kích thước
-    Route::delete('/{id}', [SizeController::class, 'destroy']);             // 🗑️ Xóa kích thước
+    Route::middleware('check_role:admin')->group(function () {
+        Route::post('/', [SizeController::class, 'store']);                     // ➕ Tạo kích thước mới
+        Route::put('/{id}', [SizeController::class, 'update']);                 // ✏️ Cập nhật kích thước
+        Route::delete('/{id}', [SizeController::class, 'destroy']);             // 🗑️ Xóa kích thước
+    });
 });
 
 // =====================================
 // 👥 USER ROUTES (Người dùng)
 // =====================================
 Route::prefix('users')->group(function () {
-    Route::get('/', [UserController::class, 'index']);                      // 📋 Danh sách user (admin)
-    Route::post('/', [UserController::class, 'store']);                     // ➕ Tạo user mới (đăng ký)
-    Route::get('/{id}', [UserController::class, 'show']);                   // 🔍 Chi tiết user
-    Route::put('/{id}', [UserController::class, 'update']);                 // ✏️ Cập nhật user (PUT)
-    Route::patch('/{id}', [UserController::class, 'update']);               // ✏️ Cập nhật user (PATCH)
-    Route::delete('/{id}', [UserController::class, 'destroy']);             // 🗑️ Xóa user
+    Route::middleware('check_role:admin')->group(function () {
+        Route::get('/', [UserController::class, 'index']);                      // 📋 Danh sách user (admin)
+        Route::post('/', [UserController::class, 'store']);                     // ➕ Tạo user mới (đăng ký)
+        Route::get('/{id}', [UserController::class, 'show']);                   // 🔍 Chi tiết user
+        Route::delete('/{id}', [UserController::class, 'destroy']);             // 🗑️ Xóa user
+        Route::patch('/{id}', [UserController::class, 'update']);                 // ✏️ Cập nhật user (PATCH)
+    });
+    Route::put('/{id}', [UserController::class, 'update'])->middleware('auth:api');                 // ✏️ Cập nhật user (PUT)
     Route::post('/change-password', [UserController::class, 'changePassword'])->middleware('auth:api'); // 🔒 Đổi mật khẩu (cần auth)
 });
 
@@ -280,7 +306,7 @@ Route::prefix('verification')->group(function () {
     Route::post('/check-verification-status', [EmailVerificationController::class, 'checkVerificationStatus']);
 });
 
-Route::prefix('revenue')->group(function () {
+Route::prefix('revenue')->middleware('check_role:admin')->group(function () {
     Route::get('/daily', [RevenueController::class, 'dailyRevenue']);
     Route::get('/weekly', [RevenueController::class, 'weeklyRevenue']);
     Route::get('/monthly', [RevenueController::class, 'monthlyRevenue']);

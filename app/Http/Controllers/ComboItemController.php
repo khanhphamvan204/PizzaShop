@@ -9,6 +9,29 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ComboItemController extends Controller
 {
+    public function index(Request $request)
+    {
+        try {
+            $comboItems = ComboItem::with([
+                'combo',
+                'productVariant.product',
+                'productVariant.size',
+                'productVariant.crust'
+            ])->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $comboItems
+            ]);
+        } catch (\Exception $e) {
+            Log::error("ComboItem index error: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'Failed to fetch combo items'
+            ], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         try {
