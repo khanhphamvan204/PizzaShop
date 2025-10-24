@@ -394,11 +394,15 @@ CREATE TABLE news (
 -- Bảng faq: Câu hỏi thường gặp
 CREATE TABLE faq (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
     question VARCHAR(255) NOT NULL,
-    answer TEXT NOT NULL,
+    answer TEXT NULL,
+    status ENUM('pending', 'answered') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
 
 -- Bảng contacts: Form liên hệ
 CREATE TABLE contacts (
@@ -677,17 +681,17 @@ INSERT INTO news (title, content, image_url) VALUES
 ('Cửa hàng mới khai trương', 'Chi nhánh mới tại Quận 7, TP.HCM.', '/images/news10.jpg');
 
 -- Dữ liệu mẫu cho bảng faq
-INSERT INTO faq (question, answer) VALUES
-('Giao hàng mất bao lâu?', 'Giao hàng trong 30-45 phút tùy khu vực.'),
-('Có pizza chay không?', 'Có, chúng tôi có danh mục pizza chay đa dạng.'),
-('Làm sao để áp dụng mã giảm giá?', 'Nhập mã tại bước thanh toán trên website.'),
-('Có giao hàng tận nơi không?', 'Có, chúng tôi giao hàng toàn TP.HCM.'),
-('Phương thức thanh toán nào được chấp nhận?', 'Tiền mặt, thẻ tín dụng, chuyển khoản, PayPal.'),
-('Làm sao để đổi mật khẩu?', 'Vào phần tài khoản cá nhân để đổi mật khẩu.'),
-('Pizza có tùy chỉnh topping không?', 'Hiện tại chúng tôi chưa hỗ trợ tùy chỉnh topping.'),
-('Có chương trình khách hàng thân thiết không?', 'Có, tích điểm với mỗi đơn hàng.'),
-('Làm sao để liên hệ hỗ trợ?', 'Gửi form liên hệ hoặc gọi hotline.'),
-('Có giao hàng ngoài TP.HCM không?', 'Hiện chỉ giao trong TP.HCM.');
+INSERT INTO faq (name, email, question, answer, status) VALUES
+('Nguyễn Văn A', 'nguyenvana@example.com', 'Giao hàng mất bao lâu?', 'Giao hàng trong 30-45 phút tùy khu vực.', 'answered'),
+('Trần Thị B', 'tranthib@example.com', 'Có pizza chay không?', 'Có, chúng tôi có danh mục pizza chay đa dạng.', 'answered'),
+('Lê Văn C', 'levanc@example.com', 'Làm sao để áp dụng mã giảm giá?', 'Nhập mã tại bước thanh toán trên website.', 'answered'),
+('Phạm Thị D', 'phamthid@example.com', 'Có giao hàng tận nơi không?', 'Có, chúng tôi giao hàng toàn TP.HCM.', 'answered'),
+('Hoàng Văn E', 'hoangvane@example.com', 'Phương thức thanh toán nào được chấp nhận?', 'Tiền mặt, thẻ tín dụng, chuyển khoản, PayPal.', 'answered'),
+('Nguyễn Thị F', 'nguyenthif@example.com', 'Làm sao để đổi mật khẩu?', NULL, 'pending'),
+('Trần Văn G', 'tranvang@example.com', 'Pizza có tùy chỉnh topping không?', 'Hiện tại chúng tôi chưa hỗ trợ tùy chỉnh topping.', 'answered'),
+('Lê Thị H', 'lethih@example.com', 'Có chương trình khách hàng thân thiết không?', 'Có, tích điểm với mỗi đơn hàng.', 'answered'),
+('Phạm Văn I', 'phamvani@example.com', 'Làm sao để liên hệ hỗ trợ?', NULL, 'pending'),
+('Hoàng Thị J', 'hoangthij@example.com', 'Có giao hàng ngoài TP.HCM không?', 'Hiện chỉ giao trong TP.HCM.', 'answered');
 
 -- Dữ liệu mẫu cho bảng contacts
 INSERT INTO contacts (user_id, name, email, message) VALUES

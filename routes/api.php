@@ -142,10 +142,10 @@ Route::prefix('crusts')->group(function () {
 // ❓ FAQ ROUTES (Câu hỏi thường gặp)
 // =====================================
 Route::prefix('faqs')->group(function () {
-    Route::get('/', [FaqController::class, 'index']);                       // 📋 Danh sách FAQ
-    Route::get('/{id}', [FaqController::class, 'show']);                    // 🔍 Chi tiết FAQ
+    // Route::get('/{id}', [FaqController::class, 'show']);                    // 🔍 Chi tiết FAQ
+    Route::post('/', [FaqController::class, 'store']);                      // ➕ Tạo FAQ mới
     Route::middleware('check_role:admin')->group(function () {
-        Route::post('/', [FaqController::class, 'store']);                      // ➕ Tạo FAQ mới
+        Route::get('/', [FaqController::class, 'index']);                       // 📋 Danh sách FAQ
         Route::put('/{id}', [FaqController::class, 'update']);                  // ✏️ Cập nhật FAQ
         Route::delete('/{id}', [FaqController::class, 'destroy']);              // 🗑️ Xóa FAQ
     });
@@ -262,9 +262,9 @@ Route::prefix('sizes')->group(function () {
 // 👥 USER ROUTES (Người dùng)
 // =====================================
 Route::prefix('users')->group(function () {
+    Route::post('/', [UserController::class, 'store']);                     // ➕ Tạo user mới (đăng ký)
     Route::middleware('check_role:admin')->group(function () {
         Route::get('/', [UserController::class, 'index']);                      // 📋 Danh sách user (admin)
-        Route::post('/', [UserController::class, 'store']);                     // ➕ Tạo user mới (đăng ký)
         Route::get('/{id}', [UserController::class, 'show']);                   // 🔍 Chi tiết user
         Route::delete('/{id}', [UserController::class, 'destroy']);             // 🗑️ Xóa user
         Route::patch('/{id}', [UserController::class, 'update']);                 // ✏️ Cập nhật user (PATCH)
