@@ -306,7 +306,7 @@ CREATE TABLE payments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
-    method ENUM('cash', 'credit_card', 'bank_transfer', 'paypal') DEFAULT 'cash',
+    method ENUM('cash', 'credit_card', 'bank_transfer', 'paypal', 'vnpay') DEFAULT 'cash',
     status ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
     transaction_id VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

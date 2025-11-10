@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SizeController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\RevenueController;
+use App\Http\Controllers\VnPayController;
 
 // =====================================
 // 🛒 CART ROUTES (Giỏ hàng)
@@ -322,3 +324,6 @@ Route::prefix('revenue')->middleware('check_role:admin')->group(function () {
 
     Route::get('/dashboard', [RevenueController::class, 'dashboardStats']);
 });
+
+// VNPAY initiate endpoint (returns redirect URL). Requires auth to create order/payments.
+Route::post('/vnpay/initiate', [VnPayController::class, 'initiate'])->middleware('auth:api');

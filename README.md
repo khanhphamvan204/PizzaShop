@@ -19,16 +19,53 @@
 
 ## 📋 Table of Contents
 
-- [🌟 Giới thiệu](#-giới-thiệu)
-- [✨ Tính năng nổi bật](#-tính-năng-nổi-bật)
-- [🚀 Chức năng chính](#-chức-năng-chính)
-- [🏗️ Cấu trúc Database](#️-cấu-trúc-database)
-- [💻 Công nghệ sử dụng](#-công-nghệ-sử-dụng)
-- [⚡ Quick Start](#-quick-start)
-- [🔧 API Reference](#-api-reference)
-- [🔒 Bảo mật](#-bảo-mật)
-- [🎯 Roadmap](#-roadmap)
-- [🤝 Contributing](#-contributing)
+-   [🌟 Giới thiệu](#-giới-thiệu)
+-   [✨ Tính năng nổi bật](#-tính-năng-nổi-bật)
+-   [🚀 Chức năng chính](#-chức-năng-chính)
+-   [🏗️ Cấu trúc Database](#️-cấu-trúc-database)
+-   [💻 Công nghệ sử dụng](#-công-nghệ-sử-dụng)
+-   [⚡ Quick Start](#-quick-start)
+-   [🔧 API Reference](#-api-reference)
+-   [🔒 Bảo mật](#-bảo-mật)
+-   [🎯 Roadmap](#-roadmap)
+-   [🤝 Contributing](#-contributing)
+
+---
+
+## 💳 VNPAY (thanh toán) — tích hợp nhanh
+
+Hướng dẫn nhanh để sử dụng VNPAY (sandbox) trong dự án:
+
+-   Thêm vào file `.env` (đã thêm sẵn trong repo):
+
+    -   VNPAY_TMN_CODE=86ED9PKB
+    -   VNPAY_HASH_SECRET=C4OX6WKZY7XBMCZK9PWCNU20JCOT3005
+    -   VNPAY_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+    -   VNPAY_RETURN_URL=http://localhost:5173/thanks
+
+-   File cấu hình: `config/vnpay.php` (đã tạo) — dùng `env()` để đọc cấu hình.
+
+-   Controller: `app/Http/Controllers/VnPayController.php` với 2 endpoint:
+
+    -   `POST /vnpay/pay` — tạo URL thanh toán và redirect người dùng tới VNPAY sandbox.
+        -   Tham số: `amount` (bắt buộc, VND), `order_id` (tùy chọn), `description` (tùy chọn)
+    -   `GET /vnpay/return` — VNPAY redirect về đây, controller kiểm tra `vnp_SecureHash` rồi trả kết quả JSON (ví dụ).
+
+-   Routes đã đăng ký trong `routes/web.php`.
+
+Ghi chú: phần xử lý sau khi thanh toán thành công (cập nhật `orders`/`payments`) cần tích hợp thêm vào `VnPayController::return` theo luồng nghiệp vụ của bạn (ghi trạng thái payment, gửi email, giảm stock...).
+
+### IPN (server-to-server)
+
+Một endpoint `POST /vnpay/ipn` đã được thêm để nhận notification từ VNPAY (server-to-server). Controller sẽ verify chữ ký và cập nhật `payments` tương ứng.
+
+### Postman collection
+
+Bạn có thể dùng Postman collection mẫu ở `postman/VNPAY.postman_collection.json` để thử các bước:
+
+-   `POST /vnpay/pay` tạo payment và redirect (thực tế trả về redirect; trong Postman bạn sẽ nhận response hoặc redirect header)
+-   `GET /vnpay/return` mô phỏng redirect từ VNPAY
+-   `POST /vnpay/ipn` mô phỏng IPN server-to-server
 
 ---
 
@@ -37,10 +74,11 @@
 > **Pizza Shop** là một website thương mại điện tử chuyên về pizza, được thiết kế với trải nghiệm người dùng tối ưu và hệ thống quản lý mạnh mẽ.
 
 ### 🎯 Mục tiêu
-- 🍕 Mang đến trải nghiệm đặt pizza online tuyệt vời
-- 📱 Responsive design cho mọi thiết bị
-- ⚡ Performance cao và tải trang nhanh
-- 🔐 Bảo mật thông tin khách hàng tuyệt đối
+
+-   🍕 Mang đến trải nghiệm đặt pizza online tuyệt vời
+-   📱 Responsive design cho mọi thiết bị
+-   ⚡ Performance cao và tải trang nhanh
+-   🔐 Bảo mật thông tin khách hàng tuyệt đối
 
 ---
 
@@ -51,27 +89,29 @@
 <td width="50%">
 
 ### 🛍️ **Cho Khách Hàng**
-- 🏠 **Trang chủ hiện đại** với banner động
-- 🍕 **Pizza customization** (size + đế)
-- 🛒 **Smart cart** lưu trạng thái
-- 💳 **Thanh toán đa dạng** (COD, Card, PayPal...)
-- ⭐ **Review system** 5 sao
-- 🎟️ **Mã giảm giá** thông minh
-- 📱 **Mobile-first design**
-- 🍱 **Combo deals** tiết kiệm
+
+-   🏠 **Trang chủ hiện đại** với banner động
+-   🍕 **Pizza customization** (size + đế)
+-   🛒 **Smart cart** lưu trạng thái
+-   💳 **Thanh toán đa dạng** (COD, Card, PayPal...)
+-   ⭐ **Review system** 5 sao
+-   🎟️ **Mã giảm giá** thông minh
+-   📱 **Mobile-first design**
+-   🍱 **Combo deals** tiết kiệm
 
 </td>
 <td width="50%">
 
 ### 👨‍💼 **Cho Admin**
-- 📊 **Dashboard** với charts realtime
-- 📦 **Quản lý sản phẩm** advanced
-- 🚚 **Order tracking** workflow
-- 👥 **Customer management**
-- 🎨 **Content management** (banners, news)
-- 📈 **Analytics & Reports**
-- 🔧 **System settings**
-- 🎯 **Coupon management**
+
+-   📊 **Dashboard** với charts realtime
+-   📦 **Quản lý sản phẩm** advanced
+-   🚚 **Order tracking** workflow
+-   👥 **Customer management**
+-   🎨 **Content management** (banners, news)
+-   📈 **Analytics & Reports**
+-   🔧 **System settings**
+-   🎯 **Coupon management**
 
 </td>
 </tr>
@@ -82,6 +122,7 @@
 ## 🚀 Chức năng chính
 
 ### 🏠 **1. Trang chủ (Home Page)**
+
 ```mermaid
 graph LR
     A[🏠 Trang chủ] --> B[🎯 Banner quảng cáo]
@@ -93,11 +134,11 @@ graph LR
 <details>
 <summary>📋 Chi tiết chức năng</summary>
 
-- **🎨 Hero Banner**: Slider với các promotion hot
-- **🔥 Featured Products**: Top pizza bestseller
-- **📰 Latest News**: Tin tức, khuyến mãi mới
-- **⭐ Customer Reviews**: Đánh giá từ khách hàng
-- **📍 Store Locator**: Bản đồ cửa hàng
+-   **🎨 Hero Banner**: Slider với các promotion hot
+-   **🔥 Featured Products**: Top pizza bestseller
+-   **📰 Latest News**: Tin tức, khuyến mãi mới
+-   **⭐ Customer Reviews**: Đánh giá từ khách hàng
+-   **📍 Store Locator**: Bản đồ cửa hàng
 
 </details>
 
@@ -107,18 +148,18 @@ graph LR
 
 <div align="center">
 
-| 🏷️ **Danh mục** | 📝 **Mô tả** | 🎯 **Đặc điểm** |
-|:---:|:---:|:---:|
-| 🦐 Pizza Hải Sản | Tôm, cua, mực tươi | Premium ingredients |
-| 🥬 Pizza Chay | 100% thuần chay | Healthy choice |
-| 🥩 Pizza Thịt | Pepperoni, xúc xích | Classic flavors |
-| 🧀 Pizza Phô Mai | 4 loại phô mai | Cheese lovers |
-| 🍕 Pizza Truyền Thống | Công thức cổ điển | Authentic taste |
-| ⭐ Pizza Đặc Biệt | Sáng tạo độc quyền | Chef's special |
-| 🥤 Nước Uống | Giải khát đa dạng | Fresh drinks |
-| 🍰 Tráng Miệng | Bánh ngọt, kem | Sweet endings |
-| 🍟 Món Ăn Kèm | Khoai tây chiên, gà chiên | Side dishes |
-| 🎁 Combo Khuyến Mãi | Combo giá ưu đãi | Value packages |
+|    🏷️ **Danh mục**    |       📝 **Mô tả**        |   🎯 **Đặc điểm**   |
+| :-------------------: | :-----------------------: | :-----------------: |
+|   🦐 Pizza Hải Sản    |    Tôm, cua, mực tươi     | Premium ingredients |
+|     🥬 Pizza Chay     |      100% thuần chay      |   Healthy choice    |
+|     🥩 Pizza Thịt     |    Pepperoni, xúc xích    |   Classic flavors   |
+|   🧀 Pizza Phô Mai    |      4 loại phô mai       |    Cheese lovers    |
+| 🍕 Pizza Truyền Thống |     Công thức cổ điển     |   Authentic taste   |
+|   ⭐ Pizza Đặc Biệt   |    Sáng tạo độc quyền     |   Chef's special    |
+|     🥤 Nước Uống      |     Giải khát đa dạng     |    Fresh drinks     |
+|    🍰 Tráng Miệng     |      Bánh ngọt, kem       |    Sweet endings    |
+|     🍟 Món Ăn Kèm     | Khoai tây chiên, gà chiên |     Side dishes     |
+|  🎁 Combo Khuyến Mãi  |     Combo giá ưu đãi      |   Value packages    |
 
 </div>
 
@@ -126,40 +167,40 @@ graph LR
 
 ```yaml
 Sizes:
-  - 🔸 Mini (12cm): Perfect for kids
-  - 🔹 Siêu Nhỏ (15cm): Light meal
-  - 🔸 Cỡ Nhỏ Đặc Biệt (18cm): Individual  
-  - 🔹 Nhỏ (20cm): Single serving
-  - 🔶 Cỡ Trung (22.5cm): For couples
-  - 🔷 Vừa (25cm): For 2-3 people
-  - 🔶 Lớn (30cm): Family size
-  - 🔷 Cỡ Lớn Đặc Biệt (32cm): Extra large
-  - 🟠 Cỡ Đại (35cm): Party size
-  - 🟡 Gia Đình (40cm): Super family
+    - 🔸 Mini (12cm): Perfect for kids
+    - 🔹 Siêu Nhỏ (15cm): Light meal
+    - 🔸 Cỡ Nhỏ Đặc Biệt (18cm): Individual
+    - 🔹 Nhỏ (20cm): Single serving
+    - 🔶 Cỡ Trung (22.5cm): For couples
+    - 🔷 Vừa (25cm): For 2-3 people
+    - 🔶 Lớn (30cm): Family size
+    - 🔷 Cỡ Lớn Đặc Biệt (32cm): Extra large
+    - 🟠 Cỡ Đại (35cm): Party size
+    - 🟡 Gia Đình (40cm): Super family
 
 Crusts:
-  - 🥖 Đế Mỏng: Crispy & light
-  - 🍞 Đế Dày: Soft & fluffy  
-  - 🧀 Viền Phô Mai: Cheese-stuffed crust
-  - 🌭 Đế Nhân Nhồi: Sausage-filled
-  - 🔥 Đế Giòn: Extra crispy
-  - 🌿 Đế Nguyên Cám: Whole wheat healthy
-  - 🚫 Đế Không Gluten: Gluten-free option
-  - 🧄 Đế Hành Lá: Green onion flavored
-  - 🌶️ Đế Tiêu Đen: Black pepper crust
-  - 🌿 Đế Thảo Mộc: Italian herbs
+    - 🥖 Đế Mỏng: Crispy & light
+    - 🍞 Đế Dày: Soft & fluffy
+    - 🧀 Viền Phô Mai: Cheese-stuffed crust
+    - 🌭 Đế Nhân Nhồi: Sausage-filled
+    - 🔥 Đế Giòn: Extra crispy
+    - 🌿 Đế Nguyên Cám: Whole wheat healthy
+    - 🚫 Đế Không Gluten: Gluten-free option
+    - 🧄 Đế Hành Lá: Green onion flavored
+    - 🌶️ Đế Tiêu Đen: Black pepper crust
+    - 🌿 Đế Thảo Mộc: Italian herbs
 ```
 
 ---
 
-
 **✨ Features:**
-- 🔄 **Auto-sync** cho user đăng nhập
-- 💾 **Persistent storage** với database
-- 🍪 **Session storage** cho guest
-- ⚡ **Real-time updates** khi thay đổi
-- 🧮 **Auto-calculate** tổng tiền, thuế, phí ship
-- 🍱 **Combo support** - có thể thêm cả sản phẩm lẻ và combo
+
+-   🔄 **Auto-sync** cho user đăng nhập
+-   💾 **Persistent storage** với database
+-   🍪 **Session storage** cho guest
+-   ⚡ **Real-time updates** khi thay đổi
+-   🧮 **Auto-calculate** tổng tiền, thuế, phí ship
+-   🍱 **Combo support** - có thể thêm cả sản phẩm lẻ và combo
 
 ---
 
@@ -176,11 +217,12 @@ graph TB
 ```
 
 **🎯 Combo Features:**
-- 🎁 **Bundle Products**: Kết hợp nhiều sản phẩm với giá ưu đãi
-- 📅 **Time-limited**: Có thời hạn bắt đầu và kết thúc
-- 💰 **Special Pricing**: Giá combo thấp hơn mua lẻ
-- 🔄 **Flexible Quantities**: Số lượng linh hoạt cho từng item
-- 📱 **Easy Management**: Admin dễ dàng tạo/chỉnh sửa combo
+
+-   🎁 **Bundle Products**: Kết hợp nhiều sản phẩm với giá ưu đãi
+-   📅 **Time-limited**: Có thời hạn bắt đầu và kết thúc
+-   💰 **Special Pricing**: Giá combo thấp hơn mua lẻ
+-   🔄 **Flexible Quantities**: Số lượng linh hoạt cho từng item
+-   📱 **Easy Management**: Admin dễ dàng tạo/chỉnh sửa combo
 
 ---
 
@@ -189,19 +231,20 @@ graph TB
 <div align="center">
 
 | 💳 **Phương thức** | 🏷️ **Phí** | ⏱️ **Xử lý** | 🔒 **Bảo mật** |
-|:---:|:---:|:---:|:---:|
-| 💵 Cash (COD) | Miễn phí | Tức thì | ⭐⭐⭐ |
-| 💳 Credit Card | 2.9% | 1-3 phút | ⭐⭐⭐⭐⭐ |
-| 🏦 Bank Transfer | Miễn phí | 15-30 phút | ⭐⭐⭐⭐ |
-| 💙 PayPal | 3.4% | Tức thì | ⭐⭐⭐⭐⭐ |
+| :----------------: | :--------: | :----------: | :------------: |
+|   💵 Cash (COD)    |  Miễn phí  |   Tức thì    |     ⭐⭐⭐     |
+|   💳 Credit Card   |    2.9%    |   1-3 phút   |   ⭐⭐⭐⭐⭐   |
+|  🏦 Bank Transfer  |  Miễn phí  |  15-30 phút  |    ⭐⭐⭐⭐    |
+|     💙 PayPal      |    3.4%    |   Tức thì    |   ⭐⭐⭐⭐⭐   |
 
 </div>
 
 **💡 Payment Features:**
-- 🛡️ **One Payment Rule**: Mỗi đơn hàng chỉ có 1 payment thành công
-- 🔄 **Status Tracking**: Pending → Completed/Failed
-- 🧾 **Transaction ID**: Lưu trữ mã giao dịch
-- 📊 **Payment Analytics**: Thống kê theo phương thức
+
+-   🛡️ **One Payment Rule**: Mỗi đơn hàng chỉ có 1 payment thành công
+-   🔄 **Status Tracking**: Pending → Completed/Failed
+-   🧾 **Transaction ID**: Lưu trữ mã giao dịch
+-   📊 **Payment Analytics**: Thống kê theo phương thức
 
 ---
 
@@ -209,18 +252,18 @@ graph TB
 
 ```yaml
 Authentication:
-  📝 Register: Email verification required
-  🔐 Login: Username/Email + Password
-  🔑 Password Reset: OTP via email/SMS
-  👤 Profile Management: Update info anytime
+    📝 Register: Email verification required
+    🔐 Login: Username/Email + Password
+    🔑 Password Reset: OTP via email/SMS
+    👤 Profile Management: Update info anytime
 
 User Dashboard:
-  📊 Overview: Order stats, points earned
-  📦 Order History: Track all purchases  
-  ⭐ Reviews: Rate & comment products/combos
-  🎟️ Coupons: Available vouchers
-  📍 Addresses: Multiple delivery locations
-  🔔 Notifications: Order updates, promotions
+    📊 Overview: Order stats, points earned
+    📦 Order History: Track all purchases
+    ⭐ Reviews: Rate & comment products/combos
+    🎟️ Coupons: Available vouchers
+    📍 Addresses: Multiple delivery locations
+    🔔 Notifications: Order updates, promotions
 ```
 
 ---
@@ -233,33 +276,33 @@ User Dashboard:
 graph TB
     A[👨‍💼 Admin Dashboard] --> B[📊 Analytics]
     A --> C[📦 Products]
-    A --> D[🛍️ Orders] 
+    A --> D[🛍️ Orders]
     A --> E[👥 Customers]
     A --> F[🎨 Content]
     A --> G[🍱 Combos]
     A --> H[🎟️ Coupons]
-    
+
     B --> B1[💰 Revenue Charts]
     B --> B2[📈 Sales Trends]
-    
+
     C --> C1[➕ Add Product]
     C --> C2[✏️ Edit Variants]
     C --> C3[📸 Image Upload]
-    
+
     D --> D1[📋 Order List]
     D --> D2[🔄 Status Update]
     D --> D3[🖨️ Print Invoice]
-    
+
     E --> E1[👤 Customer Info]
     E --> E2[📊 Purchase History]
-    
+
     F --> F1[🎨 Banners]
     F --> F2[📰 News]
     F --> F3[❓ FAQ]
-    
+
     G --> G1[🍱 Create Combo]
     G --> G2[📋 Manage Items]
-    
+
     H --> H1[🎟️ Create Coupon]
     H --> H2[📊 Usage Stats]
 ```
@@ -267,14 +310,15 @@ graph TB
 </div>
 
 **🎯 Key Features:**
-- 📈 **Real-time Dashboard** với charts động
-- 🔄 **Bulk Operations** cho products/orders
-- 📱 **Mobile Admin** responsive design
-- 🔔 **Push Notifications** cho orders mới
-- 📊 **Advanced Analytics** với filters
-- 🎨 **WYSIWYG Editor** cho content
-- 🍱 **Combo Management** tạo và quản lý combo
-- 🎟️ **Smart Coupons** với điều kiện phức tạp
+
+-   📈 **Real-time Dashboard** với charts động
+-   🔄 **Bulk Operations** cho products/orders
+-   📱 **Mobile Admin** responsive design
+-   🔔 **Push Notifications** cho orders mới
+-   📊 **Advanced Analytics** với filters
+-   🎨 **WYSIWYG Editor** cho content
+-   🍱 **Combo Management** tạo và quản lý combo
+-   🎟️ **Smart Coupons** với điều kiện phức tạp
 
 ---
 
@@ -285,55 +329,54 @@ graph TB
 <td width="33%">
 
 #### 💯 **Percentage Discount**
+
 ```yaml
 Examples:
-  PIZZA10: 10% off (min 200k, max 50k)
-  SUMMER20: 20% off (min 300k, max 100k)
-  FLASH25: 25% off (min 500k, max 150k)
-  VIP15: 15% off (min 250k, max 75k)
+    PIZZA10: 10% off (min 200k, max 50k)
+    SUMMER20: 20% off (min 300k, max 100k)
+    FLASH25: 25% off (min 500k, max 150k)
+    VIP15: 15% off (min 250k, max 75k)
 
-Features:
-  ✅ Min order amount
-  ✅ Max discount cap
-  ✅ Expiry date
-  ✅ Active/Inactive status
+Features: ✅ Min order amount
+    ✅ Max discount cap
+    ✅ Expiry date
+    ✅ Active/Inactive status
 ```
 
 </td>
 <td width="33%">
 
 #### 💰 **Fixed Amount**
+
 ```yaml
 Examples:
-  FREESHIP: -30k shipping (min 150k)
-  NEWUSER: -50k first order (min 100k)
-  COMBO50: -50k combo deals (min 400k)
-  PIZZADAY: -20k special day (min 150k)
+    FREESHIP: -30k shipping (min 150k)
+    NEWUSER: -50k first order (min 100k)
+    COMBO50: -50k combo deals (min 400k)
+    PIZZADAY: -20k special day (min 150k)
 
-Benefits:
-  ✅ Easy to understand
-  ✅ Great for small orders
-  ✅ Shipping incentives
-  ✅ New customer attraction
+Benefits: ✅ Easy to understand
+    ✅ Great for small orders
+    ✅ Shipping incentives
+    ✅ New customer attraction
 ```
 
 </td>
 <td width="34%">
 
 #### 🎁 **Smart Validation**
-```yaml
-Business Rules:
-  ⚡ Either percentage OR amount
-  ⚡ Not both at same time
-  ⚡ Auto-check minimum order
-  ⚡ Validate expiry date
-  ⚡ Usage tracking
 
-Database Constraints:
-  ✅ CHECK constraints
-  ✅ UNIQUE coupon codes
-  ✅ Proper data types
-  ✅ Audit timestamps
+```yaml
+Business Rules: ⚡ Either percentage OR amount
+    ⚡ Not both at same time
+    ⚡ Auto-check minimum order
+    ⚡ Validate expiry date
+    ⚡ Usage tracking
+
+Database Constraints: ✅ CHECK constraints
+    ✅ UNIQUE coupon codes
+    ✅ Proper data types
+    ✅ Audit timestamps
 ```
 
 </td>
@@ -352,27 +395,27 @@ erDiagram
     USERS ||--o{ CARTS : owns
     USERS ||--o{ REVIEWS : writes
     USERS ||--o{ CONTACTS : submits
-    
+
     PRODUCTS ||--o{ PRODUCT_VARIANTS : has
     PRODUCTS }|--|| CATEGORIES : belongs_to
     PRODUCTS ||--o{ REVIEWS : receives
-    
+
     ORDERS ||--o{ ORDER_ITEMS : contains
     ORDERS }|--o| COUPONS : uses
     ORDERS ||--|| PAYMENTS : has
-    
+
     CARTS ||--o{ CART_ITEMS : contains
     CART_ITEMS }|--o| PRODUCT_VARIANTS : references
     CART_ITEMS }|--o| COMBOS : references
     ORDER_ITEMS }|--o| PRODUCT_VARIANTS : references
     ORDER_ITEMS }|--o| COMBOS : references
-    
+
     PRODUCT_VARIANTS }|--|| SIZES : has
     PRODUCT_VARIANTS }|--|| CRUSTS : has
-    
+
     COMBOS ||--o{ COMBO_ITEMS : contains
     COMBO_ITEMS }|--|| PRODUCT_VARIANTS : includes
-    
+
     REVIEWS }|--o| COMBOS : rates
 ```
 
@@ -384,18 +427,19 @@ erDiagram
 ```sql
 -- 👤 Users: Customer & Admin accounts
 users (
-  id, username, password, email, full_name, 
-  address, phone, role[customer|admin], 
+  id, username, password, email, full_name,
+  address, phone, role[customer|admin],
   created_at, updated_at
 )
 
 -- 📞 Contacts: Customer inquiries (flexible user/guest)
 contacts (
-  id, user_id?, name?, email, message, 
+  id, user_id?, name?, email, message,
   created_at, updated_at
 )
 -- Logic: user_id thì auto-fill name/email, guest thì required name/email
 ```
+
 </details>
 
 <details>
@@ -405,7 +449,7 @@ contacts (
 -- 🏷️ Categories: 10 product types
 categories (id, name, description, created_at, updated_at)
 
--- 🍕 Products: Pizza and items  
+-- 🍕 Products: Pizza and items
 products (id, name, description, image_url, category_id, timestamps)
 
 -- 📏 Sizes: 10 pizza dimensions
@@ -416,11 +460,12 @@ crusts (id, name, description, created_at, updated_at)
 
 -- 🎛️ Product Variants: Price combinations
 product_variants (
-  id, product_id, size_id?, crust_id?, 
+  id, product_id, size_id?, crust_id?,
   price, stock, created_at, updated_at
 )
 -- Logic: Pizza cần size+crust, non-pizza thì NULL
 ```
+
 </details>
 
 <details>
@@ -432,33 +477,34 @@ carts (id, user_id, created_at, updated_at)
 
 -- 📦 Cart Items: Products OR combos in cart
 cart_items (
-  id, cart_id, product_variant_id?, combo_id?, 
+  id, cart_id, product_variant_id?, combo_id?,
   quantity, created_at, updated_at
 )
 -- Logic: Either product_variant_id OR combo_id (XOR)
 
 -- 🛍️ Orders: Purchase records with auto-total
 orders (
-  id, user_id, total_amount[auto-calculated], 
-  status[pending|confirmed|shipped|delivered|cancelled], 
+  id, user_id, total_amount[auto-calculated],
+  status[pending|confirmed|shipped|delivered|cancelled],
   shipping_address, coupon_id?, created_at, updated_at
 )
 
 -- 📋 Order Items: Products OR combos in order
 order_items (
-  id, order_id, product_variant_id?, combo_id?, 
+  id, order_id, product_variant_id?, combo_id?,
   quantity, price, created_at, updated_at
 )
 -- Logic: Either product_variant_id OR combo_id (XOR)
 
 -- 💳 Payments: One completed payment per order
 payments (
-  id, order_id, amount, 
-  method[cash|credit_card|bank_transfer|paypal], 
-  status[pending|completed|failed], 
+  id, order_id, amount,
+  method[cash|credit_card|bank_transfer|paypal],
+  status[pending|completed|failed],
   transaction_id?, created_at, updated_at
 )
 ```
+
 </details>
 
 <details>
@@ -468,16 +514,17 @@ payments (
 -- 🍱 Combos: Bundle deals with time limits
 combos (
   id, name, description, price, image_url,
-  start_date?, end_date?, is_active, 
+  start_date?, end_date?, is_active,
   created_at, updated_at
 )
 
 -- 📋 Combo Items: Products included in combo
 combo_items (
-  id, combo_id, product_variant_id, 
+  id, combo_id, product_variant_id,
   quantity, created_at, updated_at
 )
 ```
+
 </details>
 
 <details>
@@ -486,7 +533,7 @@ combo_items (
 ```sql
 -- 🎟️ Coupons: Smart discount system
 coupons (
-  id, code[unique], discount_percentage?, discount_amount?, 
+  id, code[unique], discount_percentage?, discount_amount?,
   expiry_date?, min_order_amount?, max_discount_amount?,
   is_active, created_at, updated_at
 )
@@ -494,7 +541,7 @@ coupons (
 
 -- ⭐ Reviews: Product OR combo ratings
 reviews (
-  id, product_id?, combo_id?, user_id, 
+  id, product_id?, combo_id?, user_id,
   rating[1-5], comment?, created_at, updated_at
 )
 -- Logic: Either product_id OR combo_id (XOR)
@@ -502,8 +549,8 @@ reviews (
 
 -- 🎨 Banners: Position-based ads
 banners (
-  id, image_url, link?, 
-  position[homepage_top|homepage_bottom|product_page], 
+  id, image_url, link?,
+  position[homepage_top|homepage_bottom|product_page],
   active, created_at, updated_at
 )
 
@@ -513,32 +560,33 @@ news (id, title, content, image_url?, created_at, updated_at)
 -- ❓ FAQ: Customer support
 faq (id, question, answer, created_at, updated_at)
 ```
+
 </details>
 
 ### 📈 **Sample Data Overview**
 
 <div align="center">
 
-| 📊 **Table** | 🔢 **Records** | 📝 **Description** |
-|:---:|:---:|:---|
-| 👥 Users | 10 | 8 customers + 2 admins |
-| 🏷️ Categories | 10 | Pizza types, drinks, desserts, combos |
-| 🍕 Products | 10 | Various pizzas and items |
-| 📏 Sizes | 10 | From mini (12cm) to family (40cm) |
-| 🥖 Crusts | 10 | Thin, thick, stuffed, specialty crusts |
-| 🎛️ Product Variants | 11 | Size+crust combinations with prices |
-| 🍱 Combos | 2 | Couple combo & Family combo |
-| 📋 Combo Items | 6 | Products included in combos |
-| 🎟️ Coupons | 10 | Percentage & fixed discounts |
-| 🛍️ Orders | 10 | Different statuses & customers |
-| 📦 Order Items | 11 | Mix of products and combos |
-| 💳 Payments | 10 | Various payment methods |
-| ⭐ Reviews | 10 | 1-5 star ratings with comments |
-| 🛒 Carts | 8 | Active customer carts |
-| 🎨 Banners | 10 | Homepage & product page ads |
-| 📰 News | 10 | Promotions & updates |
-| ❓ FAQ | 10 | Common questions & answers |
-| 📞 Contacts | 10 | Customer inquiries (mix users/guests) |
+|    📊 **Table**     | 🔢 **Records** | 📝 **Description**                     |
+| :-----------------: | :------------: | :------------------------------------- |
+|      👥 Users       |       10       | 8 customers + 2 admins                 |
+|    🏷️ Categories    |       10       | Pizza types, drinks, desserts, combos  |
+|     🍕 Products     |       10       | Various pizzas and items               |
+|      📏 Sizes       |       10       | From mini (12cm) to family (40cm)      |
+|      🥖 Crusts      |       10       | Thin, thick, stuffed, specialty crusts |
+| 🎛️ Product Variants |       11       | Size+crust combinations with prices    |
+|      🍱 Combos      |       2        | Couple combo & Family combo            |
+|   📋 Combo Items    |       6        | Products included in combos            |
+|     🎟️ Coupons      |       10       | Percentage & fixed discounts           |
+|      🛍️ Orders      |       10       | Different statuses & customers         |
+|   📦 Order Items    |       11       | Mix of products and combos             |
+|     💳 Payments     |       10       | Various payment methods                |
+|     ⭐ Reviews      |       10       | 1-5 star ratings with comments         |
+|      🛒 Carts       |       8        | Active customer carts                  |
+|     🎨 Banners      |       10       | Homepage & product page ads            |
+|       📰 News       |       10       | Promotions & updates                   |
+|       ❓ FAQ        |       10       | Common questions & answers             |
+|     📞 Contacts     |       10       | Customer inquiries (mix users/guests)  |
 
 </div>
 
@@ -552,7 +600,7 @@ faq (id, question, answer, created_at, updated_at)
 -- ✅ Order Items Validation
 -- Đảm bảo order_items có EITHER product_variant_id OR combo_id (không cả hai, không thiếu)
 
--- ✅ Cart Items Validation  
+-- ✅ Cart Items Validation
 -- Đảm bảo cart_items có EITHER product_variant_id OR combo_id
 
 -- ✅ Auto Total Calculation
@@ -611,6 +659,7 @@ idx_order_items_product_variant_id -- Order product lookup
 <td width="33%">
 
 #### 🐘 **PHP Stack**
+
 ```yaml
 Core: PHP 8.1+
 Framework: Laravel/CodeIgniter
@@ -623,7 +672,8 @@ ORM: Eloquent/Active Record
 </td>
 <td width="33%">
 
-#### 🟢 **Node.js Stack**  
+#### 🟢 **Node.js Stack**
+
 ```yaml
 Runtime: Node.js 18+
 Framework: Express.js
@@ -637,9 +687,10 @@ Validation: Joi/Yup
 <td width="34%">
 
 #### 🐍 **Python Stack**
+
 ```yaml
 Language: Python 3.9+
-Framework: Django/FastAPI  
+Framework: Django/FastAPI
 Database: MySQL + SQLAlchemy
 Auth: Django Auth/OAuth2
 Cache: Redis
@@ -654,22 +705,22 @@ Validation: Pydantic
 
 ```yaml
 🎨 Core:
-  - HTML5 semantic markup
-  - CSS3 with Flexbox/Grid
-  - Vanilla JavaScript ES6+
-  - Responsive design principles
+    - HTML5 semantic markup
+    - CSS3 with Flexbox/Grid
+    - Vanilla JavaScript ES6+
+    - Responsive design principles
 
 📱 Frameworks (Optional):
-  - React.js with hooks
-  - Vue.js 3 composition API
-  - Bootstrap 5 / Tailwind CSS
-  - SCSS for advanced styling
+    - React.js with hooks
+    - Vue.js 3 composition API
+    - Bootstrap 5 / Tailwind CSS
+    - SCSS for advanced styling
 
 ⚡ Performance:
-  - Lazy loading images
-  - Code splitting
-  - Service workers
-  - CDN integration
+    - Lazy loading images
+    - Code splitting
+    - Service workers
+    - CDN integration
 ```
 
 ---
@@ -958,6 +1009,7 @@ GET    /reset-password             # 📝 Form đặt lại mật khẩu (Web)
 ### **Chi tiết API:**
 
 **1. Gửi email đặt lại mật khẩu**
+
 ```http
 POST /api/password/forgot
 Content-Type: application/json
@@ -980,6 +1032,7 @@ Content-Type: application/json
 ```
 
 **2. Xác thực token reset**
+
 ```http
 POST /api/password/verify-token
 Content-Type: application/json
@@ -1006,6 +1059,7 @@ Content-Type: application/json
 ```
 
 **3. Đặt lại mật khẩu**
+
 ```http
 POST /api/password/reset
 Content-Type: application/json
@@ -1029,6 +1083,7 @@ Content-Type: application/json
 ```
 
 **4. Hủy yêu cầu reset**
+
 ```http
 POST /api/password/cancel-reset
 Content-Type: application/json
@@ -1044,19 +1099,22 @@ Content-Type: application/json
 ```
 
 **5. Form đặt lại mật khẩu (Web Interface)**
+
 ```http
 GET /reset-password?email=user@example.com&token=abc123
 # Hiển thị giao diện form để người dùng nhập mật khẩu mới
 ```
 
 ### **🔐 Bảo mật & Giới hạn:**
-- ⏱️ Token có hiệu lực **15 phút**
-- 🔄 Chỉ sử dụng **1 lần duy nhất**
-- 🚫 Rate limit: **1 lần/5 phút** mỗi email
-- 📧 Email template responsive với thiết kế Pizza Shop
-- 🛡️ Token được lưu trong cache, tự động xóa sau khi sử dụng
+
+-   ⏱️ Token có hiệu lực **15 phút**
+-   🔄 Chỉ sử dụng **1 lần duy nhất**
+-   🚫 Rate limit: **1 lần/5 phút** mỗi email
+-   📧 Email template responsive với thiết kế Pizza Shop
+-   🛡️ Token được lưu trong cache, tự động xóa sau khi sử dụng
 
 ### **📝 Flow hoạt động:**
+
 1. User nhập email → `POST /api/password/forgot`
 2. Nhận email với link reset → Click vào link
 3. Mở form → `GET /reset-password?email=...&token=...`
@@ -1068,7 +1126,9 @@ GET /reset-password?email=user@example.com&token=abc123
 ## 📝 **Chi tiết tham số và response**
 
 ### 🔐 Đăng nhập
+
 **POST** `/api/auth/login`
+
 ```json
 // Request
 {
@@ -1085,7 +1145,9 @@ GET /reset-password?email=user@example.com&token=abc123
 ```
 
 ### 🛒 Thêm vào giỏ hàng
+
 **POST** `/api/cart/items`
+
 ```json
 // Request (Sản phẩm)
 {
@@ -1101,17 +1163,21 @@ GET /reset-password?email=user@example.com&token=abc123
 ```
 
 ### 🛍️ Tạo đơn hàng
+
 **POST** `/api/orders`
+
 ```json
 // Request
 {
-  "shipping_address": "123 Đường ABC, Quận 1, TP.HCM",
-  "coupon_code": "DISCOUNT10"
+    "shipping_address": "123 Đường ABC, Quận 1, TP.HCM",
+    "coupon_code": "DISCOUNT10"
 }
 ```
 
 ### ✅ Kiểm tra mã giảm giá
+
 **POST** `/api/coupons/validate`
+
 ```json
 // Request
 {
@@ -1128,7 +1194,9 @@ GET /reset-password?email=user@example.com&token=abc123
 ```
 
 ### ⭐ Tạo đánh giá
+
 **POST** `/api/reviews`
+
 ```json
 // Request (Đánh giá sản phẩm)
 {
@@ -1146,29 +1214,31 @@ GET /reset-password?email=user@example.com&token=abc123
 ```
 
 ### 📊 Thống kê sản phẩm bán chạy
+
 **GET** `/api/order-items/stats/best-selling-products?days=30&limit=10`
 
 ### 📊 Thống kê combo bán chạy
+
 **GET** `/api/order-items/stats/best-selling-combos?days=30&limit=10`
 
 ---
 
 ## 🔒 **Yêu cầu xác thực**
 
-- 🟢 **Công khai**: Có thể truy cập mà không cần đăng nhập
-- 🔐 **Yêu cầu đăng nhập**: Cần JWT token trong header `Authorization: Bearer {token}`
-- 👑 **Admin**: Chỉ admin mới có thể truy cập
+-   🟢 **Công khai**: Có thể truy cập mà không cần đăng nhập
+-   🔐 **Yêu cầu đăng nhập**: Cần JWT token trong header `Authorization: Bearer {token}`
+-   👑 **Admin**: Chỉ admin mới có thể truy cập
 
 ## 📊 **Các tham số query phổ biến**
 
-- `?active=true/false` - Lọc theo trạng thái hoạt động
-- `?search=keyword` - Tìm kiếm theo từ khóa
-- `?status=pending/confirmed/shipped/delivered/cancelled` - Lọc theo trạng thái
-- `?days=30` - Thống kê trong X ngày
-- `?limit=10` - Giới hạn số kết quả
-- `?position=homepage_top/homepage_bottom/product_page` - Lọc banner theo vị trí
----
+-   `?active=true/false` - Lọc theo trạng thái hoạt động
+-   `?search=keyword` - Tìm kiếm theo từ khóa
+-   `?status=pending/confirmed/shipped/delivered/cancelled` - Lọc theo trạng thái
+-   `?days=30` - Thống kê trong X ngày
+-   `?limit=10` - Giới hạn số kết quả
+-   `?position=homepage_top/homepage_bottom/product_page` - Lọc banner theo vị trí
 
+---
 
 # 📊 Revenue Statistics API Documentation
 
@@ -1176,7 +1246,7 @@ GET /reset-password?email=user@example.com&token=abc123
 
 ```http
 GET    /api/revenue/daily          # 📅 Thống kê doanh thu theo ngày
-GET    /api/revenue/weekly         # 📅 Thống kê doanh thu theo tuần  
+GET    /api/revenue/weekly         # 📅 Thống kê doanh thu theo tuần
 GET    /api/revenue/monthly        # 📅 Thống kê doanh thu theo tháng
 GET    /api/revenue/yearly         # 📅 Thống kê doanh thu theo năm
 
@@ -1195,6 +1265,7 @@ GET    /api/revenue/dashboard      # 📈 Tổng quan dashboard
 ## **📊 1. THỐNG KÊ DOANH THU THEO THỜI GIAN**
 
 ### **1.1 Doanh thu theo ngày**
+
 ```http
 GET /api/revenue/daily?date=05/09/2025
 
@@ -1217,11 +1288,13 @@ GET /api/revenue/daily?date=05/09/2025
 ```
 
 **Parameters:**
-- `date` (optional): Ngày cần thống kê (format: d/m/Y). Mặc định: hôm nay
+
+-   `date` (optional): Ngày cần thống kê (format: d/m/Y). Mặc định: hôm nay
 
 ---
 
 ### **1.2 Doanh thu theo tuần**
+
 ```http
 GET /api/revenue/weekly?year=2025&week=36
 
@@ -1244,12 +1317,14 @@ GET /api/revenue/weekly?year=2025&week=36
 ```
 
 **Parameters:**
-- `year` (optional): Năm cần thống kê. Mặc định: năm hiện tại
-- `week` (optional): Tuần cần thống kê (1-53). Mặc định: tuần hiện tại
+
+-   `year` (optional): Năm cần thống kê. Mặc định: năm hiện tại
+-   `week` (optional): Tuần cần thống kê (1-53). Mặc định: tuần hiện tại
 
 ---
 
 ### **1.3 Doanh thu theo tháng**
+
 ```http
 GET /api/revenue/monthly?year=2025&month=9
 
@@ -1274,12 +1349,14 @@ GET /api/revenue/monthly?year=2025&month=9
 ```
 
 **Parameters:**
-- `year` (optional): Năm cần thống kê. Mặc định: năm hiện tại
-- `month` (optional): Tháng cần thống kê (1-12). Nếu không có sẽ lấy tất cả tháng trong năm
+
+-   `year` (optional): Năm cần thống kê. Mặc định: năm hiện tại
+-   `month` (optional): Tháng cần thống kê (1-12). Nếu không có sẽ lấy tất cả tháng trong năm
 
 ---
 
 ### **1.4 Doanh thu theo năm**
+
 ```http
 GET /api/revenue/yearly?year=2025
 
@@ -1302,13 +1379,15 @@ GET /api/revenue/yearly?year=2025
 ```
 
 **Parameters:**
-- `year` (optional): Năm cần thống kê. Nếu không có sẽ lấy tất cả năm
+
+-   `year` (optional): Năm cần thống kê. Nếu không có sẽ lấy tất cả năm
 
 ---
 
 ## **🏆 2. THỐNG KÊ DOANH THU THEO SẢN PHẨM**
 
 ### **2.1 Top sản phẩm bán chạy**
+
 ```http
 GET /api/revenue/top-products?limit=10
 
@@ -1341,11 +1420,13 @@ GET /api/revenue/top-products?limit=10
 ```
 
 **Parameters:**
-- `limit` (optional): Số lượng sản phẩm trả về. Mặc định: 10
+
+-   `limit` (optional): Số lượng sản phẩm trả về. Mặc định: 10
 
 ---
 
 ### **2.2 Doanh thu combo**
+
 ```http
 GET /api/revenue/combo?limit=10
 
@@ -1376,13 +1457,15 @@ GET /api/revenue/combo?limit=10
 ```
 
 **Parameters:**
-- `limit` (optional): Số lượng combo trả về. Mặc định: 10
+
+-   `limit` (optional): Số lượng combo trả về. Mặc định: 10
 
 ---
 
 ## **👑 3. THỐNG KÊ DOANH THU THEO KHÁCH HÀNG**
 
 ### **3.1 Top khách hàng VIP**
+
 ```http
 GET /api/revenue/top-customers?limit=20
 
@@ -1400,7 +1483,7 @@ GET /api/revenue/top-customers?limit=20
         },
         {
             "full_name": "Trần Thị B",
-            "email": "tranthib@example.com", 
+            "email": "tranthib@example.com",
             "phone": "0987654321",
             "total_orders": 20,
             "total_spent": "4500000.00",
@@ -1417,13 +1500,15 @@ GET /api/revenue/top-customers?limit=20
 ```
 
 **Parameters:**
-- `limit` (optional): Số lượng khách hàng trả về. Mặc định: 20
+
+-   `limit` (optional): Số lượng khách hàng trả về. Mặc định: 20
 
 ---
 
 ## **🎟️ 4. THỐNG KÊ DOANH THU THEO COUPON**
 
 ### **4.1 Doanh thu với coupon**
+
 ```http
 GET /api/revenue/coupons
 
@@ -1468,6 +1553,7 @@ GET /api/revenue/coupons
 ## **📈 5. TỔNG QUAN DASHBOARD**
 
 ### **5.1 Thống kê tổng quan**
+
 ```http
 GET /api/revenue/dashboard?start_date=01/09/2025&end_date=05/09/2025
 
@@ -1509,8 +1595,9 @@ GET /api/revenue/dashboard?start_date=01/09/2025&end_date=05/09/2025
 ```
 
 **Parameters:**
-- `start_date` (optional): Ngày bắt đầu (format: d/m/Y)
-- `end_date` (optional): Ngày kết thúc (format: d/m/Y)
+
+-   `start_date` (optional): Ngày bắt đầu (format: d/m/Y)
+-   `end_date` (optional): Ngày kết thúc (format: d/m/Y)
 
 ---
 
@@ -1522,7 +1609,7 @@ GET /api/revenue/dashboard?start_date=01/09/2025&end_date=05/09/2025
     "error": "Invalid date format. Please use d/m/Y (e.g., 04/09/2025)."
 }
 
-// 500 - Database Error  
+// 500 - Database Error
 {
     "error": "Database query failed: [specific error message]"
 }
@@ -1535,10 +1622,10 @@ GET /api/revenue/dashboard?start_date=01/09/2025&end_date=05/09/2025
 
 ## **📝 Notes**
 
-- Tất cả dữ liệu doanh thu chỉ tính từ các đơn hàng có `payments.status = 'completed'`
-- Định dạng ngày tháng sử dụng: `d/m/Y` (VD: 05/09/2025)
-- Số tiền trả về dưới dạng string để đảm bảo độ chính xác
-- Các API hỗ trợ xử lý lỗi chi tiết với mã HTTP status code phù hợp
+-   Tất cả dữ liệu doanh thu chỉ tính từ các đơn hàng có `payments.status = 'completed'`
+-   Định dạng ngày tháng sử dụng: `d/m/Y` (VD: 05/09/2025)
+-   Số tiền trả về dưới dạng string để đảm bảo độ chính xác
+-   Các API hỗ trợ xử lý lỗi chi tiết với mã HTTP status code phù hợp
 
 ## 🔒 Bảo mật
 
@@ -1549,21 +1636,23 @@ GET /api/revenue/dashboard?start_date=01/09/2025&end_date=05/09/2025
 <td width="50%">
 
 #### 🔐 **Authentication & Authorization**
-- ✅ **Password Hashing**: bcrypt with salt
-- ✅ **JWT Tokens**: Secure & stateless
-- ✅ **Role-based Access**: Admin vs Customer
-- ✅ **Session Management**: Secure sessions
-- ✅ **Input Validation**: All inputs sanitized
+
+-   ✅ **Password Hashing**: bcrypt with salt
+-   ✅ **JWT Tokens**: Secure & stateless
+-   ✅ **Role-based Access**: Admin vs Customer
+-   ✅ **Session Management**: Secure sessions
+-   ✅ **Input Validation**: All inputs sanitized
 
 </td>
 <td width="50%">
 
-#### 🛡️ **Data Protection**  
-- ✅ **SQL Injection**: Prepared statements only
-- ✅ **XSS Protection**: Input sanitization
-- ✅ **CSRF Protection**: CSRF tokens
-- ✅ **HTTPS Enforcement**: SSL/TLS required
-- ✅ **Database Triggers**: Business logic protection
+#### 🛡️ **Data Protection**
+
+-   ✅ **SQL Injection**: Prepared statements only
+-   ✅ **XSS Protection**: Input sanitization
+-   ✅ **CSRF Protection**: CSRF tokens
+-   ✅ **HTTPS Enforcement**: SSL/TLS required
+-   ✅ **Database Triggers**: Business logic protection
 
 </td>
 </tr>
@@ -1571,44 +1660,47 @@ GET /api/revenue/dashboard?start_date=01/09/2025&end_date=05/09/2025
 
 ### 🔍 **Security Features**
 
-- [x] 🔒 **HTTPS Only** - All communications encrypted
-- [x] 🛡️ **Input Validation** - All user inputs validated & sanitized
-- [x] 🔐 **Secure Headers** - Security headers implemented  
-- [x] 🚫 **Rate Limiting** - Prevent abuse & DDoS attacks
-- [x] 📝 **Audit Logs** - Track all admin actions
-- [x] 🔄 **Regular Updates** - Dependencies kept current
-- [x] 🧪 **Security Testing** - Regular vulnerability scanning
-- [x] 💾 **Backup Strategy** - Regular encrypted backups
-- [x] 🎯 **Database Constraints** - Business rules enforced at DB level
-- [x] 💳 **Payment Security** - PCI DSS compliance for card payments
+-   [x] 🔒 **HTTPS Only** - All communications encrypted
+-   [x] 🛡️ **Input Validation** - All user inputs validated & sanitized
+-   [x] 🔐 **Secure Headers** - Security headers implemented
+-   [x] 🚫 **Rate Limiting** - Prevent abuse & DDoS attacks
+-   [x] 📝 **Audit Logs** - Track all admin actions
+-   [x] 🔄 **Regular Updates** - Dependencies kept current
+-   [x] 🧪 **Security Testing** - Regular vulnerability scanning
+-   [x] 💾 **Backup Strategy** - Regular encrypted backups
+-   [x] 🎯 **Database Constraints** - Business rules enforced at DB level
+-   [x] 💳 **Payment Security** - PCI DSS compliance for card payments
 
 ---
 
 ## 🎯 Roadmap
 
 ### 🚀 **Version 1.1 (Next Release)**
-- [ ] 📱 **Mobile App** (React Native/Flutter)
-- [ ] 🔔 **Push Notifications** real-time
-- [ ] 🗺️ **Live Delivery Tracking** with GPS
-- [ ] 💬 **Live Chat Support** customer service
-- [ ] 🎁 **Loyalty Points System** advanced rewards
-- [ ] 🤖 **Chatbot** for FAQ automation
+
+-   [ ] 📱 **Mobile App** (React Native/Flutter)
+-   [ ] 🔔 **Push Notifications** real-time
+-   [ ] 🗺️ **Live Delivery Tracking** with GPS
+-   [ ] 💬 **Live Chat Support** customer service
+-   [ ] 🎁 **Loyalty Points System** advanced rewards
+-   [ ] 🤖 **Chatbot** for FAQ automation
 
 ### 🌟 **Version 1.2 (Future)**
-- [ ] 🤖 **AI Recommendations** based on order history
-- [ ] 🎨 **Pizza Builder Tool** drag & drop toppings
-- [ ] 📊 **Advanced Analytics** with ML insights
-- [ ] 🌐 **Multi-language Support** (EN, VI, JP)
-- [ ] 💰 **Cryptocurrency Payments** (Bitcoin, Ethereum)
-- [ ] 📸 **AR Pizza Preview** augmented reality
+
+-   [ ] 🤖 **AI Recommendations** based on order history
+-   [ ] 🎨 **Pizza Builder Tool** drag & drop toppings
+-   [ ] 📊 **Advanced Analytics** with ML insights
+-   [ ] 🌐 **Multi-language Support** (EN, VI, JP)
+-   [ ] 💰 **Cryptocurrency Payments** (Bitcoin, Ethereum)
+-   [ ] 📸 **AR Pizza Preview** augmented reality
 
 ### 🔮 **Version 2.0 (Long-term)**
-- [ ] 🏪 **Multi-store Management** franchise system
-- [ ] 🤝 **B2B Portal** for corporate clients
-- [ ] 📱 **POS Integration** in-store system
-- [ ] 🚁 **Drone Delivery** automated delivery
-- [ ] 🌍 **International Expansion** multi-currency
-- [ ] 🔮 **IoT Integration** smart kitchen equipment
+
+-   [ ] 🏪 **Multi-store Management** franchise system
+-   [ ] 🤝 **B2B Portal** for corporate clients
+-   [ ] 📱 **POS Integration** in-store system
+-   [ ] 🚁 **Drone Delivery** automated delivery
+-   [ ] 🌍 **International Expansion** multi-currency
+-   [ ] 🔮 **IoT Integration** smart kitchen equipment
 
 ---
 
@@ -1633,23 +1725,20 @@ GET /api/revenue/dashboard?start_date=01/09/2025&end_date=05/09/2025
 ### 📝 **Development Guidelines**
 
 ```yaml
-Code Style:
-  ✅ Follow PSR-12 for PHP
-  ✅ ESLint rules for JavaScript
-  ✅ Meaningful variable names
-  ✅ Comprehensive comments
+Code Style: ✅ Follow PSR-12 for PHP
+    ✅ ESLint rules for JavaScript
+    ✅ Meaningful variable names
+    ✅ Comprehensive comments
 
-Database:
-  ✅ All changes via migrations
-  ✅ Maintain referential integrity
-  ✅ Add proper indexes
-  ✅ Test triggers thoroughly
+Database: ✅ All changes via migrations
+    ✅ Maintain referential integrity
+    ✅ Add proper indexes
+    ✅ Test triggers thoroughly
 
-Testing:
-  ✅ Unit tests for business logic
-  ✅ Integration tests for APIs
-  ✅ Database constraint testing
-  ✅ Security vulnerability tests
+Testing: ✅ Unit tests for business logic
+    ✅ Integration tests for APIs
+    ✅ Database constraint testing
+    ✅ Security vulnerability tests
 ```
 
 ### 👥 **Contributors**
@@ -1714,7 +1803,7 @@ copies or substantial portions of the Software.
 
 ---
 
-*Made with 🍕 and ❤️ by Pizza Shop Team*
+_Made with 🍕 and ❤️ by Pizza Shop Team_
 
 **© 2025 Pizza Shop. All rights reserved.**
 

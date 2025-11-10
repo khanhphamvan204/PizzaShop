@@ -17,7 +17,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Order::with(['user', 'items.productVariant.product', 'items.combo', 'coupon']);
+            $query = Order::with(['user', 'items.productVariant.product', 'items.combo', 'coupon', 'payments']);
 
             if (Auth::user()->role !== 'admin') {
                 $query->where('user_id', Auth::id());
@@ -32,8 +32,15 @@ class OrderController extends Controller
             }
 
             $orders = $query->orderBy('created_at', 'desc')->get();
-            return response()->json($orders);
 
+            // Thêm thông tin payment method vào mỗi order
+            $orders->each(function ($order) {
+                $completedPayment = $order->payments->where('status', 'completed')->first();
+                $order->payment_method = $completedPayment ? $completedPayment->method : null;
+                $order->payment_status = $completedPayment ? $completedPayment->status : 'pending';
+            });
+
+            return response()->json($orders);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Failed to fetch orders',
@@ -139,7 +146,6 @@ class OrderController extends Controller
             DB::commit();
 
             return response()->json($order->load(['items', 'coupon']), 201);
-
         } catch (ValidationException $ve) {
             return response()->json([
                 'error' => 'Validation failed',
@@ -184,7 +190,6 @@ class OrderController extends Controller
             $order->update(['status' => $request->status]);
 
             return response()->json($order);
-
         } catch (ValidationException $ve) {
             return response()->json([
                 'error' => 'Validation failed',

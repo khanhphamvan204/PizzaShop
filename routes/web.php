@@ -19,3 +19,15 @@ Route::get('/reset-password', function (Request $request) {
 });
 Route::get('/verify-email', [UserController::class, 'showVerificationResult'])->name('verify.email');
 Route::get('/resend-verification', [UserController::class, 'resendVerificationOTP'])->name('resend.verification');
+
+// VNPAY integration routes
+use App\Http\Controllers\VnPayController;
+
+// Initiate payment (example: POST /vnpay/pay with amount and optional order_id)
+Route::post('/vnpay/pay', [VnPayController::class, 'pay']);
+
+// VNPAY return URL (customer is redirected back here)
+Route::get('/vnpay/return', [VnPayController::class, 'return']);
+
+// VNPAY IPN / server notification
+Route::post('/vnpay/ipn', [VnPayController::class, 'ipn']);

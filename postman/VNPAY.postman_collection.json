@@ -1,0 +1,83 @@
+{
+  "info": {
+    "name": "VNPAY - PizzaShop",
+    "_postman_id": "vnpay-pizzashop-001",
+    "description": "Collection to test VNPAY integration (pay, return, ipn)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create payment (pay)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"amount\": 150000,\n  \"order_id\": \"ORD1234\",\n  \"description\": \"Thanh toan don ORD1234\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost/vnpay/pay",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "path": [
+            "vnpay",
+            "pay"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Simulate return (GET)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost/vnpay/return?vnp_TxnRef=ORD1234&vnp_ResponseCode=00&vnp_Amount=15000000&vnp_SecureHash=EXAMPLE",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "path": [
+            "vnpay",
+            "return"
+          ],
+          "query": [
+            { "key": "vnp_TxnRef", "value": "ORD1234" },
+            { "key": "vnp_ResponseCode", "value": "00" },
+            { "key": "vnp_Amount", "value": "15000000" },
+            { "key": "vnp_SecureHash", "value": "EXAMPLE" }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Simulate IPN (POST)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"vnp_TxnRef\": \"ORD1234\",\n  \"vnp_ResponseCode\": \"00\",\n  \"vnp_Amount\": \"15000000\",\n  \"vnp_TransactionNo\": \"123456789\",\n  \"vnp_SecureHash\": \"EXAMPLE\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost/vnpay/ipn",
+          "protocol": "http",
+          "host": ["localhost"],
+          "path": ["vnpay","ipn"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
