@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Review;
@@ -6,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\GeminiService;
 
 class ReviewController extends Controller
 {
@@ -66,6 +68,19 @@ class ReviewController extends Controller
 
             if ($request->product_id && $request->combo_id) {
                 return response()->json(['error' => 'Cannot review both product and combo'], 400);
+            }
+
+            // Check for profanity in comment
+            if ($request->comment) {
+                $geminiService = new GeminiService();
+                $profanityCheck = $geminiService->checkProfanity($request->comment);
+
+                if ($profanityCheck['is_profane']) {
+                    return response()->json([
+                        'error' => 'Comment contains inappropriate language',
+                        'reason' => $profanityCheck['reason']
+                    ], 400);
+                }
             }
 
             // Check if the user has purchased and received the product/combo
@@ -148,6 +163,19 @@ class ReviewController extends Controller
                 'rating' => 'required|integer|min:1|max:5',
                 'comment' => 'nullable|string|max:1000'
             ]);
+
+            // Check for profanity in comment
+            if ($request->comment) {
+                $geminiService = new GeminiService();
+                $profanityCheck = $geminiService->checkProfanity($request->comment);
+
+                if ($profanityCheck['is_profane']) {
+                    return response()->json([
+                        'error' => 'Comment contains inappropriate language',
+                        'reason' => $profanityCheck['reason']
+                    ], 400);
+                }
+            }
 
             // Check if the user has purchased and received the product/combo
             $userId = Auth::id();

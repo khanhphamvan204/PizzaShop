@@ -145,9 +145,9 @@ Route::prefix('crusts')->group(function () {
 // =====================================
 Route::prefix('faqs')->group(function () {
     // Route::get('/{id}', [FaqController::class, 'show']);                    // 🔍 Chi tiết FAQ
+    Route::get('/', [FaqController::class, 'index']);                       // 📋 Danh sách FAQ
     Route::post('/', [FaqController::class, 'store']);                      // ➕ Tạo FAQ mới
     Route::middleware('check_role:admin')->group(function () {
-        Route::get('/', [FaqController::class, 'index']);                       // 📋 Danh sách FAQ
         Route::put('/{id}', [FaqController::class, 'update']);                  // ✏️ Cập nhật FAQ
         Route::delete('/{id}', [FaqController::class, 'destroy']);              // 🗑️ Xóa FAQ
     });
