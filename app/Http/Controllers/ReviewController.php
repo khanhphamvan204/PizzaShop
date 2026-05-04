@@ -77,7 +77,7 @@ class ReviewController extends Controller
 
                 if ($profanityCheck['is_profane']) {
                     return response()->json([
-                        'error' => 'Comment contains inappropriate language',
+                        'error' => 'Nhận xét chứa ngôn từ không phù hợp',
                         'reason' => $profanityCheck['reason']
                     ], 400);
                 }

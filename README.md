@@ -21,10 +21,12 @@
 
 -   [🌟 Giới thiệu](#-giới-thiệu)
 -   [✨ Tính năng nổi bật](#-tính-năng-nổi-bật)
+-   [🖼️ Giao diện người dùng](#️-giao-diện-người-dùng)
 -   [🚀 Chức năng chính](#-chức-năng-chính)
 -   [🏗️ Cấu trúc Database](#️-cấu-trúc-database)
 -   [💻 Công nghệ sử dụng](#-công-nghệ-sử-dụng)
 -   [⚡ Quick Start](#-quick-start)
+-   [🤖 Chatbot Text-to-SQL](#-chatbot-text-to-sql)
 -   [🔧 API Reference](#-api-reference)
 -   [🔒 Bảo mật](#-bảo-mật)
 -   [🎯 Roadmap](#-roadmap)
@@ -116,6 +118,50 @@ Bạn có thể dùng Postman collection mẫu ở `postman/VNPAY.postman_collec
 </td>
 </tr>
 </table>
+
+---
+
+## 🖼️ Giao diện người dùng
+
+> Dưới đây là một số màn hình giao diện thực tế của ứng dụng Pizza Shop.
+
+### 🏠 Trang chủ (Home Page)
+
+![Home Page](docs/home-page.png)
+
+> Trang chủ hiện đại với hero banner động, danh sách sản phẩm nổi bật, tin tức và khu vực newsletter.
+
+---
+
+### 🍕 Trang sản phẩm (Product Page)
+
+![Product Page](docs/product-page.png)
+
+> Hiển thị toàn bộ danh sách sản phẩm theo danh mục, hỗ trợ lọc và tìm kiếm nhanh.
+
+---
+
+### 🔍 Chi tiết sản phẩm (Product Detail)
+
+![Product Detail Page](docs/product-detail-page.png)
+
+> Trang chi tiết pizza với tùy chọn kích thước, loại đế, số lượng và nút thêm vào giỏ hàng.
+
+---
+
+### 🛒 Giỏ hàng (Cart Page)
+
+![Cart Page](docs/cart-page.png)
+
+> Giao diện giỏ hàng thông minh: hiển thị sản phẩm, cập nhật số lượng, áp mã giảm giá và thanh toán.
+
+---
+
+### 🤖 Chatbot hỗ trợ khách hàng
+
+![Chatbot Interface](docs/chatbot.png)
+
+> Chatbot AI tích hợp trực tiếp trên giao diện, hỗ trợ người dùng tìm kiếm sản phẩm phù hợp bằng ngôn ngữ tự nhiên.
 
 ---
 
@@ -1626,6 +1672,250 @@ GET /api/revenue/dashboard?start_date=01/09/2025&end_date=05/09/2025
 -   Định dạng ngày tháng sử dụng: `d/m/Y` (VD: 05/09/2025)
 -   Số tiền trả về dưới dạng string để đảm bảo độ chính xác
 -   Các API hỗ trợ xử lý lỗi chi tiết với mã HTTP status code phù hợp
+
+## 🤖 Chatbot Text-to-SQL
+
+<div align="center">
+
+![Chatbot](https://img.shields.io/badge/🤖-AI%20Chatbot-blueviolet?style=for-the-badge)
+![Text2SQL](https://img.shields.io/badge/Text--to--SQL-Gemini%20AI-orange?style=for-the-badge)
+
+</div>
+
+### 🎯 **Tổng quan**
+
+Pizza Shop tích hợp **Chatbot thông minh hỗ trợ Text-to-SQL** — cho phép người dùng tìm kiếm và lọc sản phẩm pizza **bằng ngôn ngữ tự nhiên tiếng Việt**, thay vì phải thao tác thủ công trên bộ lọc.
+
+> 💡 Ví dụ: Người dùng nhập *"Tôi muốn tìm pizza phô mai giá dưới 150.000đ, đế mỏng, cỡ vừa"* → Chatbot hiểu yêu cầu, tự động tạo câu truy vấn SQL phù hợp và trả về danh sách sản phẩm khớp.
+
+---
+
+### 🏗️ **Kiến trúc hệ thống Chatbot**
+
+```mermaid
+sequenceDiagram
+    participant U as 👤 Người dùng
+    participant FE as 🌐 Frontend
+    participant API as ⚙️ Laravel API
+    participant AI as 🤖 Gemini AI
+    participant DB as 🗄️ MySQL
+
+    U->>FE: Nhập câu hỏi tự nhiên
+    FE->>API: POST /api/chatbot/query
+    API->>AI: Gửi prompt + schema DB
+    AI-->>API: Trả về câu SQL
+    API->>DB: Thực thi SQL (safe mode)
+    DB-->>API: Kết quả sản phẩm
+    API-->>FE: JSON response
+    FE-->>U: Hiển thị danh sách pizza phù hợp
+```
+
+---
+
+### ✨ **Tính năng nổi bật của Chatbot**
+
+<table>
+<tr>
+<td width="50%">
+
+#### 🗣️ **Hiểu ngôn ngữ tự nhiên**
+
+- Hỗ trợ câu hỏi **tiếng Việt** và **tiếng Anh**
+- Nhận dạng ý định người dùng (intent detection)
+- Xử lý câu hỏi mơ hồ và thiếu thông tin
+- Gợi ý câu hỏi tiếp theo thông minh
+
+</td>
+<td width="50%">
+
+#### 🔍 **Lọc sản phẩm thông minh**
+
+- Lọc theo **tên**, **danh mục**, **giá**
+- Lọc theo **kích thước** (size) và **loại đế** (crust)
+- Kết hợp nhiều điều kiện cùng lúc
+- Hỗ trợ tìm theo **combo** và **khuyến mãi**
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+#### 🛡️ **Bảo mật SQL**
+
+- Chỉ cho phép câu lệnh **SELECT** (read-only)
+- Whitelist các bảng được phép truy vấn
+- Validate và sanitize SQL trước khi thực thi
+- Giới hạn số dòng kết quả trả về
+
+</td>
+<td width="50%">
+
+#### ⚡ **Hiệu suất cao**
+
+- Cache kết quả truy vấn phổ biến với **Redis**
+- Giới hạn **rate limiting** theo IP/user
+- Thời gian phản hồi trung bình < 2 giây
+- Fallback về tìm kiếm thủ công nếu AI lỗi
+
+</td>
+</tr>
+</table>
+
+---
+
+### 📝 **Các dạng câu hỏi được hỗ trợ**
+
+| 🗂️ **Loại truy vấn** | 💬 **Ví dụ câu hỏi** | 🎯 **Kết quả** |
+| :------------------: | :------------------- | :------------- |
+| Tìm theo tên | *"Có pizza Margherita không?"* | Sản phẩm khớp tên |
+| Tìm theo giá | *"Pizza nào dưới 100.000đ?"* | Lọc theo giá variant |
+| Tìm theo danh mục | *"Cho tôi xem pizza hải sản"* | Lọc theo category |
+| Tìm theo kích thước | *"Pizza cỡ gia đình có gì?"* | Lọc theo size |
+| Tìm theo đế bánh | *"Pizza đế không gluten"* | Lọc theo crust type |
+| Tìm combo | *"Combo nào đang khuyến mãi?"* | Combos đang active |
+| Kết hợp | *"Pizza phô mai đế mỏng giá dưới 150k cỡ vừa"* | Multi-filter query |
+| Gợi ý | *"Pizza nào bán chạy nhất?"* | Top sản phẩm theo doanh số |
+
+---
+
+### 🔧 **API Endpoint Chatbot**
+
+```http
+POST /api/chatbot/query
+Content-Type: application/json
+```
+
+**Request Body:**
+
+```json
+{
+  "message": "Tôi muốn tìm pizza phô mai đế mỏng giá dưới 150.000đ",
+  "conversation_id": "uuid-optional",
+  "language": "vi"
+}
+```
+
+**Response thành công (200):**
+
+```json
+{
+  "success": true,
+  "message": "Tìm thấy 3 sản phẩm phù hợp với yêu cầu của bạn!",
+  "sql_generated": "SELECT p.name, pv.price, s.name as size, c.name as crust FROM products p JOIN product_variants pv ON p.id = pv.product_id JOIN categories cat ON p.category_id = cat.id JOIN sizes s ON pv.size_id = s.id JOIN crusts c ON pv.crust_id = c.id WHERE cat.name LIKE '%phô mai%' AND c.name LIKE '%mỏng%' AND pv.price < 150000 LIMIT 20",
+  "results": [
+    {
+      "id": 3,
+      "name": "Pizza 4 Phô Mai",
+      "image_url": "https://...",
+      "size": "Vừa (25cm)",
+      "crust": "Đế Mỏng",
+      "price": 135000,
+      "stock": 15
+    }
+  ],
+  "total": 3,
+  "suggestions": [
+    "Bạn có muốn xem thêm pizza trong khoảng giá 150k - 200k?",
+    "Tôi cũng có Combo Đôi với pizza phô mai, bạn có muốn xem không?"
+  ]
+}
+```
+
+**Response khi không tìm thấy (200):**
+
+```json
+{
+  "success": true,
+  "message": "Không tìm thấy sản phẩm phù hợp. Bạn thử tìm kiếm với tiêu chí khác nhé!",
+  "results": [],
+  "total": 0,
+  "suggestions": [
+    "Thử tìm pizza phô mai với kích thước khác?",
+    "Xem tất cả pizza hiện có?"
+  ]
+}
+```
+
+**Response lỗi (422):**
+
+```json
+{
+  "success": false,
+  "error": "Câu hỏi không rõ ràng, vui lòng mô tả chi tiết hơn.",
+  "hint": "Ví dụ: 'Pizza hải sản cỡ lớn giá dưới 200k'"
+}
+```
+
+---
+
+### 🏛️ **Schema các bảng Chatbot được phép truy vấn**
+
+```yaml
+Whitelisted Tables:
+  ✅ products          # Tên, mô tả, hình ảnh sản phẩm
+  ✅ product_variants  # Giá, tồn kho, biến thể
+  ✅ categories        # Danh mục sản phẩm
+  ✅ sizes             # Kích thước pizza
+  ✅ crusts            # Loại đế bánh
+  ✅ combos            # Combo đang hoạt động
+  ✅ combo_items       # Chi tiết sản phẩm trong combo
+  ✅ reviews           # Đánh giá sản phẩm (avg rating)
+
+Blacklisted Tables (không được truy vấn):
+  ❌ users             # Thông tin cá nhân khách hàng
+  ❌ orders            # Lịch sử đơn hàng
+  ❌ payments          # Thông tin thanh toán
+  ❌ contacts          # Dữ liệu liên hệ
+  ❌ password_resets   # Token reset mật khẩu
+```
+
+---
+
+### 🔄 **Luồng xử lý Text-to-SQL chi tiết**
+
+```
+1. 📥 Nhận câu hỏi từ người dùng
+       ↓
+2. 🧹 Tiền xử lý: chuẩn hóa tiếng Việt, loại bỏ ký tự đặc biệt
+       ↓
+3. 🤖 Gửi đến Gemini AI với:
+       - System prompt: mô tả schema DB + quy tắc bảo mật
+       - User message: câu hỏi đã chuẩn hóa
+       ↓
+4. 📝 Nhận câu SQL từ AI
+       ↓
+5. 🛡️ Kiểm tra bảo mật SQL:
+       - Chỉ cho phép SELECT
+       - Validate tên bảng & cột
+       - Thêm LIMIT nếu thiếu
+       ↓
+6. ⚡ Kiểm tra Redis cache
+       ↓ (cache miss)
+7. 🗄️ Thực thi truy vấn trên MySQL
+       ↓
+8. 💾 Lưu kết quả vào Redis (TTL: 5 phút)
+       ↓
+9. 📤 Format và trả về JSON response
+```
+
+---
+
+### ⚙️ **Cấu hình Chatbot trong `.env`**
+
+```env
+# Gemini AI Configuration
+GEMINI_API_KEY=your_gemini_api_key
+GEMINI_MODEL=gemini-2.0-flash
+GEMINI_MAX_TOKENS=1024
+GEMINI_TEMPERATURE=0.1
+
+# Chatbot Settings
+CHATBOT_MAX_RESULTS=20
+CHATBOT_CACHE_TTL=300
+CHATBOT_RATE_LIMIT=30
+```
+
+---
 
 ## 🔒 Bảo mật
 
